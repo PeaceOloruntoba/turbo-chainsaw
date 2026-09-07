@@ -46,8 +46,9 @@ header and footer pick it up immediately, no code change needed.
 
 ## Local development
 
-**Requirements:** Node 18.20.2+, a Postgres database (Supabase or local), and
-(optionally, for uploads) an S3-compatible bucket.
+**Requirements:** Node 20.9.0+ (required by Next.js 16 and by `sharp`), a
+Postgres database (Supabase or local), and (optionally, for uploads) an
+S3-compatible bucket.
 
 1. Install dependencies:
 
@@ -172,6 +173,54 @@ already how this project is configured.
    termination), and `certbot` (automatic certificate renewal).
 
 5. Point your domain's DNS A/AAAA records at the VPS if you haven't already.
+
+## Troubleshooting
+
+**`getaddrinfo ENOTFOUND db.<ref>.supabase.co`** — Supabase's direct
+connection hostname is IPv6-only unless your project has the paid IPv4
+add-on. Many networks (including plenty of home/corporate Windows setups)
+can't route outbound IPv6, so Node fails to connect even though `nslookup`
+resolves the name fine. Fix: in the Supabase dashboard, click **Connect** →
+select the **Session pooler** tab (not Transaction pooler — Payload needs
+session-level features like prepared statements) → copy that connection
+string into `DATABASE_URI`. It looks like
+`postgresql://postgres.<project-ref>:[PASSWORD]@aws-0-<region>.pooler.supabase.com:5432/postgres`
+— note the host and username both differ from the direct string.
+
+**`missing secret key` when running `npm run seed`** — Next.js auto-loads
+`.env`, but a standalone script run via `tsx` does not. The seed script
+loads `.env` itself via `dotenv` (see `src/seed/index.ts`), so make sure
+you've run `npm install` after pulling this update and that a `.env` file
+(not just `.env.example`) exists in the project root with real values.
+
+## Keeping dependencies current
+
+This project runs **Next.js 16.3.x, React 19.2.x, and Payload 3.88.x** — the
+current stable line of each as of this writing. Two deliberate choices here:
+
+- **`payload` and every `@payloadcms/*` package are pinned to the exact same
+  version** (currently `3.88.0`), with no `^`. This is intentional and
+  matches Payload's own recommendation — mixing patch versions across
+  `@payloadcms/*` packages is a common source of subtle bugs. When
+  upgrading Payload, bump all of them together to the same new version.
+- **Everything else uses a caret range** (`^`), so `npm audit fix` /
+  `npm update` can actually pull in patch and minor security fixes on their
+  own between now and your next manual dependency review — unlike the
+  original exact pins, which is why `npm audit fix` wasn't able to do much
+  before this update.
+
+Because `next` jumped a major version (15 → 16) and `payload` jumped ~58
+minor/patch releases, treat this as a real upgrade, not just a patch bump:
+run `npm install`, then `npm run build` locally before deploying, and skim
+the [Payload releases](https://github.com/payloadcms/payload/releases)
+and [Next.js blog](https://nextjs.org/blog) for anything relevant between
+your previous version and this one. Next.js 16 also switches Turbopack on
+by default for `next dev`/`next build`; this project doesn't use any
+webpack-specific config, so no changes were needed here, but worth knowing
+if you add custom build config later.
+
+For ongoing hygiene: run `npm outdated` periodically, and prefer bumping
+`@payloadcms/*` packages together rather than one at a time.
 
 ## Ownership & accounts
 
