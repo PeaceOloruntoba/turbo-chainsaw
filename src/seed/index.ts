@@ -1,5 +1,7 @@
+import { config as loadEnv } from 'dotenv'
+loadEnv()
+
 import { getPayload } from 'payload'
-import config from '../payload.config'
 import { paragraphsToLexical } from './lexical'
 
 /**
@@ -84,6 +86,11 @@ const LEGAL_PAGES: Array<{
 ]
 
 async function seed() {
+  // Dynamic import, not a static one — payload.config.ts reads
+  // process.env at import time, and static imports are hoisted above
+  // loadEnv() in ESM regardless of source order. This import must happen
+  // here, after loadEnv() has actually run.
+  const { default: config } = await import('../payload.config')
   const payload = await getPayload({ config })
 
   payload.logger.info('Seeding Legal Pages…')
