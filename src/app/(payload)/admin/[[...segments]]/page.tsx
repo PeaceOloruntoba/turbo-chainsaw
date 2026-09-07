@@ -4,8 +4,8 @@ import config from '@payload-config'
 import { importMap } from '../importMap'
 
 type Args = {
-  params: Promise<{ segments?: string[] }>
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  params: Promise<{ segments: string[] }>
+  searchParams: Promise<{ [key: string]: string | string[] }>
 }
 
 export const generateMetadata = async ({ params, searchParams }: Args): Promise<Metadata> =>
