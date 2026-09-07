@@ -142,7 +142,10 @@ copy are ready, they go in through `/admin` — no developer required.
 2. Add the environment variables from `.env.example` in the Vercel project
    settings.
 3. Deploy. Vercel builds `next build` automatically; no extra config needed
-   beyond the env vars.
+   beyond the env vars. `next.config.mjs` detects Vercel's build environment
+   (`process.env.VERCEL`) and skips `output: 'standalone'` automatically —
+   that setting is only for the Docker/VPS target below and will break the
+   Vercel build if applied there, so don't remove that conditional.
 
 Note: Payload's admin panel and file uploads work on Vercel, but for anything
 beyond light testing, prefer S3 (not local disk) for media — which is
@@ -253,3 +256,4 @@ draft-status banner on legal pages.
   draft placeholder text (see `npm run seed`) so the pages aren't empty —
   but this has not been reviewed by counsel and must be finalised before
   launch.
+  

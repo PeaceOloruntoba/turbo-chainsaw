@@ -3,7 +3,7 @@ import { withPayload } from '@payloadcms/next/withPayload'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
+  ...(process.env.VERCEL ? {} : { output: 'standalone' }),
   images: {
     remotePatterns: [
       // Allow images served from your S3 / CDN bucket. Replace with your real bucket host.
@@ -16,9 +16,6 @@ const nextConfig = {
         hostname: process.env.NEXT_PUBLIC_MEDIA_HOSTNAME || 'localhost',
       },
     ],
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 }
 
