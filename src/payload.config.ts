@@ -13,6 +13,13 @@ import { Intelligence } from './collections/Intelligence'
 import { Events } from './collections/Events'
 import { Subscribers } from './collections/Subscribers'
 import { ResearchSubmissions } from './collections/ResearchSubmissions'
+import { LegalPages } from './collections/LegalPages'
+
+import { SiteSettings } from './globals/SiteSettings'
+import { HomeContent } from './globals/HomeContent'
+import { AboutContent } from './globals/AboutContent'
+import { ResearchContent } from './globals/ResearchContent'
+import { Pilot2026Content } from './globals/Pilot2026Content'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,7 +42,9 @@ export default buildConfig({
     Events,
     Subscribers,
     ResearchSubmissions,
+    LegalPages,
   ],
+  globals: [SiteSettings, HomeContent, AboutContent, ResearchContent, Pilot2026Content],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

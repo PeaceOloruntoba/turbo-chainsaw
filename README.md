@@ -35,6 +35,15 @@ Public routes: `/`, `/about`, `/research`, `/firms`, `/firms/[slug]`,
 
 Admin panel: `/admin`.
 
+## Placeholder logo
+
+No final logo has been supplied yet. `public/logo-lockup.svg` and
+`public/logo-mark.svg` are simple placeholder marks (navy field, green arc
+accent, "NL" monogram) in the brief's colour palette, used automatically
+until a real logo is uploaded. Once you have the approved Logo No. 2, upload
+it in `/admin` under **Site Configuration → Site Settings → Logo** — the
+header and footer pick it up immediately, no code change needed.
+
 ## Local development
 
 **Requirements:** Node 18.20.2+, a Postgres database (Supabase or local), and
@@ -67,10 +76,33 @@ Admin panel: `/admin`.
    first administrator account. This is the only account with `role: admin`
    until you promote others from the admin panel.
 
-5. Visit `http://localhost:3000` to see the public site. Pages that read
+5. Seed placeholder content (recommended — see below):
+
+   ```bash
+   npm run seed
+   ```
+
+6. Visit `http://localhost:3000` to see the public site. Pages that read
    from collections (Home's "Latest Intelligence", Firms & Lawyers,
    Intelligence, Events) render sensible empty states until you publish
-   content — nothing needs to be seeded before the site works.
+   content — nothing needs to be seeded before the site works, but running
+   the seed script gives every page and legal document real starting
+   content to edit rather than blank forms.
+
+### What `npm run seed` does
+
+- Creates all six Legal Pages (Privacy Policy, Cookie Policy, Terms of Use,
+  Disclaimer, Editorial Independence, Corrections Policy) with generic
+  placeholder wording, each flagged **"Draft placeholder — not reviewed"**.
+  A matching notice banner shows on the public page until you change a
+  page's status to "Final" in `/admin`. This text is a starting point only
+  and must be reviewed by Nigeria Lex's legal counsel before launch.
+- Persists the default copy for every content Global (Site Settings, Home,
+  About, Research, Pilot 2026) as real, editable documents in `/admin`,
+  rather than leaving editors looking at blank forms the first time they
+  open one.
+- Safe to re-run — it updates existing documents by slug instead of
+  duplicating them.
 
 ## Content editing (non-technical admin)
 
@@ -84,15 +116,22 @@ Everything an editor needs is in the `/admin` panel:
 - **Add/update a lawyer** → Lawyers collection
 - **Upload a PDF** → attach directly on the relevant Intelligence item, or
   upload independently via the Media collection
-- **Change the pilot timetable / ordinary page text** → the Pilot 2026,
-  About, Research, and Contact page copy currently lives in the page files
-  themselves (`src/app/(site)/.../page.tsx`) rather than the CMS, since Phase
-  1 prioritised a fast, credible launch. Wiring this copy into an editable
-  Payload global is a natural, low-risk Phase 2 addition — flag it if you'd
-  like it prioritised.
+- **Change the pilot timetable, hero copy, About text, Research methodology,
+  or footer/contact details** → all editable under **Site Configuration**
+  and **Page Content** in `/admin` (Site Settings, Home Content, About
+  Content, Research Content, Pilot 2026 Content globals) — no code changes
+  needed.
+- **Edit legal pages** (Privacy Policy, Terms of Use, etc.) → Legal Pages
+  collection. Each page has a "Draft placeholder" / "Final" status; set it to
+  Final once legal counsel has reviewed the text to remove the draft notice
+  from the public page.
+- **Change the logo** → Site Settings → Logo (see "Placeholder logo" above)
 - **View subscriber enquiries** → Subscribers collection (newsletter
   sign-ups) and Research Submissions collection (firm/institutional
   submissions)
+
+Everything above is now genuinely CMS-driven: once the real logo and final
+copy are ready, they go in through `/admin` — no developer required.
 
 ## Deployment
 
@@ -140,16 +179,28 @@ Per the design brief, the domain, hosting account, Supabase project, S3
 bucket, and admin credentials should be registered under Kaye & Crowther
 Limited / Nigeria Lex accounts, not the developer's personal accounts.
 
-## What's intentionally deferred to later phases
+## Phase status
 
-- **Firms & Lawyers filtering UI** (by Firm/Lawyer/Practice Area/Sector/
-  Location) — the schema fully supports it (see `Firms.ts`, `Lawyers.ts`);
-  the filter controls are shown but inert until there's enough published
-  research to filter meaningfully (per brief §8).
-- **Subscriber-only access control for Intelligence** — the `isSubscriberOnly`
-  flag and gating UI exist now; enforcing it against a real subscriber
-  session/login (Phase 4, "Future Subscription Capability") is not built yet.
-- Real legal copy for Privacy Policy, Cookie Policy, Terms of Use,
-  Disclaimer, Editorial Independence and Corrections Policy — these are
-  stubbed with a placeholder notice pending legal review, since the brief
-  did not supply final text and this is not something to draft unreviewed.
+**Phase 1 (Design) and Phase 2 (Initial Website — About, Research,
+Intelligence, Pilot, Events, Contact, Subscribe) are complete**, and the CMS
+is fully wired: every piece of on-page copy, the logo, contact details, and
+all legal pages are editable from `/admin` with no code changes required.
+Placeholder content (logo, hero copy, legal text) is in place throughout and
+clearly identifiable as placeholder — see "Placeholder logo" above and the
+draft-status banner on legal pages.
+
+**Deferred to later phases, per the brief's quotation structure (§19):**
+
+- **Phase 3 — Research Database:** the schema for a searchable, filterable
+  Firms & Lawyers database is fully built (`Firms.ts`, `Lawyers.ts`, and the
+  individual firm profile page at `/firms/[slug]`), but the public filter
+  controls (by Firm/Lawyer/Practice Area/Sector/Location) are shown inert
+  until there's enough published research to filter meaningfully, matching
+  the brief's "Research in progress" placeholder instruction (§8, §20).
+- **Phase 4 — Future Subscription Capability:** the `isSubscriberOnly` flag
+  and gating UI on Intelligence items exist now; enforcing that against a
+  real subscriber login/paywall is Phase 4 work.
+- **Real legal copy:** Legal Pages ship seeded with generic, clearly-marked
+  draft placeholder text (see `npm run seed`) so the pages aren't empty —
+  but this has not been reviewed by counsel and must be finalised before
+  launch.

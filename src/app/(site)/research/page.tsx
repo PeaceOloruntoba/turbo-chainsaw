@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { IndependenceBanner } from '@/components/IndependenceBanner'
 import { ResearchSubmissionForm } from '@/components/ResearchSubmissionForm'
+import { getPayloadClient } from '@/lib/payload'
 
 export const metadata: Metadata = {
   title: 'Research',
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
     'How Nigeria Lex researches Nigerian corporate law firms and practitioners: our methodology, criteria, process and how to participate.',
 }
 
-const CRITERIA = [
+const FALLBACK_CRITERIA = [
   'Experience',
   'Expertise',
   'Significant transactions',
@@ -17,9 +18,9 @@ const CRITERIA = [
   'Cross-border experience',
   'Market evidence',
   'Client / market feedback',
-]
+].map((label) => ({ label }))
 
-const PROCESS = [
+const FALLBACK_PROCESS = [
   { step: 'Research', detail: 'Gathering evidence on firms, practitioners, transactions and sector activity.' },
   { step: 'Verification', detail: 'Checking findings against independent sources and market evidence.' },
   { step: 'Analysis', detail: 'Assessing capability, experience and market standing against our criteria.' },
@@ -27,7 +28,30 @@ const PROCESS = [
   { step: 'Publication', detail: 'Findings are published on Nigeria Lex, subject to ongoing correction and review.' },
 ]
 
-export default function ResearchPage() {
+async function getResearchContent() {
+  try {
+    const payload = await getPayloadClient()
+    return await payload.findGlobal({ slug: 'research-content' })
+  } catch {
+    return null
+  }
+}
+
+export default async function ResearchPage() {
+  const content = await getResearchContent()
+
+  const methodologyText =
+    content?.methodologyText ||
+    'Nigeria Lex research is evidence-led. We assess firms and practitioners against a consistent set of criteria, verify our findings independently, and subject every conclusion to editorial review before publication.'
+  const criteria = content?.criteria?.length ? content.criteria : FALLBACK_CRITERIA
+  const process = content?.process?.length ? content.process : FALLBACK_PROCESS
+  const researchIndependenceText =
+    content?.researchIndependenceText ||
+    'Participation and recognition in Nigeria Lex research are not conditional upon payment.'
+  const participateIntro =
+    content?.participateIntro ||
+    'Law firms and institutional users can submit information for consideration as part of Nigeria Lex research using the secure form below.'
+
   return (
     <>
       <div className="container max-w-3xl py-16 md:py-20">
@@ -40,20 +64,18 @@ export default function ResearchPage() {
 
         <section id="methodology" className="mt-12 scroll-mt-24">
           <h2 className="font-serif text-xl text-navy">Our Methodology</h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-navy-ink">
-            Nigeria Lex research is evidence-led. We assess firms and practitioners against a
-            consistent set of criteria, verify our findings independently, and subject every
-            conclusion to editorial review before publication.
+          <p className="mt-4 whitespace-pre-line text-[15px] leading-relaxed text-navy-ink">
+            {methodologyText}
           </p>
         </section>
 
         <section className="mt-10 border-t border-line pt-10">
           <h2 className="font-serif text-xl text-navy">Research Criteria</h2>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            {CRITERIA.map((criterion) => (
-              <li key={criterion} className="flex items-start gap-2 text-[15px] text-navy-ink">
+            {criteria.map((criterion: any, i: number) => (
+              <li key={i} className="flex items-start gap-2 text-[15px] text-navy-ink">
                 <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-green" />
-                {criterion}
+                {criterion.label}
               </li>
             ))}
           </ul>
@@ -62,7 +84,7 @@ export default function ResearchPage() {
         <section className="mt-10 border-t border-line pt-10">
           <h2 className="font-serif text-xl text-navy">Research Process</h2>
           <ol className="mt-6 space-y-6">
-            {PROCESS.map((item, index) => (
+            {process.map((item: any, index: number) => (
               <li key={item.step} className="flex gap-5">
                 <span className="font-serif text-lg text-line">{index + 1}</span>
                 <div>
@@ -76,9 +98,8 @@ export default function ResearchPage() {
 
         <section className="mt-10 border-t border-line pt-10">
           <h2 className="font-serif text-xl text-navy">Research Independence</h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-navy-ink">
-            Participation and recognition in Nigeria Lex research are not conditional upon
-            payment.
+          <p className="mt-4 whitespace-pre-line text-[15px] leading-relaxed text-navy-ink">
+            {researchIndependenceText}
           </p>
         </section>
       </div>
@@ -93,10 +114,8 @@ export default function ResearchPage() {
           <h2 className="mt-2 font-serif text-2xl text-navy">
             Submission guidelines and secure electronic submission.
           </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-navy-ink">
-            Law firms and institutional users can submit information for consideration as part of
-            Nigeria Lex research using the secure form below. Research deadlines and downloadable
-            submission forms will be published here ahead of each research cycle.
+          <p className="mt-4 whitespace-pre-line text-[15px] leading-relaxed text-navy-ink">
+            {participateIntro}
           </p>
           <div className="mt-8">
             <ResearchSubmissionForm defaultType="law_firm" />

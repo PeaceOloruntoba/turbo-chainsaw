@@ -2,10 +2,10 @@ import Link from 'next/link'
 import { IndependenceBanner } from '@/components/IndependenceBanner'
 import { getPayloadClient } from '@/lib/payload'
 
-const PILLARS = [
+const FALLBACK_PILLARS = [
   {
     title: 'Legal Market Research',
-    description: 'Independent research and analysis of Nigeria\u2019s corporate legal market.',
+    description: "Independent research and analysis of Nigeria's corporate legal market.",
     href: '/research',
   },
   {
@@ -16,7 +16,7 @@ const PILLARS = [
   {
     title: 'Market Intelligence',
     description:
-      'Analysis of transactions, sectors and developments affecting Nigeria\u2019s legal and investment environment.',
+      "Analysis of transactions, sectors and developments affecting Nigeria's legal and investment environment.",
     href: '/intelligence',
   },
   {
@@ -25,6 +25,15 @@ const PILLARS = [
     href: '/intelligence',
   },
 ]
+
+async function getHomeContent() {
+  try {
+    const payload = await getPayloadClient()
+    return await payload.findGlobal({ slug: 'home-content' })
+  } catch {
+    return null
+  }
+}
 
 async function getLatestIntelligence() {
   try {
@@ -43,7 +52,20 @@ async function getLatestIntelligence() {
 }
 
 export default async function HomePage() {
-  const latest = await getLatestIntelligence()
+  const [content, latest] = await Promise.all([getHomeContent(), getLatestIntelligence()])
+
+  const heroHeadline =
+    content?.heroHeadline || "Independent intelligence on Nigeria's corporate legal market."
+  const heroBody =
+    content?.heroBody ||
+    "Nigeria Lex provides independent research and intelligence on the capabilities, experience and expertise of Nigeria's corporate law firms and practitioners. We combine legal-market knowledge, evidence-led research and market intelligence to help investors, businesses, financial institutions and professional advisers make informed decisions about Nigeria's legal market."
+  const ctaPrimaryLabel = content?.ctaPrimaryLabel || 'Explore Our Research'
+  const ctaSecondaryLabel = content?.ctaSecondaryLabel || 'Our Methodology'
+  const pillars = content?.pillars?.length ? content.pillars : FALLBACK_PILLARS
+  const pilotTeaserLabel = content?.pilotTeaserLabel || 'Nigeria Lex Pilot Study 2026'
+  const pilotTeaserHeadline =
+    content?.pilotTeaserHeadline ||
+    'Our inaugural pilot study is testing and refining the Nigeria Lex methodology.'
 
   return (
     <>
@@ -51,27 +73,21 @@ export default async function HomePage() {
         <div className="container grid gap-10 py-20 md:grid-cols-[1.4fr_1fr] md:py-28">
           <div>
             <h1 className="max-w-xl font-serif text-[2.5rem] leading-[1.1] md:text-[3.25rem]">
-              Independent intelligence on Nigeria&rsquo;s corporate legal market.
+              {heroHeadline}
             </h1>
-            <p className="mt-6 max-w-lg text-[16px] leading-relaxed text-paper/75">
-              Nigeria Lex provides independent research and intelligence on the capabilities,
-              experience and expertise of Nigeria&rsquo;s corporate law firms and practitioners.
-              We combine legal-market knowledge, evidence-led research and market intelligence to
-              help investors, businesses, financial institutions and professional advisers make
-              informed decisions about Nigeria&rsquo;s legal market.
-            </p>
+            <p className="mt-6 max-w-lg text-[16px] leading-relaxed text-paper/75">{heroBody}</p>
             <div className="mt-9 flex flex-wrap gap-4">
               <Link
                 href="/research"
                 className="rounded-sm bg-green px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep"
               >
-                Explore Our Research
+                {ctaPrimaryLabel}
               </Link>
               <Link
                 href="/research#methodology"
                 className="rounded-sm border border-paper/30 px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:border-paper"
               >
-                Our Methodology
+                {ctaSecondaryLabel}
               </Link>
             </div>
           </div>
@@ -82,7 +98,7 @@ export default async function HomePage() {
 
       <section className="container py-16 md:py-20">
         <div className="grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-4">
-          {PILLARS.map((pillar) => (
+          {pillars.map((pillar: any) => (
             <Link
               key={pillar.title}
               href={pillar.href}
@@ -130,11 +146,9 @@ export default async function HomePage() {
         <div className="container flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
-              Nigeria Lex Pilot Study 2026
+              {pilotTeaserLabel}
             </p>
-            <h2 className="mt-2 max-w-xl font-serif text-2xl text-navy">
-              Our inaugural pilot study is testing and refining the Nigeria Lex methodology.
-            </h2>
+            <h2 className="mt-2 max-w-xl font-serif text-2xl text-navy">{pilotTeaserHeadline}</h2>
           </div>
           <Link
             href="/pilot-2026"

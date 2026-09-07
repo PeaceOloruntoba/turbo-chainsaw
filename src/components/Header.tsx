@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getPayloadClient } from '@/lib/payload'
 
 const NAV_ITEMS = [
   { label: 'About', href: '/about' },
@@ -10,17 +11,32 @@ const NAV_ITEMS = [
   { label: 'Contact', href: '/contact' },
 ]
 
-export function Header() {
+async function getSiteSettings() {
+  try {
+    const payload = await getPayloadClient()
+    return await payload.findGlobal({ slug: 'site-settings' })
+  } catch {
+    return null
+  }
+}
+
+export async function Header() {
+  const settings = await getSiteSettings()
+  const siteName = settings?.siteName || 'Nigeria Lex'
+  const logoUrl = (settings?.logo as any)?.url as string | undefined
+
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
       <div className="container flex h-[76px] items-center justify-between gap-6">
-        <Link href="/" className="flex flex-col leading-none">
-          <span className="font-serif text-[22px] tracking-tight text-navy">
-            Nigeria Lex<span className="align-super text-[10px]">™</span>
-          </span>
-          <span className="mt-1 hidden text-[11px] tracking-[0.08em] text-slate sm:block">
-            Legal Market Intelligence for Informed Decisions
-          </span>
+        <Link href="/" className="flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element -- logo may be an
+              admin-uploaded SVG/PNG of arbitrary aspect ratio; next/image's SVG
+              handling and fixed sizing add friction here for little benefit. */}
+          <img
+            src={logoUrl || '/logo-lockup.svg'}
+            alt={logoUrl ? siteName : `${siteName} — placeholder logo, pending final brand assets`}
+            className="h-10 w-auto"
+          />
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">

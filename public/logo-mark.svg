@@ -1,0 +1,5 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nigeria Lex placeholder mark">
+  <rect width="64" height="64" rx="14" fill="#0A192F"/>
+  <path d="M53 42 A24 24 0 0 1 29 59" fill="none" stroke="#005A36" stroke-width="3" stroke-linecap="round"/>
+  <text x="32" y="41" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" fill="#F8FAFC" letter-spacing="0.5">NL</text>
+</svg>
