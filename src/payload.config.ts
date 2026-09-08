@@ -4,6 +4,7 @@ import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
+import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -33,6 +34,7 @@ export default buildConfig({
     },
   },
   editor: lexicalEditor({}),
+  sharp,
   collections: [
     Users,
     Media,
@@ -49,8 +51,6 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  // Direct Postgres connection to Supabase. Supabase Auth and Edge Functions
-  // are deliberately not used — Payload owns auth and the schema directly.
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI,
