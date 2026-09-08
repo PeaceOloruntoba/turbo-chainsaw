@@ -1,5 +1,5 @@
-import { config as loadEnv } from 'dotenv'
-loadEnv()
+// import { config as loadEnv } from 'dotenv'
+// loadEnv()
 
 import { getPayload } from 'payload'
 import { paragraphsToLexical } from './lexical'

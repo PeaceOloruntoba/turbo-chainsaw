@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { safeRevalidatePath } from '../utilities/revalidate'
 
 /**
  * Every footer legal page (Privacy Policy, Cookie Policy, Terms of Use,
@@ -17,6 +18,23 @@ export const LegalPages: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'reviewStatus', 'updatedAt'],
     group: 'Site Configuration',
     description: 'Privacy Policy, Terms of Use, and other footer legal pages.',
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        if (doc?.slug) safeRevalidatePath(`/legal/${doc.slug}`)
+        // The footer renders every legal page's title/link on every page.
+        safeRevalidatePath('/', 'layout')
+        return doc
+      },
+    ],
+    afterDelete: [
+      ({ doc }) => {
+        if (doc?.slug) safeRevalidatePath(`/legal/${doc.slug}`)
+        safeRevalidatePath('/', 'layout')
+        return doc
+      },
+    ],
   },
   access: {
     read: () => true,

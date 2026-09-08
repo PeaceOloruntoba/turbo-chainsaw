@@ -1,10 +1,22 @@
 import type { GlobalConfig } from 'payload'
+import { safeRevalidatePath } from '../utilities/revalidate'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   admin: {
     group: 'Site Configuration',
     description: 'Logo, name, and correspondence details used across the site.',
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        // Logo, site name, footer, and contact details all render via the
+        // shared Header/Footer, so every page under the site layout needs
+        // to be revalidated, not just one route.
+        safeRevalidatePath('/', 'layout')
+        return doc
+      },
+    ],
   },
   access: {
     read: () => true,

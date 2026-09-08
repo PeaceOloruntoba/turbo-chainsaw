@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { safeRevalidatePath } from '../utilities/revalidate'
 
 /**
  * Individual firm pages are independent research profiles — not paid
@@ -14,6 +15,22 @@ export const Firms: CollectionConfig = {
     group: 'Research',
     description:
       'Independent firm research profiles. Firms & Lawyers is public-facing as a "Research in progress" notice until entries here are published.',
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        safeRevalidatePath('/firms')
+        if (doc?.slug) safeRevalidatePath(`/firms/${doc.slug}`)
+        return doc
+      },
+    ],
+    afterDelete: [
+      ({ doc }) => {
+        safeRevalidatePath('/firms')
+        if (doc?.slug) safeRevalidatePath(`/firms/${doc.slug}`)
+        return doc
+      },
+    ],
   },
   access: {
     read: ({ req: { user } }) => {

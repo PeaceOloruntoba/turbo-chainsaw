@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { safeRevalidatePath } from '../utilities/revalidate'
 
 export const Intelligence: CollectionConfig = {
   slug: 'intelligence',
@@ -7,6 +8,24 @@ export const Intelligence: CollectionConfig = {
     defaultColumns: ['title', 'category', 'publishedAt', 'isSubscriberOnly'],
     group: 'Content',
     description: 'Nigeria Lex Intelligence — articles, reports, briefings and analysis.',
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        safeRevalidatePath('/') // homepage "Latest Intelligence" preview
+        safeRevalidatePath('/intelligence')
+        if (doc?.slug) safeRevalidatePath(`/intelligence/${doc.slug}`)
+        return doc
+      },
+    ],
+    afterDelete: [
+      ({ doc }) => {
+        safeRevalidatePath('/')
+        safeRevalidatePath('/intelligence')
+        if (doc?.slug) safeRevalidatePath(`/intelligence/${doc.slug}`)
+        return doc
+      },
+    ],
   },
   access: {
     read: ({ req: { user } }) => {

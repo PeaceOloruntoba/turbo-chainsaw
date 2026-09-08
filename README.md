@@ -208,6 +208,22 @@ loads `.env` itself via `dotenv` (see `src/seed/index.ts`), so make sure
 you've run `npm install` after pulling this update and that a `.env` file
 (not just `.env.example`) exists in the project root with real values.
 
+## Live content updates (on-demand revalidation)
+
+Public pages are statically generated for speed, but every collection and
+global that feeds a public page has a Payload `afterChange`/`afterDelete`
+hook (see `src/utilities/revalidate.ts`) that calls Next.js's
+`revalidatePath` the moment you save in `/admin` — so edits show up on the
+live site within seconds, not just at the next deploy. This covers Site
+Settings (logo, name, footer, contact details — revalidates the whole
+site), Home/About/Research/Pilot 2026 content, Legal Pages, Firms,
+Intelligence, and Events.
+
+`revalidatePath` only works inside a live Next.js server request, so the
+hooks are wrapped in `safeRevalidatePath`, which silently no-ops when
+called from a standalone context — e.g. `npm run seed` or any future
+Payload CLI command — rather than throwing and aborting the write.
+
 ## Keeping dependencies current
 
 This project runs **Next.js 16.3.x, React 19.2.x, and Payload 3.88.x** — the
@@ -279,4 +295,3 @@ draft-status banner on legal pages.
   draft placeholder text (see `npm run seed`) so the pages aren't empty —
   but this has not been reviewed by counsel and must be finalised before
   launch.
-  

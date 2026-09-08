@@ -1,8 +1,17 @@
 import type { GlobalConfig } from 'payload'
+import { safeRevalidatePath } from '../utilities/revalidate'
 
 export const Pilot2026Content: GlobalConfig = {
   slug: 'pilot-2026-content',
   admin: { group: 'Page Content' },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        safeRevalidatePath('/pilot-2026')
+        return doc
+      },
+    ],
+  },
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user),

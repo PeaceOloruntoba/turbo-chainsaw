@@ -1,8 +1,17 @@
 import type { GlobalConfig } from 'payload'
+import { safeRevalidatePath } from '../utilities/revalidate'
 
 export const HomeContent: GlobalConfig = {
   slug: 'home-content',
   admin: { group: 'Page Content' },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        safeRevalidatePath('/')
+        return doc
+      },
+    ],
+  },
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user),

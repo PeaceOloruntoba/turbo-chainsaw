@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { safeRevalidatePath } from '../utilities/revalidate'
 
 export const Events: CollectionConfig = {
   slug: 'events',
@@ -7,6 +8,20 @@ export const Events: CollectionConfig = {
     defaultColumns: ['title', 'eventDate', 'venue'],
     group: 'Content',
     description: 'Roundtables, investor briefings, sector forums and research presentations.',
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        safeRevalidatePath('/events')
+        return doc
+      },
+    ],
+    afterDelete: [
+      ({ doc }) => {
+        safeRevalidatePath('/events')
+        return doc
+      },
+    ],
   },
   access: {
     read: () => true,
