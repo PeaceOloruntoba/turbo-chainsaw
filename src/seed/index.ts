@@ -85,6 +85,87 @@ const LEGAL_PAGES: Array<{
   },
 ]
 
+const SAMPLE_INTELLIGENCE: Array<{
+  title: string
+  slug: string
+  category: string
+  summary: string
+  paragraphs: string[]
+  isSubscriberOnly?: boolean
+}> = [
+  {
+    title: 'Welcome to Nigeria Lex',
+    slug: 'welcome-to-nigeria-lex',
+    category: 'Briefing',
+    summary:
+      "Nigeria Lex launches as an independent, research-led platform for Nigeria's corporate legal market.",
+    paragraphs: [
+      "Nigeria Lex has launched as an independent, research-led legal market intelligence platform focused on Nigeria's corporate legal market. Our purpose is to provide credible, evidence-led information concerning Nigerian corporate law firms, practitioners, transactions, sectors and market developments to investors, financial institutions, multinational corporations and other institutional users of Nigerian legal services.",
+      "Unlike directory or ranking products that charge firms for inclusion or prominence, Nigeria Lex does not charge law firms or practitioners for consideration, inclusion or recognition in its research. Sponsorship, subscriptions and other commercial relationships do not determine research outcomes — see our Editorial Independence policy for more detail.",
+      'Over the coming months, Nigeria Lex will publish findings from its inaugural Pilot Study 2026, building toward a structured, searchable database of firms and practitioners. Subscribe to Nigeria Lex Briefing to be notified as new research is published.',
+    ],
+  },
+  {
+    title: 'Nigeria Lex Announces Pilot Study 2026',
+    slug: 'nigeria-lex-announces-pilot-study-2026',
+    category: 'Article',
+    summary:
+      "Nigeria Lex's inaugural pilot study will test and refine its research methodology ahead of a proposed Lagos presentation in November 2026.",
+    paragraphs: [
+      "Nigeria Lex is undertaking an inaugural pilot study examining selected areas of Nigeria's corporate legal market. The pilot will test and refine the Nigeria Lex research methodology through engagement with law firms, practitioners, investors and institutional users.",
+      'The pilot follows the Nigeria Lex research process in full: research, verification, analysis, editorial review and publication. Participating practice areas will be confirmed and published as pilot research progresses.',
+      'Nigeria Lex is proposing to present initial pilot findings in Lagos, in the week commencing 16 November 2026, subject to research progress. Law firms and institutional users interested in participating can find submission details on the Pilot 2026 and Research pages.',
+    ],
+  },
+]
+
+const SAMPLE_EVENTS: Array<{
+  title: string
+  slug: string
+  eventDate: string
+  venue: string
+  paragraphs: string[]
+  speakers: Array<{ name: string; role?: string; organisation?: string }>
+}> = [
+  {
+    title: 'Nigeria Lex Pilot 2026 — Lagos Launch Briefing',
+    slug: 'nigeria-lex-pilot-2026-lagos-launch-briefing',
+    eventDate: '2026-11-17T10:00:00.000Z',
+    venue: 'Lagos, Nigeria — venue to be confirmed',
+    paragraphs: [
+      "A presentation of initial findings from the Nigeria Lex Pilot Study 2026, proposed for the week commencing 16 November 2026 in Lagos, subject to research progress. Details of the venue and programme will be confirmed closer to the date.",
+    ],
+    speakers: [{ name: 'Paul Onifade', role: 'Founder & Editor-in-Chief', organisation: 'Nigeria Lex' }],
+  },
+]
+
+/**
+ * A single hidden demo Firm + Lawyer pair, kept in "Pilot 2026" status so
+ * the public `read` access rule on Firms (researchStatus === 'published')
+ * excludes it from the live site entirely. This exists only so Nigeria Lex
+ * staff can see the Firms/Lawyers admin UI populated with a realistic
+ * example while real research is still in progress — it must never be
+ * switched to "Published", since it is not a real firm.
+ */
+const DEMO_FIRM = {
+  name: 'Example Research Profile (Sample — Do Not Publish)',
+  slug: 'example-research-profile-sample',
+  overviewParagraphs: [
+    'This is a sample firm research profile, seeded only to demonstrate the Firms admin UI and the public firm-profile page template. It does not describe a real organisation and must never be set to "Published".',
+  ],
+  coreCapabilities: ['Sample capability one', 'Sample capability two'],
+  representativeExperience: [{ description: 'Sample representative matter entry.', year: 2026 }],
+}
+
+const DEMO_LAWYER = {
+  name: 'Jordan Example (Sample — Do Not Publish)',
+  slug: 'jordan-example-sample',
+  title: 'Partner (sample entry)',
+  biographyParagraphs: [
+    'This is a sample lawyer profile linked to the sample firm, seeded only to demonstrate the Lawyers admin UI. It does not describe a real person.',
+  ],
+}
+
 async function seed() {
   // Dynamic import, not a static one — payload.config.ts reads
   // process.env at import time, and static imports are hoisted above
@@ -132,7 +213,104 @@ async function seed() {
     await payload.updateGlobal({ slug, data: current as any })
   }
 
-  payload.logger.info('Seed complete. Legal pages are marked "Draft placeholder" — review before launch.')
+  // Attach the first admin user as author, if one exists, so seeded
+  // Intelligence items don't sit with an empty author field.
+  const firstUser = await payload.find({ collection: 'users', limit: 1 })
+  const authorId = firstUser.docs[0]?.id
+
+  payload.logger.info('Seeding Intelligence…')
+  for (const item of SAMPLE_INTELLIGENCE) {
+    const existing = await payload.find({
+      collection: 'intelligence',
+      where: { slug: { equals: item.slug } },
+      limit: 1,
+    })
+
+    const data = {
+      title: item.title,
+      slug: item.slug,
+      category: item.category as any,
+      summary: item.summary,
+      content: paragraphsToLexical(item.paragraphs),
+      publishedAt: new Date().toISOString(),
+      isSubscriberOnly: item.isSubscriberOnly ?? false,
+      ...(authorId ? { author: authorId } : {}),
+    }
+
+    if (existing.docs[0]) {
+      await payload.update({ collection: 'intelligence', id: existing.docs[0].id, data })
+    } else {
+      await payload.create({ collection: 'intelligence', data })
+    }
+  }
+
+  payload.logger.info('Seeding Events…')
+  for (const event of SAMPLE_EVENTS) {
+    const existing = await payload.find({
+      collection: 'events',
+      where: { slug: { equals: event.slug } },
+      limit: 1,
+    })
+
+    const data = {
+      title: event.title,
+      slug: event.slug,
+      eventDate: event.eventDate,
+      venue: event.venue,
+      description: paragraphsToLexical(event.paragraphs),
+      speakers: event.speakers,
+    }
+
+    if (existing.docs[0]) {
+      await payload.update({ collection: 'events', id: existing.docs[0].id, data })
+    } else {
+      await payload.create({ collection: 'events', data })
+    }
+  }
+
+  payload.logger.info('Seeding hidden demo Firm + Lawyer (Pilot 2026 status — not publicly visible)…')
+  const existingFirm = await payload.find({
+    collection: 'firms',
+    where: { slug: { equals: DEMO_FIRM.slug } },
+    limit: 1,
+  })
+
+  const firmData = {
+    name: DEMO_FIRM.name,
+    slug: DEMO_FIRM.slug,
+    overview: paragraphsToLexical(DEMO_FIRM.overviewParagraphs),
+    coreCapabilities: DEMO_FIRM.coreCapabilities.map((capability) => ({ capability })),
+    representativeExperience: DEMO_FIRM.representativeExperience,
+    researchStatus: 'pilot_2026' as const,
+  }
+
+  const firmDoc = existingFirm.docs[0]
+    ? await payload.update({ collection: 'firms', id: existingFirm.docs[0].id, data: firmData })
+    : await payload.create({ collection: 'firms', data: firmData })
+
+  const existingLawyer = await payload.find({
+    collection: 'lawyers',
+    where: { slug: { equals: DEMO_LAWYER.slug } },
+    limit: 1,
+  })
+
+  const lawyerData = {
+    name: DEMO_LAWYER.name,
+    slug: DEMO_LAWYER.slug,
+    title: DEMO_LAWYER.title,
+    biography: paragraphsToLexical(DEMO_LAWYER.biographyParagraphs),
+    firm: firmDoc.id,
+  }
+
+  if (existingLawyer.docs[0]) {
+    await payload.update({ collection: 'lawyers', id: existingLawyer.docs[0].id, data: lawyerData })
+  } else {
+    await payload.create({ collection: 'lawyers', data: lawyerData })
+  }
+
+  payload.logger.info(
+    'Seed complete. Legal pages are marked "Draft placeholder" — review before launch. The demo firm/lawyer are hidden from the public site (Pilot 2026 status) — do not switch to Published.',
+  )
   process.exit(0)
 }
 

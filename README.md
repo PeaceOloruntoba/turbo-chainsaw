@@ -102,6 +102,18 @@ S3-compatible bucket.
   About, Research, Pilot 2026) as real, editable documents in `/admin`,
   rather than leaving editors looking at blank forms the first time they
   open one.
+- Publishes two starter Intelligence items (a "Welcome to Nigeria Lex"
+  briefing and a Pilot Study 2026 announcement) so the Intelligence page
+  isn't empty, and one starter Event for the proposed Lagos launch
+  briefing.
+- Seeds **one demo Firm and Lawyer, kept in "Pilot 2026" status** —
+  deliberately **not** "Published", so the public `read` access rule on
+  Firms excludes it and it never appears on the live site. This exists
+  only so you can see the Firms/Lawyers admin UI populated with a
+  realistic example while real research is in progress. Its name is
+  prefixed "(Sample — Do Not Publish)" for exactly this reason — **do not
+  switch its status to Published**, and delete it once you've entered real
+  firm research.
 - Safe to re-run — it updates existing documents by slug instead of
   duplicating them.
 
@@ -224,6 +236,17 @@ if you add custom build config later.
 
 For ongoing hygiene: run `npm outdated` periodically, and prefer bumping
 `@payloadcms/*` packages together rather than one at a time.
+
+**Blank `/admin` page, no visible browser error** — check your Vercel
+**Runtime Logs** (not build logs). If you see
+`getFromImportMap: PayloadComponent not found in importMap`, it means
+`src/app/(payload)/admin/importMap.js` is out of date. This project uses
+`@payloadcms/storage-s3`, which registers its own admin UI component
+(`S3ClientUploadHandler`) — an empty import map doesn't cover that, and the
+whole admin panel fails to render with no client-side error. Fix: run
+`npm run generate:importmap` locally, commit the regenerated
+`importMap.js`, and redeploy. Do this again any time you add a plugin or
+custom component that touches the admin UI.
 
 ## Ownership & accounts
 
