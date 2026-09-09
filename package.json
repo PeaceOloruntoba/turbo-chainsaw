@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "description": "Nigeria Lex — Legal Market Intelligence for Informed Decisions",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "payload": "payload",
-    "generate:types": "payload generate:types",
-    "generate:importmap": "payload generate:importmap",
+    "postinstall": "node scripts/patch-payload-loadenv.mjs",
+    "payload": "dotenv -e .env -- payload",
+    "generate:types": "dotenv -e .env -- payload generate:types",
+    "generate:importmap": "dotenv -e .env -- payload generate:importmap",
     "seed": "dotenv -e .env -- tsx src/seed/index.ts"
   },
   "dependencies": {

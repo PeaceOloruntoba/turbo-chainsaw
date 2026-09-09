@@ -18,29 +18,70 @@ export const ResearchContent: GlobalConfig = {
   },
   fields: [
     {
+      name: 'tagline',
+      type: 'text',
+      defaultValue: 'Evidence before reputation',
+    },
+    {
       name: 'methodologyText',
       type: 'textarea',
       required: true,
       defaultValue:
-        'Nigeria Lex research is evidence-led. We assess firms and practitioners against a consistent set of criteria, verify our findings independently, and subject every conclusion to editorial review before publication.',
+        "Nigeria Lex seeks to provide an independent assessment of Nigeria's corporate legal market based upon research rather than reputation alone. Our research considers evidence of demonstrated capability, significant work, practitioner expertise, market experience and other relevant indicators.",
+    },
+    {
+      name: 'howWeResearch',
+      type: 'array',
+      label: 'How We Research (source list)',
+      defaultValue: [
+        { item: 'Submissions from participating law firms' },
+        { item: 'Significant and representative transactions' },
+        { item: 'Publicly available transaction and regulatory information' },
+        { item: 'Independent market research' },
+        { item: 'Interviews with practitioners' },
+        { item: 'Consultation with clients and users of legal services' },
+        { item: 'Sector and practice-area analysis' },
+        { item: 'Peer and market feedback' },
+        { item: 'Verification of submitted information where practicable' },
+      ],
+      fields: [{ name: 'item', type: 'text', required: true }],
+    },
+    {
+      name: 'noSingleFactorText',
+      type: 'text',
+      defaultValue: 'No single factor determines a Nigeria Lex assessment.',
     },
     {
       name: 'criteria',
+      label: 'What We Assess',
       type: 'array',
       defaultValue: [
-        { label: 'Experience' },
-        { label: 'Expertise' },
-        { label: 'Significant transactions' },
-        { label: 'Practitioner capability' },
-        { label: 'Sector knowledge' },
-        { label: 'Cross-border experience' },
-        { label: 'Market evidence' },
-        { label: 'Client / market feedback' },
+        { label: 'Experience', detail: 'The nature, complexity and significance of work undertaken.' },
+        { label: 'Expertise', detail: 'Demonstrated specialist capability within a practice area or sector.' },
+        { label: 'Practitioners', detail: 'Depth and quality of relevant practitioner experience.' },
+        {
+          label: 'Clients and Markets',
+          detail: 'Experience advising sophisticated domestic and international clients.',
+        },
+        {
+          label: 'Transactions',
+          detail: 'Participation in significant or representative transactions and mandates.',
+        },
+        { label: 'Sector Knowledge', detail: 'Evidence of sustained expertise within relevant industries.' },
+        {
+          label: 'Cross-Border Capability',
+          detail: 'Experience involving international clients, counterparties, advisers and transactions.',
+        },
+        { label: 'Market Evidence', detail: 'Information obtained through independent consultation and research.' },
       ],
-      fields: [{ name: 'label', type: 'text', required: true }],
+      fields: [
+        { name: 'label', type: 'text', required: true },
+        { name: 'detail', type: 'textarea', required: true },
+      ],
     },
     {
       name: 'process',
+      label: 'Research Process (internal stages)',
       type: 'array',
       defaultValue: [
         { step: 'Research', detail: 'Gathering evidence on firms, practitioners, transactions and sector activity.' },
@@ -58,7 +99,15 @@ export const ResearchContent: GlobalConfig = {
       name: 'researchIndependenceText',
       type: 'textarea',
       required: true,
-      defaultValue: 'Participation and recognition in Nigeria Lex research are not conditional upon payment.',
+      defaultValue:
+        "Participation in Nigeria Lex research is free. A firm's decision whether to advertise, sponsor an event, subscribe to Nigeria Lex Intelligence or enter into another commercial relationship with Nigeria Lex has no bearing upon its assessment, inclusion or recognition.",
+    },
+    {
+      name: 'correctionsText',
+      label: 'Corrections and Review',
+      type: 'textarea',
+      defaultValue:
+        'Nigeria Lex seeks accuracy and fairness. Firms and practitioners may bring factual inaccuracies to our attention. Requests for correction will be considered where supported by appropriate evidence. A request for review does not guarantee alteration of an editorial assessment.',
     },
     {
       name: 'participateIntro',

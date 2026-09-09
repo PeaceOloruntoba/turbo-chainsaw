@@ -18,18 +18,23 @@ export const AboutContent: GlobalConfig = {
   },
   fields: [
     {
+      name: 'tagline',
+      type: 'text',
+      defaultValue: "Better information about Nigeria's legal market",
+    },
+    {
       name: 'whoWeAre',
       type: 'textarea',
       required: true,
       defaultValue:
-        "Nigeria Lex is an independent, research-led legal market intelligence platform established to improve the quality, accessibility and international visibility of information about Nigeria's corporate legal market.",
+        "Nigeria has one of Africa's largest and most sophisticated legal markets. Yet reliable, independently researched information about the capabilities and experience of its corporate law firms and practitioners can be difficult to obtain, particularly for organisations entering the market or instructing Nigerian counsel for the first time.\n\nNigeria Lex was established to address that information gap.\n\nWe research and analyse the Nigerian corporate legal market to provide independent insight into firms, practitioners, transactions, sectors and emerging areas of legal expertise.",
     },
     {
       name: 'purpose',
       type: 'textarea',
       required: true,
       defaultValue:
-        "Institutional users of Nigerian legal services — investors, financial institutions, development finance institutions, multinational corporations and international law firms among them — often make decisions about Nigerian legal counsel without access to independent, evidence-led information. Nigeria Lex exists to close that information gap: combining legal-market knowledge, rigorous research and market intelligence so that institutional users can make better-informed decisions about who they instruct and why.",
+        'Our purpose is not simply to identify prominent names. We seek to understand where demonstrable capability exists, how that capability has been developed, and where particular expertise may be found.',
     },
     {
       name: 'leadership',
@@ -41,7 +46,7 @@ export const AboutContent: GlobalConfig = {
           name: 'biography',
           type: 'textarea',
           defaultValue:
-            'A full professional biography for Paul Onifade will be published here shortly.',
+            'Nigeria Lex was conceived by Paul Onifade, Solicitor Advocate of the Senior Courts of England and Wales, who serves as its Founder and Editor-in-Chief.',
         },
       ],
     },
@@ -49,14 +54,14 @@ export const AboutContent: GlobalConfig = {
       name: 'ownershipText',
       type: 'textarea',
       required: true,
-      defaultValue: 'Nigeria Lex is an initiative of Kaye & Crowther Limited.',
+      defaultValue: 'Nigeria Lex is promoted and published by Kaye & Crowther Limited.',
     },
     {
       name: 'researchPartnerText',
       type: 'textarea',
       required: true,
       defaultValue:
-        "SBM Intelligence acts as Nigeria Lex's Strategic Research & Intelligence Partner, contributing research and data expertise to the Nigeria Lex methodology. A fuller description of this partnership will be published following execution of the collaboration agreement.",
+        'Strategic Research & Intelligence Partner: SBM Intelligence — an Africa-focused market intelligence, security intelligence, and strategic consulting firm. It is a leading provider of strategic research and analysis, delivering actionable insights into the socio-political, economic, security, and business environments across West Africa through evidence-based research, data analytics, and practical policy recommendations.',
     },
   ],
 }

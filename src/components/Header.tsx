@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getPayloadClient } from '@/lib/payload'
+import { MobileNav } from './MobileNav'
 
 const NAV_ITEMS = [
   { label: 'About', href: '/about' },
@@ -33,14 +34,14 @@ export async function Header() {
               admin-uploaded SVG/PNG of arbitrary aspect ratio; next/image's SVG
               handling and fixed sizing add friction here for little benefit. */}
           <img
-            src={logoUrl || '/logo-lockup.svg'}
-            alt={logoUrl ? siteName : `${siteName} — placeholder logo, pending final brand assets`}
-            className="h-10 w-auto"
+            src={logoUrl || '/logo-lockup.png'}
+            alt={logoUrl ? siteName : `${siteName} logo`}
+            className="h-12 w-auto"
           />
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">
-          <ul className="flex items-center gap-7 text-[13px] font-medium tracking-[0.04em] text-navy-ink">
+          <ul className="flex items-center gap-8 text-[13px] font-medium tracking-[0.04em] text-navy-ink">
             {NAV_ITEMS.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="uppercase transition-colors hover:text-green">
@@ -51,26 +52,16 @@ export async function Header() {
           </ul>
         </nav>
 
-        <Link
-          href="/subscribe"
-          className="whitespace-nowrap rounded-sm bg-green px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep"
-        >
-          Subscribe
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/subscribe"
+            className="hidden whitespace-nowrap rounded-sm bg-green px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep lg:inline-block"
+          >
+            Subscribe
+          </Link>
+          <MobileNav />
+        </div>
       </div>
-
-      {/* Mobile nav: simple wrapped list, no JS menu required for Phase 1 */}
-      <nav aria-label="Primary mobile" className="border-t border-line lg:hidden">
-        <ul className="container flex flex-wrap gap-x-5 gap-y-2 py-3 text-[12px] font-medium uppercase tracking-[0.04em] text-navy-ink">
-          {NAV_ITEMS.map((item) => (
-            <li key={item.href}>
-              <Link href={item.href} className="hover:text-green">
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
     </header>
   )
 }

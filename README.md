@@ -35,14 +35,26 @@ Public routes: `/`, `/about`, `/research`, `/firms`, `/firms/[slug]`,
 
 Admin panel: `/admin`.
 
-## Placeholder logo
+## Logo & brand assets
 
-No final logo has been supplied yet. `public/logo-lockup.svg` and
-`public/logo-mark.svg` are simple placeholder marks (navy field, green arc
-accent, "NL" monogram) in the brief's colour palette, used automatically
-until a real logo is uploaded. Once you have the approved Logo No. 2, upload
-it in `/admin` under **Site Configuration → Site Settings → Logo** — the
-header and footer pick it up immediately, no code change needed.
+The real, client-approved Nigeria Lex logo is in place, cropped from the
+supplied source file into the variants the site needs:
+
+- `public/logo-lockup.png` — icon + wordmark, used in the header
+- `public/logo-mark.png` / `public/logo-mark-512.png` — icon only
+- `public/logo-full.png` — icon + wordmark + tagline, used as the default
+  Open Graph / social share image
+- `src/app/icon.png` (32×32) and `src/app/apple-icon.png` (180×180) — favicon
+  and mobile home-screen icon, via Next.js's automatic file convention
+
+All were auto-cropped with a simple brightness-threshold transparency cutout
+(near-white → transparent), which is good enough for web use but not
+pixel-perfect at the edges. If Nigeria Lex's designer can supply the
+original vector/source file with true transparency, swap these files for
+higher-quality versions — no code changes needed, just replace the files at
+the same paths (or upload a replacement in `/admin` under **Site
+Configuration → Site Settings → Logo**, which overrides `logo-lockup.png`
+without touching the repo).
 
 ## Local development
 
@@ -256,42 +268,86 @@ For ongoing hygiene: run `npm outdated` periodically, and prefer bumping
 **Blank `/admin` page, no visible browser error** — check your Vercel
 **Runtime Logs** (not build logs). If you see
 `getFromImportMap: PayloadComponent not found in importMap`, it means
-`src/app/(payload)/admin/importMap.js` is out of date. This project uses
-`@payloadcms/storage-s3`, which registers its own admin UI component
-(`S3ClientUploadHandler`) — an empty import map doesn't cover that, and the
-whole admin panel fails to render with no client-side error. Fix: run
-`npm run generate:importmap` locally, commit the regenerated
-`importMap.js`, and redeploy. Do this again any time you add a plugin or
-custom component that touches the admin UI.
+`src/app/(payload)/admin/importMap.js` is out of date. Run
+`npm run generate:importmap` locally, commit the regenerated file, and
+redeploy. Do this again any time you add a plugin or custom component that
+touches the admin UI (uploads, rich-text editor features, etc. all register
+their own admin components here). Note: on some Windows + Node 22+
+combinations, `payload generate:importmap` can fail with
+`ERR_REQUIRE_ASYNC_MODULE` — this is an open upstream Payload bug
+([payloadcms/payload#16378](https://github.com/payloadcms/payload/issues/16378)).
+If you hit that, running the same command under Node 20 LTS (`nvm use
+20`) has resolved it in practice.
+
+## Project status against the brief
+
+**Done:**
+
+- **Phase 1 (Design) and Phase 2 (Initial Website)** — Home, About, Research,
+  Firms & Lawyers (placeholder), Intelligence, Pilot 2026, Events, Contact,
+  Subscribe, and all six footer legal pages are built and live.
+- **Real brand assets** — the client-supplied logo is cropped, wired into
+  the header, footer, and favicon (see "Logo & brand assets" above), in the
+  brief's exact navy `#0A192F` / green `#005A36` / off-white `#F8FAFC`
+  palette.
+- **Real site copy** — every page's text now matches the client-approved
+  web content brief (`NIGERIA_LEX_Webcontent.docx`), not placeholder text,
+  including the updated tagline, the five "What We Do" pillars, the fuller
+  Research criteria/methodology, and real leadership/ownership/partner
+  copy. Applied via `npm run seed`, which is safe to re-run.
+- **Fully CMS-editable** — every collection and global (Site Settings,
+  Home/About/Research/Pilot 2026 content, Legal Pages, Firms, Lawyers,
+  Intelligence, Events) is editable in `/admin` with no code changes
+  needed, and edits go live within seconds via on-demand revalidation (see
+  "Live content updates" above) — not just at the next deploy.
+- **Firm profiles** now render all seven sections the brief specifies
+  (§9): Overview, Core Capabilities, Representative Experience, Key
+  Practitioners (linked Lawyers), Sector Strengths, Cross-Border
+  Experience, Nigeria Lex Analysis.
+- **Mobile responsive**, including a real hamburger menu on small screens
+  (`MobileNav.tsx`), not just a wrapped list.
+- **SEO**: per-page metadata, Open Graph + Twitter card images, a
+  JSON-LD Organization schema, an auto-generated `/sitemap.xml` (including
+  every published Firm and Intelligence article) and `/robots.txt`
+  disallowing `/admin` and `/api`.
+- **Visual design pass**: reworked type scale, spacing rhythm, and the
+  homepage hero/pillar treatment to move away from generic
+  hairline-rule/eyebrow-label patterns, applied to the Header, Home, About,
+  and Research pages.
+
+**Deferred, per the brief's own quotation structure (§19) or flagged as a
+real gap worth knowing about:**
+
+- **Phase 3 — Research Database**: the schema for a searchable, filterable
+  Firms & Lawyers database is fully built, but the public filter controls
+  (Firm/Lawyer/Practice Area/Sector/Location) stay inert until there's
+  enough published research to filter meaningfully — matching the brief's
+  "Research in progress" instruction (§8, §20). Individual lawyer profile
+  pages (`/lawyers/[slug]`) also aren't built yet, so Key Practitioners on
+  a firm page currently render as plain text, not links.
+- **Phase 4 — Future Subscription Capability**: the `isSubscriberOnly` flag
+  and gating UI exist, but there's no real subscriber login — every
+  visitor sees the same "subscribe to read this" message regardless of
+  subscription status.
+- **Real legal copy**: Legal Pages are seeded with generic, clearly-marked
+  "Draft placeholder" text — not reviewed by counsel, must be finalised
+  before launch.
+- **Visual design pass isn't sitewide yet** — Header, Home, About, and
+  Research got the refined type/spacing treatment described above; Pilot
+  2026, Events, Contact, Firms, Intelligence, and Subscribe still use the
+  earlier, plainer styling and would benefit from the same pass.
+- **No real email sending** — Subscribers are captured to the database
+  only; there's no welcome email, newsletter delivery, or staff
+  password-reset email yet (see the email-adapter warning in your server
+  logs). Needs `@payloadcms/email-resend` or similar wired in when ready.
+- **SiteSettings favicon field** isn't actually wired to the live favicon
+  yet (it comes from `src/app/icon.png` instead) — see the field's admin
+  description for detail.
+- **Per-page canonical URLs** are set on Home, About, and Research; the
+  remaining pages don't have one yet (low-priority SEO polish, not a bug).
 
 ## Ownership & accounts
 
 Per the design brief, the domain, hosting account, Supabase project, S3
 bucket, and admin credentials should be registered under Kaye & Crowther
 Limited / Nigeria Lex accounts, not the developer's personal accounts.
-
-## Phase status
-
-**Phase 1 (Design) and Phase 2 (Initial Website — About, Research,
-Intelligence, Pilot, Events, Contact, Subscribe) are complete**, and the CMS
-is fully wired: every piece of on-page copy, the logo, contact details, and
-all legal pages are editable from `/admin` with no code changes required.
-Placeholder content (logo, hero copy, legal text) is in place throughout and
-clearly identifiable as placeholder — see "Placeholder logo" above and the
-draft-status banner on legal pages.
-
-**Deferred to later phases, per the brief's quotation structure (§19):**
-
-- **Phase 3 — Research Database:** the schema for a searchable, filterable
-  Firms & Lawyers database is fully built (`Firms.ts`, `Lawyers.ts`, and the
-  individual firm profile page at `/firms/[slug]`), but the public filter
-  controls (by Firm/Lawyer/Practice Area/Sector/Location) are shown inert
-  until there's enough published research to filter meaningfully, matching
-  the brief's "Research in progress" placeholder instruction (§8, §20).
-- **Phase 4 — Future Subscription Capability:** the `isSubscriberOnly` flag
-  and gating UI on Intelligence items exist now; enforcing that against a
-  real subscriber login/paywall is Phase 4 work.
-- **Real legal copy:** Legal Pages ship seeded with generic, clearly-marked
-  draft placeholder text (see `npm run seed`) so the pages aren't empty —
-  but this has not been reviewed by counsel and must be finalised before
-  launch.

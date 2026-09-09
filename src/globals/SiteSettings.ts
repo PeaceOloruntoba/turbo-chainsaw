@@ -29,14 +29,17 @@ export const SiteSettings: GlobalConfig = {
       relationTo: 'media',
       admin: {
         description:
-          'Header logo (horizontal lockup preferred). Falls back to the placeholder mark until set.',
+          'Header logo. Falls back to the approved Nigeria Lex logo already in the codebase (public/logo-lockup.png) until you upload a different file here — e.g. a higher-resolution or alternate version.',
       },
     },
     {
       name: 'favicon',
       type: 'upload',
       relationTo: 'media',
-      admin: { description: 'Square icon used for the browser tab / favicon.' },
+      admin: {
+        description:
+          'Not yet wired to the live site — the actual browser favicon currently comes from src/app/icon.png (already set to the real Nigeria Lex mark). Uploading here has no effect yet; kept as a placeholder field for when dynamic favicon support is added.',
+      },
     },
     { name: 'siteName', type: 'text', required: true, defaultValue: 'Nigeria Lex' },
     {
@@ -50,7 +53,7 @@ export const SiteSettings: GlobalConfig = {
       type: 'textarea',
       required: true,
       defaultValue:
-        'Nigeria Lex does not charge law firms or practitioners for consideration, inclusion or recognition in its research. Sponsorship, subscriptions and other commercial relationships do not determine research outcomes.',
+        'Law firms and practitioners do not pay to be considered, included or recognised by Nigeria Lex. Sponsorship, advertising, subscriptions and other commercial relationships are kept separate from the research and editorial process and do not determine research outcomes.',
       admin: {
         description: 'Shown on the Homepage and Research page independence banner.',
       },

@@ -1,4 +1,19 @@
 import type { CollectionConfig } from 'payload'
+import { safeRevalidatePath } from '../utilities/revalidate'
+
+async function revalidateRelatedFirm({ doc, req }: { doc: any; req: any }) {
+  const firmRef = doc?.firm
+  if (!firmRef) return doc
+  try {
+    const firmId = typeof firmRef === 'object' ? firmRef.id : firmRef
+    const firm = await req.payload.findByID({ collection: 'firms', id: firmId })
+    if (firm?.slug) safeRevalidatePath(`/firms/${firm.slug}`)
+  } catch {
+    // Firm may have been deleted, or this is running outside a request
+    // context (e.g. the seed script) — nothing to revalidate either way.
+  }
+  return doc
+}
 
 export const Lawyers: CollectionConfig = {
   slug: 'lawyers',
@@ -6,6 +21,10 @@ export const Lawyers: CollectionConfig = {
     useAsTitle: 'name',
     defaultColumns: ['name', 'firm', 'title', 'updatedAt'],
     group: 'Research',
+  },
+  hooks: {
+    afterChange: [revalidateRelatedFirm],
+    afterDelete: [revalidateRelatedFirm],
   },
   access: {
     read: () => true,
@@ -39,12 +58,12 @@ export const Lawyers: CollectionConfig = {
         'Banking & Finance',
         'Capital Markets',
         'Corporate & M&A',
-        'Private Equity',
+        'Private Equity & Venture Capital',
         'Energy & Natural Resources',
         'Power & Infrastructure',
         'Projects & Project Finance',
         'Technology, Media & Telecommunications',
-        'Competition',
+        'Competition & Antitrust',
         'Tax',
         'Employment',
         'Intellectual Property',

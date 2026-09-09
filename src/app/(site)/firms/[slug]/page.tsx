@@ -14,6 +14,21 @@ async function getFirm(slug: string) {
   return result.docs[0] ?? null
 }
 
+async function getLawyersForFirm(firmId: string) {
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'lawyers',
+      where: { firm: { equals: firmId } },
+      limit: 50,
+      depth: 0,
+    })
+    return result.docs
+  } catch {
+    return []
+  }
+}
+
 export async function generateMetadata({ params }: Args) {
   const { slug } = await params
   const firm = await getFirm(slug)
@@ -24,6 +39,8 @@ export default async function FirmProfilePage({ params }: Args) {
   const { slug } = await params
   const firm = await getFirm(slug)
   if (!firm) notFound()
+
+  const lawyers = await getLawyersForFirm(firm.id)
 
   return (
     <div className="container max-w-3xl py-16 md:py-20">
@@ -62,6 +79,48 @@ export default async function FirmProfilePage({ params }: Args) {
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {lawyers.length > 0 && (
+        <section className="mt-10 border-t border-line pt-10">
+          <h2 className="font-serif text-xl text-navy">Key Practitioners</h2>
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+            {lawyers.map((lawyer: any) => (
+              <li key={lawyer.id}>
+                {/* Individual lawyer profile pages aren't built yet (see
+                    README — Firms & Lawyers directory is Phase 3), so this
+                    is plain text rather than a link for now. */}
+                <p className="text-[15px] font-medium text-navy">{lawyer.name}</p>
+                {lawyer.title && <p className="text-[13px] text-slate">{lawyer.title}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {firm.sectorStrengths?.length > 0 && (
+        <section className="mt-10 border-t border-line pt-10">
+          <h2 className="font-serif text-xl text-navy">Sector Strengths</h2>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {firm.sectorStrengths.map((item: any, i: number) => (
+              <li
+                key={i}
+                className="rounded-sm border border-line px-3 py-1.5 text-[13px] text-navy-ink"
+              >
+                {item.sector}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {firm.crossBorderExperience && (
+        <section className="mt-10 border-t border-line pt-10">
+          <h2 className="font-serif text-xl text-navy">Cross-Border Experience</h2>
+          <div className="prose prose-sm mt-4 max-w-none">
+            <RichText data={firm.crossBorderExperience} />
+          </div>
         </section>
       )}
 

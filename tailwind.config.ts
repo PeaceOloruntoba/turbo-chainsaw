@@ -33,6 +33,8 @@ const config: Config = {
           deep: '#003D25',
         },
         paper: '#F8FAFC',
+        mist: '#EEF2F6',
+        'navy-tint': '#E7ECF3',
         line: '#D9E0E8',
         slate: '#55647A',
       },

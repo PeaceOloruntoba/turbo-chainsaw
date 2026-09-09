@@ -51,6 +51,8 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
+  // Direct Postgres connection to Supabase. Supabase Auth and Edge Functions
+  // are deliberately not used — Payload owns auth and the schema directly.
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI,
