@@ -14,7 +14,7 @@ async function getFirm(slug: string) {
   return result.docs[0] ?? null
 }
 
-async function getLawyersForFirm(firmId: string) {
+async function getLawyersForFirm(firmId: string | number) {
   try {
     const payload = await getPayloadClient()
     const result = await payload.find({

@@ -12,7 +12,7 @@ export const Users: CollectionConfig = {
     tokenExpiration: 60 * 60 * 8, // 8 hours
     cookies: {
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'Lax',
     },
   },
   admin: {
