@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getPayloadClient } from '@/lib/payload'
+import { absoluteUrl, truncate } from '@/lib/seo'
 
 type Args = { params: Promise<{ slug: string }> }
 
@@ -16,10 +18,32 @@ async function getArticle(slug: string) {
   return result.docs[0] ?? null
 }
 
-export async function generateMetadata({ params }: Args) {
+export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const article = await getArticle(slug)
-  return { title: article ? article.title : 'Not found' }
+  if (!article) return { title: 'Not found' }
+
+  const description = truncate(article.summary, 160)
+  const url = absoluteUrl(`/intelligence/${article.slug}`)
+
+  return {
+    title: article.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      title: article.title,
+      description,
+      url,
+      publishedTime: article.publishedAt || undefined,
+      section: article.category || undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description,
+    },
+  }
 }
 
 export default async function IntelligenceArticlePage({ params }: Args) {
@@ -32,8 +56,47 @@ export default async function IntelligenceArticlePage({ params }: Args) {
   // is part of Phase 4 — "Future Subscription Capability" in the brief.
   const isGated = article.isSubscriberOnly
 
+  const articleUrl = absoluteUrl(`/intelligence/${article.slug}`)
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.summary,
+    url: articleUrl,
+    mainEntityOfPage: articleUrl,
+    datePublished: article.publishedAt || undefined,
+    dateModified: article.updatedAt || article.publishedAt || undefined,
+    articleSection: article.category || undefined,
+    isAccessibleForFree: !isGated,
+    author: { '@type': 'Organization', name: 'Nigeria Lex' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Nigeria Lex',
+      logo: { '@type': 'ImageObject', url: absoluteUrl('/logo-mark-512.png') },
+    },
+  }
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
+      { '@type': 'ListItem', position: 2, name: 'Intelligence', item: absoluteUrl('/intelligence') },
+      { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
+    ],
+  }
+
   return (
     <article className="container max-w-2xl py-16 md:py-20">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
         {article.category}
       </p>

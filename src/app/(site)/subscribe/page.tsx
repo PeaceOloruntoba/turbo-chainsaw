@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Subscribe',
   description:
     'Receive Nigeria Lex research, market intelligence, reports and invitations to briefings and roundtables.',
+  alternates: { canonical: '/subscribe' },
 }
 
 export default function SubscribePage() {

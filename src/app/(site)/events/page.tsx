@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Events',
   description:
     'Nigeria Lex Roundtables, investor briefings, general counsel briefings, sector forums and research presentations.',
+  alternates: { canonical: '/events' },
 }
 
 async function getUpcomingEvents() {

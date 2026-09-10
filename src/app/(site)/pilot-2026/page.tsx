@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: 'Pilot 2026',
   description:
     'The Nigeria Lex Pilot Study 2026 tests and refines the Nigeria Lex research methodology through engagement with law firms, practitioners, investors and institutional users.',
+  alternates: { canonical: '/pilot-2026' },
 }
 
 const FALLBACK_TIMELINE = [

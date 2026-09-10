@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getPayloadClient } from '@/lib/payload'
+import { absoluteUrl, truncate } from '@/lib/seo'
 
 type Args = { params: Promise<{ slug: string }> }
 
@@ -29,10 +31,31 @@ async function getLawyersForFirm(firmId: string | number) {
   }
 }
 
-export async function generateMetadata({ params }: Args) {
+export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const firm = await getFirm(slug)
-  return { title: firm ? firm.name : 'Firm not found' }
+  if (!firm) return { title: 'Firm not found' }
+
+  const sectorList = firm.sectorStrengths
+    ?.map((item: any) => item.sector)
+    .filter(Boolean)
+    .slice(0, 4)
+    .join(', ')
+  const description = truncate(
+    sectorList
+      ? `Independent Nigeria Lex research profile of ${firm.name}, covering capabilities, representative experience and sector strengths including ${sectorList}.`
+      : `Independent Nigeria Lex research profile of ${firm.name}, a Nigerian corporate law firm.`,
+    160,
+  )
+  const url = absoluteUrl(`/firms/${firm.slug}`)
+
+  return {
+    title: firm.name,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: 'profile', title: `${firm.name} | Nigeria Lex`, description, url },
+    twitter: { card: 'summary_large_image', title: firm.name, description },
+  }
 }
 
 export default async function FirmProfilePage({ params }: Args) {
@@ -41,9 +64,37 @@ export default async function FirmProfilePage({ params }: Args) {
   if (!firm) notFound()
 
   const lawyers = await getLawyersForFirm(firm.id)
+  const firmUrl = absoluteUrl(`/firms/${firm.slug}`)
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LegalService',
+    name: firm.name,
+    url: firmUrl,
+    areaServed: 'NG',
+    knowsAbout: firm.sectorStrengths?.map((item: any) => item.sector).filter(Boolean),
+  }
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
+      { '@type': 'ListItem', position: 2, name: 'Firms & Lawyers', item: absoluteUrl('/firms') },
+      { '@type': 'ListItem', position: 3, name: firm.name, item: firmUrl },
+    ],
+  }
 
   return (
     <div className="container max-w-3xl py-16 md:py-20">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
         Firm Research Profile
       </p>

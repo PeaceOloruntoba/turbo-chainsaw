@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Firms & Lawyers',
   description:
     'Independent, evidence-led research profiles of Nigerian corporate law firms and practitioners.',
+  alternates: { canonical: '/firms' },
 }
 
 const FILTERS = ['Firm', 'Lawyer', 'Practice Area', 'Sector', 'Location']

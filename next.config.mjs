@@ -22,6 +22,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: process.env.NEXT_PUBLIC_MEDIA_HOSTNAME || 'localhost',
       },
+      // Placeholder hero imagery (see homepage hero) — swap for the S3/CDN
+      // host above once a real photo is uploaded through Payload.
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
 }

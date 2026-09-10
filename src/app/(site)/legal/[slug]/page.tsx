@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getPayloadClient } from '@/lib/payload'
+import { absoluteUrl } from '@/lib/seo'
 
 const VALID_SLUGS = [
   'privacy-policy',
@@ -28,10 +30,19 @@ async function getLegalPage(slug: string) {
   }
 }
 
-export async function generateMetadata({ params }: Args) {
+export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const page = await getLegalPage(slug)
-  return { title: page?.title || 'Legal' }
+  const isUnreviewed = !page || page.reviewStatus === 'draft_placeholder'
+
+  return {
+    title: page?.title || 'Legal',
+    description: page?.title ? `${page.title} — Nigeria Lex.` : 'Nigeria Lex legal information.',
+    alternates: { canonical: absoluteUrl(`/legal/${slug}`) },
+    // Unreviewed placeholder text shouldn't be indexed until legal counsel
+    // has signed off on it — see the in-page draft notice below.
+    robots: isUnreviewed ? { index: false, follow: true } : { index: true, follow: true },
+  }
 }
 
 export default async function LegalPage({ params }: Args) {

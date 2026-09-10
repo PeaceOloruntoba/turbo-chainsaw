@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Intelligence',
   description:
     'Nigeria Lex Intelligence: articles, market analysis, reports, sector briefings, transaction intelligence, regulatory intelligence and investor briefings.',
+  alternates: { canonical: '/intelligence' },
 }
 
 const CATEGORIES = [

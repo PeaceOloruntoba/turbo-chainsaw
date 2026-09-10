@@ -4,6 +4,7 @@ import { getPayloadClient } from '@/lib/payload'
 export const metadata: Metadata = {
   title: 'Contact',
   description: 'Contact Nigeria Lex — research, editorial, partnerships, events and general enquiries.',
+  alternates: { canonical: '/contact' },
 }
 
 const FALLBACK_DEPARTMENTS = [
