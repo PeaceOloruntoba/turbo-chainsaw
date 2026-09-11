@@ -12,6 +12,23 @@
     font-feature-settings: 'kern' 1, 'liga' 1;
   }
 
+  .site-grid {
+    background-image: linear-gradient(to right, rgba(10, 25, 47, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 25, 47, 0.045) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .hero-grid {
+    background-color: #0a192f;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-green;
+  }
+
   h1,
   h2,
   h3,
@@ -32,6 +49,10 @@
 @layer utilities {
   .rule {
     @apply border-t border-line;
+  }
+
+  .text-balance {
+    text-wrap: balance;
   }
 }
 

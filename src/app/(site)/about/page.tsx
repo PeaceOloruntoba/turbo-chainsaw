@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getPayloadClient } from '@/lib/payload'
+import { PageIntro } from '@/components/PageIntro'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -39,10 +40,9 @@ export default async function AboutPage() {
     "SBM Intelligence acts as Nigeria Lex's Strategic Research & Intelligence Partner."
 
   return (
-    <div className="container max-w-3xl py-16 md:py-20">
-      <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">About</p>
-      <h1 className="mt-2 font-serif text-3xl text-navy md:text-4xl">About Nigeria Lex</h1>
-      <p className="mt-3 font-serif text-lg italic text-slate">{tagline}</p>
+    <>
+      <PageIntro eyebrow="About Nigeria Lex" title="About Nigeria Lex" description={tagline} tone="about" />
+      <div className="container max-w-3xl py-16 md:py-20">
 
       <section className="mt-10">
         <h2 className="font-serif text-xl text-navy">Who We Are</h2>
@@ -74,6 +74,7 @@ export default async function AboutPage() {
           {researchPartnerText}
         </p>
       </section>
-    </div>
+      </div>
+    </>
   )
 }

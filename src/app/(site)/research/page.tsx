@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { IndependenceBanner } from '@/components/IndependenceBanner'
 import { ResearchSubmissionForm } from '@/components/ResearchSubmissionForm'
+import { PageIntro } from '@/components/PageIntro'
 import { getPayloadClient } from '@/lib/payload'
 
 export const metadata: Metadata = {
@@ -76,12 +77,8 @@ export default async function ResearchPage() {
 
   return (
     <>
+      <PageIntro eyebrow="Research" title="Evidence before reputation" description={tagline} tone="research" />
       <div className="container max-w-3xl py-16 md:py-20">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
-          Research
-        </p>
-        <h1 className="mt-2 font-serif text-3xl text-navy md:text-4xl">Our Research</h1>
-        <p className="mt-3 font-serif text-lg italic text-slate">{tagline}</p>
 
         <section id="methodology" className="mt-10 scroll-mt-24">
           <h2 className="font-serif text-xl text-navy">Our Methodology</h2>

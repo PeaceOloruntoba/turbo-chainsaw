@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getPayloadClient } from '@/lib/payload'
+import { PageIntro } from '@/components/PageIntro'
 
 export const metadata: Metadata = {
   title: 'Firms & Lawyers',
@@ -30,13 +31,14 @@ export default async function FirmsPage() {
   const firms = await getPublishedFirms()
 
   return (
-    <div className="container max-w-4xl py-16 md:py-20">
-      <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
-        Firms &amp; Lawyers
-      </p>
-      <h1 className="mt-2 font-serif text-3xl text-navy md:text-4xl">
-        Evidence-led research on Nigeria&rsquo;s corporate law firms and practitioners.
-      </h1>
+    <>
+      <PageIntro
+        eyebrow="Firms & Lawyers"
+        title="Evidence-led research on Nigeria's corporate law firms and practitioners."
+        description="A structured view of capability, experience, sectors and practice areas."
+        tone="firms"
+      />
+      <div className="container max-w-4xl py-16 md:py-20">
 
       {/* Filter architecture: disabled during the pilot, wired up once published
           research volume justifies filtering. Kept visible so the structure of
@@ -81,6 +83,7 @@ export default async function FirmsPage() {
           ))}
         </ul>
       )}
-    </div>
+      </div>
+    </>
   )
 }

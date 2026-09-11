@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getPayloadClient } from '@/lib/payload'
+import { PageIntro } from '@/components/PageIntro'
 
 export const metadata: Metadata = {
   title: 'Intelligence',
@@ -42,13 +43,14 @@ export default async function IntelligencePage({ searchParams }: Args) {
   const items = await getIntelligence(category)
 
   return (
-    <div className="container max-w-4xl py-16 md:py-20">
-      <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
-        Nigeria Lex Intelligence
-      </p>
-      <h1 className="mt-2 font-serif text-3xl text-navy md:text-4xl">
-        Analysis, reports and briefings for institutional decision-makers.
-      </h1>
+    <>
+      <PageIntro
+        eyebrow="Nigeria Lex Intelligence"
+        title="Analysis, reports and briefings for institutional decision-makers."
+        description="Research-led signals for navigating Nigeria's corporate and investment environment."
+        tone="intelligence"
+      />
+      <div className="container max-w-4xl py-16 md:py-20">
 
       <div className="mt-8 flex flex-wrap gap-2">
         <Link
@@ -117,6 +119,7 @@ export default async function IntelligencePage({ searchParams }: Args) {
           ))}
         </ul>
       )}
-    </div>
+      </div>
+    </>
   )
 }
