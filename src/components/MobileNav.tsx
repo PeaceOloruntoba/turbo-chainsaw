@@ -45,7 +45,7 @@ export function MobileNav() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-[60] isolate overflow-y-auto bg-navy/95 text-paper backdrop-blur-md">
+        <div className="fixed inset-0 z-[60] overflow-y-auto bg-navy/95 text-paper backdrop-blur-md">
           <div className="container flex h-[76px] items-center justify-between">
             <span className="font-serif text-lg">Menu</span>
             <button
