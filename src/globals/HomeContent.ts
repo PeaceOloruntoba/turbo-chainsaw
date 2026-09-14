@@ -21,19 +21,19 @@ export const HomeContent: GlobalConfig = {
       name: 'heroHeadline',
       type: 'text',
       required: true,
-      defaultValue: 'Independent research. Market intelligence. Informed choice.',
+      defaultValue: "Independent intelligence on Nigeria's corporate legal market.",
     },
     {
       name: 'heroBody',
       type: 'textarea',
       required: true,
       defaultValue:
-        "Nigeria Lex is an independent, research-led legal market intelligence platform providing credible insight into the capabilities, experience and expertise of Nigeria's corporate law firms and practitioners. We combine legal-market knowledge, evidence-led research and market intelligence to help businesses, investors, financial institutions and professional advisers make better-informed decisions about Nigeria's legal market.",
+        'Research and market intelligence helping investors, businesses, financial institutions and professional advisers make informed decisions about legal capability in Nigeria.',
     },
     { name: 'ctaPrimaryLabel', type: 'text', defaultValue: 'Explore Our Research' },
     { name: 'ctaPrimaryHref', type: 'text', defaultValue: '/research' },
-    { name: 'ctaSecondaryLabel', type: 'text', defaultValue: 'About Nigeria Lex' },
-    { name: 'ctaSecondaryHref', type: 'text', defaultValue: '/about' },
+    { name: 'ctaSecondaryLabel', type: 'text', defaultValue: 'Our Methodology' },
+    { name: 'ctaSecondaryHref', type: 'text', defaultValue: '/research#methodology' },
     {
       name: 'pillars',
       label: 'What We Do',

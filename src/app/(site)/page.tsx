@@ -74,14 +74,14 @@ async function getLatestIntelligence() {
 export default async function HomePage() {
   const [content, latest] = await Promise.all([getHomeContent(), getLatestIntelligence()])
 
-  const heroHeadline = content?.heroHeadline || 'Independent research. Market intelligence. Informed choice.'
+  const heroHeadline = content?.heroHeadline || "Independent intelligence on Nigeria's corporate legal market."
   const heroBody =
     content?.heroBody ||
-    "Nigeria Lex is an independent, research-led legal market intelligence platform providing credible insight into the capabilities, experience and expertise of Nigeria's corporate law firms and practitioners."
+    'Research and market intelligence helping investors, businesses, financial institutions and professional advisers make informed decisions about legal capability in Nigeria.'
   const ctaPrimaryLabel = content?.ctaPrimaryLabel || 'Explore Our Research'
   const ctaPrimaryHref = content?.ctaPrimaryHref || '/research'
-  const ctaSecondaryLabel = content?.ctaSecondaryLabel || 'About Nigeria Lex'
-  const ctaSecondaryHref = content?.ctaSecondaryHref || '/about'
+  const ctaSecondaryLabel = content?.ctaSecondaryLabel || 'Our Methodology'
+  const ctaSecondaryHref = content?.ctaSecondaryHref || '/research#methodology'
   const pillars = content?.pillars?.length ? content.pillars : FALLBACK_PILLARS
   const pilotTeaserLabel = content?.pilotTeaserLabel || 'Nigeria Lex Pilot Study 2026'
   const pilotTeaserHeadline =

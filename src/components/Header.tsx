@@ -30,14 +30,24 @@ export async function Header() {
     <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
       <div className="container flex h-[76px] items-center justify-between gap-6">
         <Link href="/" className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element -- logo may be an
-              admin-uploaded SVG/PNG of arbitrary aspect ratio; next/image's SVG
-              handling and fixed sizing add friction here for little benefit. */}
-          <img
-            src={logoUrl || '/logo-lockup.png'}
-            alt={logoUrl ? siteName : `${siteName} logo`}
-            className="h-12 w-auto"
-          />
+          {logoUrl ? (
+            // Admin-uploaded logo: rendered as a single image since we can't
+            // know its internal composition (may already be a full lockup).
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt={siteName} className="h-12 w-auto" />
+          ) : (
+            // Default lockup: the NL monogram image plus a real text
+            // wordmark set alongside it, rather than baked into a single
+            // image. This lets the "NIGERIA LEX" wordmark be sized for
+            // legibility independently of the monogram / header height.
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-mark.png" alt="" aria-hidden="true" className="h-10 w-auto shrink-0" />
+              <span className="whitespace-nowrap font-serif text-[15px] font-semibold uppercase tracking-[0.14em] text-navy">
+                {siteName}
+              </span>
+            </>
+          )}
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">

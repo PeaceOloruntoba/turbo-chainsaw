@@ -34,11 +34,32 @@ export default async function FirmsPage() {
     <>
       <PageIntro
         eyebrow="Firms & Lawyers"
-        title="Evidence-led research on Nigeria's corporate law firms and practitioners."
+        title="Firms & Lawyers"
         description="A structured view of capability, experience, sectors and practice areas."
         tone="firms"
       />
       <div className="container max-w-4xl py-16 md:py-20">
+
+      {/* Persistent notice while the Pilot 2026 research is under way. Remove
+          this section once the research database and firm/practitioner
+          profiles are published. */}
+      <div className="rounded-sm border border-line bg-mist p-8">
+        <p className="font-serif text-lg text-navy">
+          Research in progress &mdash; Nigeria Lex Pilot Study 2026
+        </p>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-navy-ink">
+          Nigeria Lex is currently conducting research for its 2026 pilot study. Firm and
+          practitioner profiles, practice-area analysis and related assessments will be published
+          following completion of the relevant research, verification and editorial review
+          processes.
+        </p>
+        <Link
+          href="/pilot-2026#law-firms-participate"
+          className="mt-6 inline-block rounded-sm bg-green px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep"
+        >
+          Participate in Research
+        </Link>
+      </div>
 
       {/* Filter architecture: disabled during the pilot, wired up once published
           research volume justifies filtering. Kept visible so the structure of
@@ -56,18 +77,13 @@ export default async function FirmsPage() {
 
       {firms.length === 0 ? (
         <div className="mt-10 rounded-sm border border-line bg-white p-8">
-          <p className="font-serif text-lg text-navy">
-            Research in progress &mdash; Nigeria Lex Pilot Study 2026
-          </p>
-          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate">
-            This section is being built into a structured, searchable database of firms and
-            lawyers, filterable by firm, lawyer, practice area, sector and location. Profiles will
-            be published here as Nigeria Lex research is completed, verified and editorially
-            reviewed.
+          <p className="text-[15px] leading-relaxed text-slate">
+            Firm and practitioner profiles will appear here as Nigeria Lex research is completed,
+            verified and editorially reviewed.
           </p>
           <Link
             href="/pilot-2026"
-            className="mt-6 inline-block text-[13px] font-semibold text-green"
+            className="mt-4 inline-block text-[13px] font-semibold text-green"
           >
             Read about the Pilot Study 2026 →
           </Link>

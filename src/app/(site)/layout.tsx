@@ -20,7 +20,7 @@ const sourceSerif = Source_Serif_4({
 })
 
 const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-const title = 'Nigeria Lex™ | Legal Market Intelligence for Informed Decisions'
+const title = 'Nigeria Lex™ | Independent research. Market intelligence. Informed choice.'
 const description =
   "Nigeria Lex is an independent, research-led legal market intelligence platform providing credible insight into the capabilities, experience and expertise of Nigeria's corporate law firms and practitioners."
 

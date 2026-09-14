@@ -17,7 +17,7 @@ type PageIntroProps = {
 export function PageIntro({ eyebrow, title, description, tone }: PageIntroProps) {
   return (
     <section className="hero-grid relative overflow-hidden text-paper">
-      <div className="absolute inset-0 bg-navy/45" />
+      <div className="absolute inset-0 bg-navy/32" />
       <div className="container relative grid min-h-[290px] items-end gap-4 py-12 md:min-h-[350px] md:grid-cols-[1fr_0.65fr] md:py-16">
         <div>
           <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-green-200">
@@ -28,7 +28,7 @@ export function PageIntro({ eyebrow, title, description, tone }: PageIntroProps)
         </div>
         {description && <p className="max-w-md border-l border-paper/35 pl-5 text-[15px] leading-relaxed text-paper/75">{description}</p>}
       </div>
-      <Image src={IMAGE_BY_TONE[tone]} alt="" fill sizes="100vw" className="-z-10 object-cover opacity-55 mix-blend-luminosity" priority />
+      <Image src={IMAGE_BY_TONE[tone]} alt="" fill sizes="100vw" className="-z-10 object-cover opacity-[0.68] mix-blend-luminosity" priority />
     </section>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
+import Link from 'next/link'
 
 const AREAS_OF_INTEREST = [
   'Legal Market Research',
@@ -51,7 +52,7 @@ export function SubscribeForm() {
   if (status === 'success') {
     return (
       <div className="rounded-sm border border-line bg-white p-6">
-        <p className="font-serif text-lg text-navy">Thank you for subscribing.</p>
+        <p className="font-serif text-lg text-navy">Thank you for subscribing to Nigeria Lex.</p>
         <p className="mt-2 text-sm text-slate">
           You will receive Nigeria Lex research, market intelligence and briefing invitations at
           the email address you provided. You may unsubscribe at any time.
@@ -101,7 +102,11 @@ export function SubscribeForm() {
         />
         <span>
           I consent to receive communications from Nigeria Lex and understand I can unsubscribe
-          at any time.
+          at any time. Information I provide will be handled in accordance with Nigeria Lex&rsquo;s{' '}
+          <Link href="/legal/privacy-policy" className="font-medium text-green">
+            Privacy Policy
+          </Link>
+          .
         </span>
       </label>
 

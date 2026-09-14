@@ -131,7 +131,7 @@ export default async function ResearchPage() {
           </ol>
         </section>
 
-        <section className="mt-10 border-t border-line pt-10">
+        <section id="independence" className="mt-10 scroll-mt-24 border-t border-line pt-10">
           <h2 className="font-serif text-xl text-navy">Research Independence</h2>
           <p className="mt-4 whitespace-pre-line text-[15px] leading-relaxed text-navy-ink">
             {researchIndependenceText}

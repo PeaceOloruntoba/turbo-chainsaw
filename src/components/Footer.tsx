@@ -1,12 +1,17 @@
 import Link from 'next/link'
 import { getPayloadClient } from '@/lib/payload'
 
+// Editorial Independence is deliberately not in this list: per client
+// direction it links to the Research page's "Research Independence"
+// section (like Research Methodology does) rather than to the standalone
+// /legal/editorial-independence page. That page still exists in
+// LegalPages for direct linking/SEO purposes; the footer just doesn't
+// point to it.
 const LEGAL_SLUGS = [
   'privacy-policy',
   'cookie-policy',
   'terms-of-use',
   'disclaimer',
-  'editorial-independence',
   'corrections-policy',
 ] as const
 
@@ -15,7 +20,6 @@ const FALLBACK_LEGAL_TITLES: Record<string, string> = {
   'cookie-policy': 'Cookie Policy',
   'terms-of-use': 'Terms of Use',
   disclaimer: 'Disclaimer',
-  'editorial-independence': 'Editorial Independence',
   'corrections-policy': 'Corrections Policy',
 }
 
@@ -36,7 +40,7 @@ export async function Footer() {
   const { settings, legalPages } = await getFooterData()
 
   const siteName = settings?.siteName || 'Nigeria Lex'
-  const strapline = settings?.strapline || 'Legal Market Intelligence for Informed Decisions'
+  const strapline = settings?.strapline || 'Independent research. Market intelligence. Informed choice.'
   const lagos = settings?.correspondence?.lagos || 'Lagos, Nigeria'
   const emails = settings?.departmentalEmails?.length
     ? settings.departmentalEmails
@@ -84,16 +88,28 @@ export async function Footer() {
             Legal
           </p>
           <ul className="mt-3 space-y-1 text-sm text-paper/80">
-            {legalLinks.map((link) => (
-              <li key={link.slug}>
-                <Link href={`/legal/${link.slug}`} className="hover:text-white">
-                  {link.title}
-                </Link>
-              </li>
-            ))}
+            {legalLinks
+              .filter((link) => link.slug !== 'corrections-policy')
+              .map((link) => (
+                <li key={link.slug}>
+                  <Link href={`/legal/${link.slug}`} className="hover:text-white">
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
             <li>
               <Link href="/research#methodology" className="hover:text-white">
                 Research Methodology
+              </Link>
+            </li>
+            <li>
+              <Link href="/research#independence" className="hover:text-white">
+                Editorial Independence
+              </Link>
+            </li>
+            <li>
+              <Link href="/legal/corrections-policy" className="hover:text-white">
+                {legalLinks.find((l) => l.slug === 'corrections-policy')?.title || 'Corrections Policy'}
               </Link>
             </li>
             <li>

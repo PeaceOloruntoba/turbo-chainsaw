@@ -24,7 +24,7 @@ import { paragraphsToLexical } from './lexical'
 
 const SITE_SETTINGS_DATA = {
   siteName: 'Nigeria Lex',
-  strapline: 'Legal Market Intelligence for Informed Decisions',
+  strapline: 'Independent research. Market intelligence. Informed choice.',
   independenceStatement:
     'Law firms and practitioners do not pay to be considered, included or recognised by Nigeria Lex. Sponsorship, advertising, subscriptions and other commercial relationships are kept separate from the research and editorial process and do not determine research outcomes.',
   footerCopyright:
@@ -43,13 +43,13 @@ const SITE_SETTINGS_DATA = {
 }
 
 const HOME_CONTENT_DATA = {
-  heroHeadline: 'Independent research. Market intelligence. Informed choice.',
+  heroHeadline: "Independent intelligence on Nigeria's corporate legal market.",
   heroBody:
-    "Nigeria Lex is an independent, research-led legal market intelligence platform providing credible insight into the capabilities, experience and expertise of Nigeria's corporate law firms and practitioners. We combine legal-market knowledge, evidence-led research and market intelligence to help businesses, investors, financial institutions and professional advisers make better-informed decisions about Nigeria's legal market.",
+    'Research and market intelligence helping investors, businesses, financial institutions and professional advisers make informed decisions about legal capability in Nigeria.',
   ctaPrimaryLabel: 'Explore Our Research',
   ctaPrimaryHref: '/research',
-  ctaSecondaryLabel: 'About Nigeria Lex',
-  ctaSecondaryHref: '/about',
+  ctaSecondaryLabel: 'Our Methodology',
+  ctaSecondaryHref: '/research#methodology',
   pillars: [
     {
       title: 'Legal Market Research',
@@ -87,18 +87,18 @@ const HOME_CONTENT_DATA = {
 const ABOUT_CONTENT_DATA = {
   tagline: "Better information about Nigeria's legal market",
   whoWeAre:
-    "Nigeria has one of Africa's largest and most sophisticated legal markets. Yet reliable, independently researched information about the capabilities and experience of its corporate law firms and practitioners can be difficult to obtain, particularly for organisations entering the market or instructing Nigerian counsel for the first time.\n\nNigeria Lex was established to address that information gap.\n\nWe research and analyse the Nigerian corporate legal market to provide independent insight into firms, practitioners, transactions, sectors and emerging areas of legal expertise.",
+    "Nigeria Lex provides independent research and market intelligence on Nigeria's corporate legal market, helping investors, businesses, financial institutions and professional advisers make informed decisions about legal capability and market conditions.\n\nNigeria has one of Africa's largest and most sophisticated legal markets. Yet reliable, independently researched information about the capabilities and experience of its corporate law firms and practitioners can be difficult to obtain, particularly for organisations entering the market or instructing Nigerian counsel for the first time.\n\nNigeria Lex was established to address that information gap.\n\nWe research and analyse the Nigerian corporate legal market to provide independent insight into firms, practitioners, transactions, sectors and emerging areas of legal expertise.",
   purpose:
     'Our purpose is not simply to identify prominent names. We seek to understand where demonstrable capability exists, how that capability has been developed, and where particular expertise may be found.',
   leadership: {
     name: 'Paul Onifade',
     title: 'Founder & Editor-in-Chief',
     biography:
-      'Nigeria Lex was conceived by Paul Onifade, Solicitor Advocate of the Senior Courts of England and Wales, who serves as its Founder and Editor-in-Chief.',
+      "Paul Onifade is a Solicitor Advocate of the Senior Courts of England and Wales and Founder & Editor-in-Chief of Nigeria Lex. He leads the platform's editorial vision, legal-market strategy and institutional development.",
   },
-  ownershipText: 'Nigeria Lex is promoted and published by Kaye & Crowther Limited.',
+  ownershipText: 'Nigeria Lex is owned and published by Kaye & Crowther Limited.',
   researchPartnerText:
-    'Strategic Research & Intelligence Partner: SBM Intelligence — an Africa-focused market intelligence, security intelligence, and strategic consulting firm. It is a leading provider of strategic research and analysis, delivering actionable insights into the socio-political, economic, security, and business environments across West Africa through evidence-based research, data analytics, and practical policy recommendations.',
+    'SBM Intelligence supports Nigeria Lex in research design, data verification, analysis and market intelligence. SBM Intelligence is an Africa-focused research and strategic intelligence firm with expertise across the socio-political, economic, security and business environments in West Africa.',
 }
 
 const RESEARCH_CONTENT_DATA = {
@@ -150,15 +150,15 @@ const RESEARCH_CONTENT_DATA = {
 
 const PILOT_2026_CONTENT_DATA = {
   intro:
-    "Nigeria Lex is undertaking an inaugural pilot study examining selected areas of Nigeria's corporate legal market. The pilot will test and refine the Nigeria Lex research methodology through engagement with law firms, practitioners, investors and institutional users.",
-  objectives:
-    "To test and refine Nigeria Lex's research methodology ahead of full-scale research, and to establish the platform's initial evidence base.",
-  researchScope:
-    "A selected range of practice areas within Nigeria's corporate legal market, chosen for their significance to institutional users of legal services.",
+    "The Nigeria Lex Pilot Study 2026 will test and refine our research methodology while developing an independent evidence base on selected areas of Nigeria's corporate legal market. The pilot is intended to provide investors, businesses, financial institutions, professional advisers and other institutional users with clearer insight into legal capability, experience and market conditions.",
+  whatIsBeingResearched:
+    "A selected range of practice areas within Nigeria's corporate legal market, chosen for their significance to institutional users of legal services. Practice areas under research will be confirmed as the pilot progresses and published on the Firms & Lawyers section as they become available.",
   methodologyNote:
     'The pilot follows the Nigeria Lex research process: research, verification, analysis, editorial review and publication.',
-  practiceAreasNote:
-    'To be confirmed as pilot research progresses and will be published on the Firms & Lawyers section as it becomes available.',
+  whyItMatters:
+    "Reliable, independently researched information about legal capability in Nigeria is difficult to obtain. The pilot's findings are intended to help investors, businesses, financial institutions and professional advisers make more informed decisions when engaging Nigerian legal counsel.",
+  whoCanParticipate:
+    'Nigerian law firms and practitioners are invited to participate in the underlying research. Investors, corporates, financial institutions, professional advisers and other institutional users of Nigerian legal services are separately invited to contribute market feedback and insight.',
   timeline: [
     {
       label: 'Research and consultation',
@@ -173,6 +173,10 @@ const PILOT_2026_CONTENT_DATA = {
       detail: 'Week commencing 16 November 2026, in Lagos, subject to research progress.',
     },
   ],
+  lagosPresentationNote:
+    'Nigeria Lex proposes to present initial pilot findings in Lagos in the week commencing 16 November 2026. The date and venue remain proposed and subject to confirmation as research progresses.',
+  howToEngageIntro:
+    'Law firms, institutional users and other market participants can engage with the Pilot Study 2026 as set out below.',
 }
 
 // ---------------------------------------------------------------------------

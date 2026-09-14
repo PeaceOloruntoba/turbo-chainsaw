@@ -2,7 +2,7 @@
   "name": "nigeria-lex",
   "version": "0.1.0",
   "private": true,
-  "description": "Nigeria Lex — Legal Market Intelligence for Informed Decisions",
+  "description": "Nigeria Lex — Independent research. Market intelligence. Informed choice.",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",

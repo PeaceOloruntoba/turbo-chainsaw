@@ -29,7 +29,7 @@ export const SiteSettings: GlobalConfig = {
       relationTo: 'media',
       admin: {
         description:
-          'Header logo. Falls back to the approved Nigeria Lex logo already in the codebase (public/logo-lockup.png) until you upload a different file here — e.g. a higher-resolution or alternate version.',
+          'Header logo. Falls back to the approved Nigeria Lex mark already in the codebase (public/logo-mark.png, paired with a text wordmark) until you upload a full lockup image here — e.g. a higher-resolution or alternate version.',
       },
     },
     {
@@ -46,7 +46,7 @@ export const SiteSettings: GlobalConfig = {
       name: 'strapline',
       type: 'text',
       required: true,
-      defaultValue: 'Legal Market Intelligence for Informed Decisions',
+      defaultValue: 'Independent research. Market intelligence. Informed choice.',
     },
     {
       name: 'independenceStatement',

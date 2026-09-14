@@ -1,6 +1,6 @@
 # Nigeria Lex™
 
-Legal Market Intelligence for Informed Decisions — Phase 1.
+Independent research. Market intelligence. Informed choice. — Phase 1.
 
 An independent, research-led legal market intelligence platform for Nigeria's
 corporate legal market, built as a single Next.js 15 codebase with Payload
