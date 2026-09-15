@@ -84,33 +84,41 @@ on `html`/`body`) so that if any future element does this again, the page
 clips it instead of scrolling sideways. There's no intentional
 horizontal-scroll UI anywhere in the site, so this has no downside.
 
-### Homepage Lagos photo — cleaner photo, no on-page credit, swipeable
+### Homepage Lagos photo — full-bleed hero background, industrial imagery, swipeable
 Your voice note didn't come through as text I could read (no audio
 transcription available on my end), so this is built from your typed
-points:
+points, including the follow-up asking for the photo to be the entire hero
+background (Clifford Chance-style) with the grid pattern and a backdrop
+kept on top so the text stays legible:
 
-1. **Cleaner photo, no visible credit line.** The old photo (by Nupo Deyon
-   Daniel) had a caption directly under it on the page reading "Photo:
-   Nupo Deyon Daniel / Unsplash" — that's gone, and it's replaced with three
-   different clean, corporate/infrastructure shots of Lagos (Lekki-Ikoyi
-   Link Bridge and an aerial skyline view, from other Unsplash
-   photographers), matching the same "no gavels/handshakes, corporate and
-   architectural" visual language used for the other page heroes. None of
-   these need attribution — Unsplash's license doesn't require it, so
-   there's no caption line at all now, not even a different name.
-2. **Scrollable page-to-page.** New `HomeHeroGallery.tsx` replaces the
-   single static photo with a small swipeable gallery — native
-   scroll-snap, so it swipes on touch, drags on trackpad, and also has
-   visible left/right arrows plus dot indicators for anyone on a mouse.
-   One photo fills the frame at a time, "scrolling from page to page"
-   exactly as asked.
-3. **Clifford Chance reference.** Their homepage uses the same underlying
-   idea — a rotating set of full-bleed banner images at the top of the
-   page. I've kept Nigeria Lex's restrained card-in-hero treatment (per
-   the "no redesign" direction from the first round) rather than adopting
-   Clifford Chance's full-bleed edge-to-edge banner style, since that
-   would be a more significant visual change — let me know if you actually
-   want the full-bleed treatment instead and I'll adjust.
+1. **Cleaner photos, no visible credit line, more industrial character.**
+   The old single photo (by Nupo Deyon Daniel) had an on-page caption
+   reading "Photo: Nupo Deyon Daniel / Unsplash" — gone. Replaced with four
+   different clean Lagos shots with more of an industrial/infrastructure
+   feel — the Lekki-Ikoyi Link Bridge, boats beside a modern bridge, an
+   aerial skyline, and a black-and-white bridge shot for variety — all from
+   other Unsplash photographers (Malik Buraimoh, Namnso Ukpanah, Tunde
+   Buremo). None need attribution — Unsplash's license doesn't require
+   it — so there's no credit line at all now.
+2. **Full-bleed hero background, not a side card.** Rebuilt
+   `HomeHeroGallery.tsx` to render as the entire hero section's background
+   rather than a photo card next to the text. On top of the photos: the
+   same grid-line pattern used elsewhere on the site (added as a new
+   `.hero-grid-overlay` CSS class — same grid lines as the existing
+   `.hero-grid`, just without its solid navy fill, so it can sit over a
+   photo instead of replacing one), then a navy tint for contrast, then the
+   headline/body/buttons on top of that — same layered approach as Clifford
+   Chance's banner, in Nigeria Lex's own restrained palette rather than
+   copying their visual style.
+3. **Still swipeable, page to page.** Same scroll-snap behaviour as before
+   — swipe/drag through the four photos, plus visible arrows and dot
+   indicators for mouse users — just now filling the whole hero instead of
+   a small card.
+4. Removed the old two-column hero layout (text | photo card) and the
+   decorative "Signal / 01" badge and green accent bar that were styled
+   specifically for that card — they didn't have anywhere sensible to sit
+   once the photo became the full background. Let me know if you'd like a
+   similar small badge/motif reintroduced somewhere in the new layout.
 
 ---
 

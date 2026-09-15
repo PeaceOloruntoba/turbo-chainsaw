@@ -7,7 +7,6 @@ import {
   Landmark,
   FileText,
   ArrowRight,
-  Activity,
   type LucideIcon,
 } from "lucide-react";
 import { IndependenceBanner } from "@/components/IndependenceBanner";
@@ -108,54 +107,37 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="hero-grid relative overflow-hidden text-paper">
-        <div className="absolute right-0 top-0 hidden h-full w-[34%] border-l border-paper/10 bg-green/10 lg:block" />
-        <div className="container relative grid gap-12 py-16 md:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:py-24">
-          <div>
-            <div className="mb-7 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-green-200">
-              <span className="h-px w-10 bg-green" />
-              Nigeria Lex / 2026
-            </div>
-            <h1 className="text-balance max-w-2xl font-serif text-[2.75rem] leading-[0.98] tracking-[-0.01em] md:text-[4.5rem]">
-              {heroHeadline}
-            </h1>
-            <p className="mt-7 max-w-xl text-[16px] leading-relaxed text-paper/70 md:text-[17px]">
-              {heroBody}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href={ctaPrimaryHref}
-                className="group inline-flex items-center gap-2 rounded-sm bg-green px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep"
-              >
-                {ctaPrimaryLabel}
-                <ArrowRight
-                  size={15}
-                  strokeWidth={2}
-                  className="transition-transform group-hover:translate-x-0.5"
-                />
-              </Link>
-              <Link
-                href={ctaSecondaryHref}
-                className="rounded-sm border border-paper/25 px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:border-paper"
-              >
-                {ctaSecondaryLabel}
-              </Link>
-            </div>
+      <section className="relative isolate overflow-hidden text-paper">
+        <HomeHeroGallery />
+        <div className="container relative z-10 flex min-h-[560px] flex-col justify-center py-16 md:min-h-[680px] md:py-20 lg:py-24">
+          <div className="mb-7 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-green-200">
+            <span className="h-px w-10 bg-green" />
+            Nigeria Lex / 2026
           </div>
-
-          <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
-            <div className="absolute -right-3 -top-5 z-10 hidden w-36 border border-paper/20 bg-navy/80 p-4 backdrop-blur-sm sm:block">
-              <Activity size={17} className="mb-6 text-green" />
-              <p className="text-[10px] uppercase tracking-[0.12em] text-paper/50">
-                Signal / 01
-              </p>
-              <p className="mt-1 font-serif text-lg">Evidence first</p>
-            </div>
-            <div
-              aria-hidden="true"
-              className="absolute -left-4 top-8 hidden h-[calc(100%-4rem)] w-[3px] bg-green md:block"
-            />
-            <HomeHeroGallery className="md:ml-5" />
+          <h1 className="text-balance max-w-2xl font-serif text-[2.75rem] leading-[0.98] tracking-[-0.01em] md:text-[4.5rem]">
+            {heroHeadline}
+          </h1>
+          <p className="mt-7 max-w-xl text-[16px] leading-relaxed text-paper/80 md:text-[17px]">
+            {heroBody}
+          </p>
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Link
+              href={ctaPrimaryHref}
+              className="group inline-flex items-center gap-2 rounded-sm bg-green px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep"
+            >
+              {ctaPrimaryLabel}
+              <ArrowRight
+                size={15}
+                strokeWidth={2}
+                className="transition-transform group-hover:translate-x-0.5"
+              />
+            </Link>
+            <Link
+              href={ctaSecondaryHref}
+              className="rounded-sm border border-paper/25 px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:border-paper"
+            >
+              {ctaSecondaryLabel}
+            </Link>
           </div>
         </div>
       </section>

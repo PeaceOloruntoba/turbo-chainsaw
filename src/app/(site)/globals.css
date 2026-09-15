@@ -31,6 +31,15 @@
     background-size: 42px 42px;
   }
 
+  /* Same grid lines as .hero-grid, without the solid navy fill — for
+     layering on top of a photo background (e.g. the homepage hero
+     gallery) rather than standing in for one. */
+  .hero-grid-overlay {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+
   .eyebrow {
     @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-green;
   }
