@@ -114,7 +114,7 @@ export default async function HomePage() {
             <span className="h-px w-10 bg-green" />
             Nigeria Lex / 2026
           </div>
-          <h1 className="text-balance max-w-2xl font-serif text-[2.75rem] leading-[0.98] tracking-[-0.01em] md:text-[4.5rem]">
+          <h1 className="text-balance text-white max-w-2xl font-serif text-[2.75rem] leading-[0.98] tracking-[-0.01em] md:text-[4.5rem]">
             {heroHeadline}
           </h1>
           <p className="mt-7 max-w-xl text-[16px] leading-relaxed text-paper/80 md:text-[17px]">
