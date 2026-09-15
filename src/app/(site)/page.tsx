@@ -1,92 +1,110 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import type { Metadata } from 'next'
-import { Search, TrendingUp, Building2, Landmark, FileText, ArrowRight, Activity, type LucideIcon } from 'lucide-react'
-import { IndependenceBanner } from '@/components/IndependenceBanner'
-import { getPayloadClient } from '@/lib/payload'
+import Link from "next/link";
+import type { Metadata } from "next";
+import {
+  Search,
+  TrendingUp,
+  Building2,
+  Landmark,
+  FileText,
+  ArrowRight,
+  Activity,
+  type LucideIcon,
+} from "lucide-react";
+import { IndependenceBanner } from "@/components/IndependenceBanner";
+import { HomeHeroGallery } from "@/components/HomeHeroGallery";
+import { getPayloadClient } from "@/lib/payload";
 
 export const metadata: Metadata = {
-  alternates: { canonical: '/' },
-}
+  alternates: { canonical: "/" },
+};
 
 const PILLAR_ICONS: Record<string, LucideIcon> = {
-  'Legal Market Research': Search,
-  'Market Intelligence': TrendingUp,
-  'Firms & Lawyers': Building2,
-  'Institutional Intelligence': Landmark,
-  'Reports & Insights': FileText,
-}
+  "Legal Market Research": Search,
+  "Market Intelligence": TrendingUp,
+  "Firms & Lawyers": Building2,
+  "Institutional Intelligence": Landmark,
+  "Reports & Insights": FileText,
+};
 
 const FALLBACK_PILLARS = [
   {
-    title: 'Legal Market Research',
-    description: 'Independent research into Nigerian corporate law firms, practitioners and areas of expertise.',
-    href: '/research',
-  },
-  {
-    title: 'Market Intelligence',
+    title: "Legal Market Research",
     description:
-      'Analysis of transactions, sectors, regulatory developments and trends affecting demand for legal services.',
-    href: '/intelligence',
+      "Independent research into Nigerian corporate law firms, practitioners and areas of expertise.",
+    href: "/research",
   },
   {
-    title: 'Firms & Lawyers',
-    description: 'Evidence-led profiles and recognition of firms and practitioners demonstrating significant capability.',
-    href: '/firms',
-  },
-  {
-    title: 'Institutional Intelligence',
+    title: "Market Intelligence",
     description:
-      'Research designed to assist investors, financial institutions, corporates, international law firms and other organisations operating in or engaging with Nigeria.',
-    href: '/intelligence',
+      "Analysis of transactions, sectors, regulatory developments and trends affecting demand for legal services.",
+    href: "/intelligence",
   },
   {
-    title: 'Reports & Insights',
-    description: "Regular analysis of developments affecting Nigeria's corporate legal and investment environment.",
-    href: '/intelligence',
+    title: "Firms & Lawyers",
+    description:
+      "Evidence-led profiles and recognition of firms and practitioners demonstrating significant capability.",
+    href: "/firms",
   },
-]
+  {
+    title: "Institutional Intelligence",
+    description:
+      "Research designed to assist investors, financial institutions, corporates, international law firms and other organisations operating in or engaging with Nigeria.",
+    href: "/intelligence",
+  },
+  {
+    title: "Reports & Insights",
+    description:
+      "Regular analysis of developments affecting Nigeria's corporate legal and investment environment.",
+    href: "/intelligence",
+  },
+];
 
 async function getHomeContent() {
   try {
-    const payload = await getPayloadClient()
-    return await payload.findGlobal({ slug: 'home-content' })
+    const payload = await getPayloadClient();
+    return await payload.findGlobal({ slug: "home-content" });
   } catch {
-    return null
+    return null;
   }
 }
 
 async function getLatestIntelligence() {
   try {
-    const payload = await getPayloadClient()
+    const payload = await getPayloadClient();
     const result = await payload.find({
-      collection: 'intelligence',
+      collection: "intelligence",
       limit: 3,
-      sort: '-publishedAt',
+      sort: "-publishedAt",
       depth: 0,
-    })
-    return result.docs
+    });
+    return result.docs;
   } catch {
-    return []
+    return [];
   }
 }
 
 export default async function HomePage() {
-  const [content, latest] = await Promise.all([getHomeContent(), getLatestIntelligence()])
+  const [content, latest] = await Promise.all([
+    getHomeContent(),
+    getLatestIntelligence(),
+  ]);
 
-  const heroHeadline = content?.heroHeadline || "Independent intelligence on Nigeria's corporate legal market."
+  const heroHeadline =
+    content?.heroHeadline ||
+    "Independent intelligence on Nigeria's corporate legal market.";
   const heroBody =
     content?.heroBody ||
-    'Research and market intelligence helping investors, businesses, financial institutions and professional advisers make informed decisions about legal capability in Nigeria.'
-  const ctaPrimaryLabel = content?.ctaPrimaryLabel || 'Explore Our Research'
-  const ctaPrimaryHref = content?.ctaPrimaryHref || '/research'
-  const ctaSecondaryLabel = content?.ctaSecondaryLabel || 'Our Methodology'
-  const ctaSecondaryHref = content?.ctaSecondaryHref || '/research#methodology'
-  const pillars = content?.pillars?.length ? content.pillars : FALLBACK_PILLARS
-  const pilotTeaserLabel = content?.pilotTeaserLabel || 'Nigeria Lex Pilot Study 2026'
+    "Research and market intelligence helping investors, businesses, financial institutions and professional advisers make informed decisions about legal capability in Nigeria.";
+  const ctaPrimaryLabel = content?.ctaPrimaryLabel || "Explore Our Research";
+  const ctaPrimaryHref = content?.ctaPrimaryHref || "/research";
+  const ctaSecondaryLabel = content?.ctaSecondaryLabel || "Our Methodology";
+  const ctaSecondaryHref = content?.ctaSecondaryHref || "/research#methodology";
+  const pillars = content?.pillars?.length ? content.pillars : FALLBACK_PILLARS;
+  const pilotTeaserLabel =
+    content?.pilotTeaserLabel || "Nigeria Lex Pilot Study 2026";
   const pilotTeaserHeadline =
     content?.pilotTeaserHeadline ||
-    'Our inaugural pilot study is testing and refining the Nigeria Lex methodology.'
+    "Our inaugural pilot study is testing and refining the Nigeria Lex methodology.";
 
   return (
     <>
@@ -101,7 +119,9 @@ export default async function HomePage() {
             <h1 className="text-balance max-w-2xl font-serif text-[2.75rem] leading-[0.98] tracking-[-0.01em] md:text-[4.5rem]">
               {heroHeadline}
             </h1>
-            <p className="mt-7 max-w-xl text-[16px] leading-relaxed text-paper/70 md:text-[17px]">{heroBody}</p>
+            <p className="mt-7 max-w-xl text-[16px] leading-relaxed text-paper/70 md:text-[17px]">
+              {heroBody}
+            </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 href={ctaPrimaryHref}
@@ -126,27 +146,16 @@ export default async function HomePage() {
           <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
             <div className="absolute -right-3 -top-5 z-10 hidden w-36 border border-paper/20 bg-navy/80 p-4 backdrop-blur-sm sm:block">
               <Activity size={17} className="mb-6 text-green" />
-              <p className="text-[10px] uppercase tracking-[0.12em] text-paper/50">Signal / 01</p>
+              <p className="text-[10px] uppercase tracking-[0.12em] text-paper/50">
+                Signal / 01
+              </p>
               <p className="mt-1 font-serif text-lg">Evidence first</p>
             </div>
             <div
               aria-hidden="true"
               className="absolute -left-4 top-8 hidden h-[calc(100%-4rem)] w-[3px] bg-green md:block"
             />
-            <div className="relative aspect-[5/6] overflow-hidden rounded-sm border border-paper/15 shadow-2xl shadow-black/40 md:ml-5">
-              <Image
-                src="https://images.unsplash.com/photo-1618828665347-d870c38c95c7?q=80&w=1200&auto=format&fit=crop"
-                alt="Skyline of Lekki, Lagos — the commercial and legal centre of Nigeria's corporate market"
-                fill
-                priority
-                sizes="(min-width: 1024px) 480px, 90vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent" />
-            </div>
-            <p className="mt-3 text-[12px] leading-relaxed text-paper/45 md:ml-5">
-              Lekki, Lagos — Nigeria&rsquo;s commercial and legal centre. Photo: Nupo Deyon Daniel / Unsplash.
-            </p>
+            <HomeHeroGallery className="md:ml-5" />
           </div>
         </div>
       </section>
@@ -158,13 +167,17 @@ export default async function HomePage() {
           <div className="flex items-end justify-between gap-6 border-b border-line pb-6">
             <div>
               <p className="eyebrow">Our point of view</p>
-              <h2 className="mt-2 max-w-md font-serif text-3xl text-navy md:text-4xl">What We Do</h2>
+              <h2 className="mt-2 max-w-md font-serif text-3xl text-navy md:text-4xl">
+                What We Do
+              </h2>
             </div>
-            <span className="hidden font-serif text-5xl text-navy/10 md:block">01—05</span>
+            <span className="hidden font-serif text-5xl text-navy/10 md:block">
+              01—05
+            </span>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {pillars.map((pillar: any) => {
-              const Icon = PILLAR_ICONS[pillar.title] || FileText
+              const Icon = PILLAR_ICONS[pillar.title] || FileText;
               return (
                 <Link
                   key={pillar.title}
@@ -174,13 +187,17 @@ export default async function HomePage() {
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-mist text-green">
                     <Icon size={22} strokeWidth={1.5} />
                   </span>
-                  <h3 className="mt-5 font-serif text-xl text-navy">{pillar.title}</h3>
-                  <p className="mt-2.5 text-[14.5px] leading-relaxed text-slate">{pillar.description}</p>
+                  <h3 className="mt-5 font-serif text-xl text-navy">
+                    {pillar.title}
+                  </h3>
+                  <p className="mt-2.5 text-[14.5px] leading-relaxed text-slate">
+                    {pillar.description}
+                  </p>
                   <span className="mt-4 inline-block text-[13px] font-semibold text-navy underline decoration-line underline-offset-4 group-hover:text-green group-hover:decoration-green">
                     Learn more
                   </span>
                 </Link>
-              )
+              );
             })}
           </div>
         </div>
@@ -192,20 +209,33 @@ export default async function HomePage() {
             <div className="flex items-end justify-between border-b border-line pb-6">
               <div>
                 <p className="eyebrow">From the desk</p>
-                <h2 className="mt-2 font-serif text-3xl text-navy">Latest Intelligence</h2>
+                <h2 className="mt-2 font-serif text-3xl text-navy">
+                  Latest Intelligence
+                </h2>
               </div>
-              <Link href="/intelligence" className="text-[13px] font-semibold text-green">
+              <Link
+                href="/intelligence"
+                className="text-[13px] font-semibold text-green"
+              >
                 View all
               </Link>
             </div>
             <div className="mt-10 grid gap-px overflow-hidden border border-line bg-line md:grid-cols-3">
               {latest.map((item: any) => (
-                <Link key={item.id} href={`/intelligence/${item.slug}`} className="group block bg-white p-7 transition-colors hover:bg-mist">
+                <Link
+                  key={item.id}
+                  href={`/intelligence/${item.slug}`}
+                  className="group block bg-white p-7 transition-colors hover:bg-mist"
+                >
                   <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
                     {item.category}
                   </p>
-                  <h3 className="mt-3 font-serif text-xl text-navy group-hover:text-green">{item.title}</h3>
-                  <p className="mt-3 text-[14.5px] leading-relaxed text-slate">{item.summary}</p>
+                  <h3 className="mt-3 font-serif text-xl text-navy group-hover:text-green">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-[14.5px] leading-relaxed text-slate">
+                    {item.summary}
+                  </p>
                 </Link>
               ))}
             </div>
@@ -219,7 +249,9 @@ export default async function HomePage() {
             <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
               {pilotTeaserLabel}
             </p>
-            <h2 className="mt-2 max-w-xl font-serif text-2xl text-navy">{pilotTeaserHeadline}</h2>
+            <h2 className="mt-2 max-w-xl font-serif text-2xl text-navy">
+              {pilotTeaserHeadline}
+            </h2>
           </div>
           <Link
             href="/pilot-2026"
@@ -230,5 +262,5 @@ export default async function HomePage() {
         </div>
       </section>
     </>
-  )
+  );
 }

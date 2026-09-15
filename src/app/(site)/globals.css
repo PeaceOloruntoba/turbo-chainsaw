@@ -5,11 +5,17 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Safety net: no individual element should be wide enough to cause
+       horizontal scroll, but this catches it site-wide if one ever does
+       (e.g. an untested addition) rather than letting the whole page
+       scroll sideways on mobile. */
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-paper text-navy-ink antialiased;
     font-feature-settings: 'kern' 1, 'liga' 1;
+    overflow-x: hidden;
   }
 
   .site-grid {

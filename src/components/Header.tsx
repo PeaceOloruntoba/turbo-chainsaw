@@ -1,49 +1,58 @@
-import Link from 'next/link'
-import { getPayloadClient } from '@/lib/payload'
-import { MobileNav } from './MobileNav'
+import Link from "next/link";
+import { getPayloadClient } from "@/lib/payload";
+import { MobileNav } from "./MobileNav";
 
 const NAV_ITEMS = [
-  { label: 'About', href: '/about' },
-  { label: 'Research', href: '/research' },
-  { label: 'Firms & Lawyers', href: '/firms' },
-  { label: 'Intelligence', href: '/intelligence' },
-  { label: 'Pilot 2026', href: '/pilot-2026' },
-  { label: 'Events', href: '/events' },
-  { label: 'Contact', href: '/contact' },
-]
+  { label: "About", href: "/about" },
+  { label: "Research", href: "/research" },
+  { label: "Firms & Lawyers", href: "/firms" },
+  { label: "Intelligence", href: "/intelligence" },
+  { label: "Pilot 2026", href: "/pilot-2026" },
+  { label: "Events", href: "/events" },
+  { label: "Contact", href: "/contact" },
+];
 
 async function getSiteSettings() {
   try {
-    const payload = await getPayloadClient()
-    return await payload.findGlobal({ slug: 'site-settings' })
+    const payload = await getPayloadClient();
+    return await payload.findGlobal({ slug: "site-settings" });
   } catch {
-    return null
+    return null;
   }
 }
 
 export async function Header() {
-  const settings = await getSiteSettings()
-  const siteName = settings?.siteName || 'Nigeria Lex'
-  const logoUrl = (settings?.logo as any)?.url as string | undefined
+  const settings = await getSiteSettings();
+  const siteName = settings?.siteName || "Nigeria Lex";
+  const logoUrl = (settings?.logo as any)?.url as string | undefined;
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
-      <div className="container flex h-[76px] items-center justify-between gap-6">
-        <Link href="/" className="flex items-center gap-3">
+      <div className="container flex h-[76px] items-center justify-between gap-3 sm:gap-6">
+        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
           {logoUrl ? (
             // Admin-uploaded logo: rendered as a single image since we can't
             // know its internal composition (may already be a full lockup).
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoUrl} alt={siteName} className="h-12 w-auto" />
+            <img src={logoUrl} alt={siteName} className="h-10 w-auto sm:h-12" />
           ) : (
             // Default lockup: the NL monogram image plus a real text
             // wordmark set alongside it, rather than baked into a single
             // image. This lets the "NIGERIA LEX" wordmark be sized for
             // legibility independently of the monogram / header height.
+            // The text is deliberately allowed to shrink+truncate (rather
+            // than force whitespace-nowrap at every breakpoint) so the
+            // lockup never pushes the sticky header — and with it, the
+            // whole page — wider than the viewport on narrow phones.
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-mark.png" alt="" aria-hidden="true" className="h-10 w-auto shrink-0" />
-              <span className="whitespace-nowrap font-serif text-[15px] font-semibold uppercase tracking-[0.14em] text-navy">
+              <img
+                src="/logo-mark.png"
+                alt=""
+                aria-hidden="true"
+                className="h-9 w-auto shrink-0 sm:h-10"
+              />
+              <span className="min-w-0 truncate font-serif text-[12px] font-semibold uppercase tracking-[0.08em] text-navy sm:text-[15px] sm:tracking-[0.14em]">
                 {siteName}
               </span>
             </>
@@ -54,7 +63,10 @@ export async function Header() {
           <ul className="flex items-center gap-8 text-[13px] font-medium tracking-[0.04em] text-navy-ink">
             {NAV_ITEMS.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="uppercase transition-colors hover:text-green">
+                <Link
+                  href={item.href}
+                  className="uppercase transition-colors hover:text-green"
+                >
                   {item.label}
                 </Link>
               </li>
@@ -73,5 +85,5 @@ export async function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
