@@ -1,97 +1,108 @@
-import type { CollectionConfig } from 'payload'
-import { safeRevalidatePath } from '../utilities/revalidate'
+import type { CollectionConfig } from "payload";
+import { safeRevalidatePath } from "../utilities/revalidate";
 
 export const Intelligence: CollectionConfig = {
-  slug: 'intelligence',
+  slug: "intelligence",
   admin: {
-    useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'publishedAt', 'isSubscriberOnly'],
-    group: 'Content',
-    description: 'Nigeria Lex Intelligence — articles, reports, briefings and analysis.',
+    useAsTitle: "title",
+    defaultColumns: ["title", "category", "publishedAt", "isSubscriberOnly"],
+    group: "Content",
+    description:
+      "Nigeria Lex Intelligence — articles, reports, briefings and analysis.",
   },
   hooks: {
     afterChange: [
       ({ doc }) => {
-        safeRevalidatePath('/') // homepage "Latest Intelligence" preview
-        safeRevalidatePath('/intelligence')
-        if (doc?.slug) safeRevalidatePath(`/intelligence/${doc.slug}`)
-        return doc
+        safeRevalidatePath("/"); // homepage "Latest Intelligence" preview
+        safeRevalidatePath("/intelligence");
+        if (doc?.slug) safeRevalidatePath(`/intelligence/${doc.slug}`);
+        return doc;
       },
     ],
     afterDelete: [
       ({ doc }) => {
-        safeRevalidatePath('/')
-        safeRevalidatePath('/intelligence')
-        if (doc?.slug) safeRevalidatePath(`/intelligence/${doc.slug}`)
-        return doc
+        safeRevalidatePath("/");
+        safeRevalidatePath("/intelligence");
+        if (doc?.slug) safeRevalidatePath(`/intelligence/${doc.slug}`);
+        return doc;
       },
     ],
   },
   access: {
     read: ({ req: { user } }) => {
-      if (user) return true
-      return { publishedAt: { less_than_equal: new Date().toISOString() } }
+      if (user) return true;
+      return { publishedAt: { less_than_equal: new Date().toISOString() } };
     },
     create: ({ req: { user } }) => Boolean(user),
     update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => user?.role === 'admin',
+    delete: ({ req: { user } }) => user?.role === "admin",
   },
   fields: [
-    { name: 'title', type: 'text', required: true },
+    { name: "title", type: "text", required: true },
     {
-      name: 'slug',
-      type: 'text',
+      name: "slug",
+      type: "text",
       required: true,
       unique: true,
-      admin: { position: 'sidebar' },
+      admin: { position: "sidebar" },
     },
     {
-      name: 'publishedAt',
-      type: 'date',
-      admin: { position: 'sidebar', date: { pickerAppearance: 'dayAndTime' } },
+      name: "publishedAt",
+      type: "date",
+      admin: { position: "sidebar", date: { pickerAppearance: "dayAndTime" } },
     },
     {
-      name: 'author',
-      type: 'relationship',
-      relationTo: 'users',
-      admin: { position: 'sidebar' },
+      name: "author",
+      type: "relationship",
+      relationTo: "users",
+      admin: { position: "sidebar" },
     },
     {
-      name: 'category',
-      type: 'select',
+      name: "category",
+      type: "select",
       required: true,
       options: [
-        'Article',
-        'Report',
-        'Briefing',
-        'Sector Briefing',
-        'Transaction Intelligence',
-        'Regulatory Intelligence',
-        'Investor Briefing',
+        { label: "Article", value: "Article" },
+        { label: "Report", value: "Report" },
+        { label: "Briefing", value: "Briefing" },
+        { label: "Sector Briefing", value: "Sector Briefing" },
+        {
+          label: "Transaction Intelligence",
+          value: "Transaction Intelligence",
+        },
+        { label: "Regulatory Intelligence", value: "Regulatory Intelligence" },
+        { label: "Investor Briefing", value: "Investor Briefing" },
       ],
-      admin: { position: 'sidebar' },
+      admin: { position: "sidebar" },
     },
     {
-      name: 'summary',
-      type: 'textarea',
+      name: "summary",
+      type: "textarea",
       required: true,
-      admin: { description: 'Shown on listing pages and as the article/report standfirst.' },
+      admin: {
+        description:
+          "Shown on listing pages and as the article/report standfirst.",
+      },
     },
-    { name: 'content', type: 'richText', required: true },
+    { name: "content", type: "richText", required: true },
     {
-      name: 'isSubscriberOnly',
-      type: 'checkbox',
+      name: "isSubscriberOnly",
+      type: "checkbox",
       defaultValue: false,
       admin: {
-        position: 'sidebar',
-        description: 'Restrict the full item to Nigeria Lex subscribers. Summary always remains public.',
+        position: "sidebar",
+        description:
+          "Restrict the full item to Nigeria Lex subscribers. Summary always remains public.",
       },
     },
     {
-      name: 'pdfAttachment',
-      type: 'upload',
-      relationTo: 'media',
-      admin: { description: 'Optional downloadable PDF (full report / briefing document).' },
+      name: "pdfAttachment",
+      type: "upload",
+      relationTo: "media",
+      admin: {
+        description:
+          "Optional downloadable PDF (full report / briefing document).",
+      },
     },
   ],
-}
+};

@@ -1,5 +1,5 @@
-import type { CollectionConfig } from 'payload'
-import { safeRevalidatePath } from '../utilities/revalidate'
+import type { CollectionConfig } from "payload";
+import { safeRevalidatePath } from "../utilities/revalidate";
 
 /**
  * Individual firm pages are independent research profiles — not paid
@@ -8,126 +8,151 @@ import { safeRevalidatePath } from '../utilities/revalidate'
  * buy prominence within this collection (see brief §9, §Independence).
  */
 export const Firms: CollectionConfig = {
-  slug: 'firms',
+  slug: "firms",
   admin: {
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'researchStatus', 'updatedAt'],
-    group: 'Research',
+    useAsTitle: "name",
+    defaultColumns: ["name", "researchStatus", "updatedAt"],
+    group: "Research",
     description:
       'Independent firm research profiles. Firms & Lawyers is public-facing as a "Research in progress" notice until entries here are published.',
   },
   hooks: {
     afterChange: [
       ({ doc }) => {
-        safeRevalidatePath('/firms')
-        if (doc?.slug) safeRevalidatePath(`/firms/${doc.slug}`)
-        return doc
+        safeRevalidatePath("/firms");
+        if (doc?.slug) safeRevalidatePath(`/firms/${doc.slug}`);
+        return doc;
       },
     ],
     afterDelete: [
       ({ doc }) => {
-        safeRevalidatePath('/firms')
-        if (doc?.slug) safeRevalidatePath(`/firms/${doc.slug}`)
-        return doc
+        safeRevalidatePath("/firms");
+        if (doc?.slug) safeRevalidatePath(`/firms/${doc.slug}`);
+        return doc;
       },
     ],
   },
   access: {
     read: ({ req: { user } }) => {
-      if (user) return true
+      if (user) return true;
       // Public visitors only ever see published research.
-      return { researchStatus: { equals: 'published' } }
+      return { researchStatus: { equals: "published" } };
     },
     create: ({ req: { user } }) => Boolean(user),
     update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => user?.role === 'admin',
+    delete: ({ req: { user } }) => user?.role === "admin",
   },
   fields: [
-    { name: 'name', type: 'text', required: true },
+    { name: "name", type: "text", required: true },
     {
-      name: 'slug',
-      type: 'text',
+      name: "slug",
+      type: "text",
       required: true,
       unique: true,
-      admin: { position: 'sidebar', description: 'URL-friendly identifier, e.g. "example-llp".' },
+      admin: {
+        position: "sidebar",
+        description: 'URL-friendly identifier, e.g. "example-llp".',
+      },
     },
     {
-      name: 'logo',
-      type: 'upload',
-      relationTo: 'media',
-      admin: { description: 'Firm logo, used only on the firm\'s own research profile.' },
+      name: "logo",
+      type: "upload",
+      relationTo: "media",
+      admin: {
+        description: "Firm logo, used only on the firm's own research profile.",
+      },
     },
     {
-      name: 'overview',
-      type: 'richText',
-      admin: { description: 'Firm Overview — independent editorial summary of the firm.' },
+      name: "overview",
+      type: "richText",
+      admin: {
+        description:
+          "Firm Overview — independent editorial summary of the firm.",
+      },
     },
     {
-      name: 'coreCapabilities',
-      type: 'array',
-      labels: { singular: 'Capability', plural: 'Core Capabilities' },
-      fields: [{ name: 'capability', type: 'text', required: true }],
+      name: "coreCapabilities",
+      type: "array",
+      labels: { singular: "Capability", plural: "Core Capabilities" },
+      fields: [{ name: "capability", type: "text", required: true }],
     },
     {
-      name: 'practiceAreas',
-      type: 'select',
+      name: "practiceAreas",
+      type: "select",
       hasMany: true,
       options: [
-        'Banking & Finance',
-        'Capital Markets',
-        'Corporate & M&A',
-        'Private Equity & Venture Capital',
-        'Energy & Natural Resources',
-        'Power & Infrastructure',
-        'Projects & Project Finance',
-        'Technology, Media & Telecommunications',
-        'Competition & Antitrust',
-        'Tax',
-        'Employment',
-        'Intellectual Property',
-        'Real Estate',
-        'Dispute Resolution & Arbitration',
-        'Regulatory & Compliance',
+        { label: "Banking & Finance", value: "Banking & Finance" },
+        { label: "Capital Markets", value: "Capital Markets" },
+        { label: "Corporate & M&A", value: "Corporate & M&A" },
+        {
+          label: "Private Equity & Venture Capital",
+          value: "Private Equity & Venture Capital",
+        },
+        {
+          label: "Energy & Natural Resources",
+          value: "Energy & Natural Resources",
+        },
+        { label: "Power & Infrastructure", value: "Power & Infrastructure" },
+        {
+          label: "Projects & Project Finance",
+          value: "Projects & Project Finance",
+        },
+        {
+          label: "Technology, Media & Telecommunications",
+          value: "Technology, Media & Telecommunications",
+        },
+        { label: "Competition & Antitrust", value: "Competition & Antitrust" },
+        { label: "Tax", value: "Tax" },
+        { label: "Employment", value: "Employment" },
+        { label: "Intellectual Property", value: "Intellectual Property" },
+        { label: "Real Estate", value: "Real Estate" },
+        {
+          label: "Dispute Resolution & Arbitration",
+          value: "Dispute Resolution & Arbitration",
+        },
+        { label: "Regulatory & Compliance", value: "Regulatory & Compliance" },
       ],
       admin: {
-        description: 'Only show categories Nigeria Lex is actively researching (brief §8).',
+        description:
+          "Only show categories Nigeria Lex is actively researching (brief §8).",
       },
     },
     {
-      name: 'representativeExperience',
-      type: 'array',
-      labels: { singular: 'Matter', plural: 'Representative Experience' },
+      name: "representativeExperience",
+      type: "array",
+      labels: { singular: "Matter", plural: "Representative Experience" },
       fields: [
-        { name: 'description', type: 'textarea', required: true },
-        { name: 'year', type: 'number' },
+        { name: "description", type: "textarea", required: true },
+        { name: "year", type: "number" },
       ],
     },
     {
-      name: 'sectorStrengths',
-      type: 'array',
-      fields: [{ name: 'sector', type: 'text', required: true }],
+      name: "sectorStrengths",
+      type: "array",
+      fields: [{ name: "sector", type: "text", required: true }],
     },
     {
-      name: 'crossBorderExperience',
-      type: 'richText',
+      name: "crossBorderExperience",
+      type: "richText",
     },
     {
-      name: 'nigeriaLexAnalysis',
-      type: 'richText',
+      name: "nigeriaLexAnalysis",
+      type: "richText",
       admin: {
-        description: 'Editorial analysis — Nigeria Lex\'s independent assessment of the firm.',
+        description:
+          "Editorial analysis — Nigeria Lex's independent assessment of the firm.",
       },
     },
     {
-      name: 'researchStatus',
-      type: 'select',
+      name: "researchStatus",
+      type: "select",
       required: true,
-      defaultValue: 'pilot_2026',
+      defaultValue: "pilot_2026",
       options: [
-        { label: 'Pilot 2026 (in progress)', value: 'pilot_2026' },
-        { label: 'Published', value: 'published' },
+        { label: "Pilot 2026 (in progress)", value: "pilot_2026" },
+        { label: "Published", value: "published" },
       ],
-      admin: { position: 'sidebar' },
+      admin: { position: "sidebar" },
     },
   ],
-}
+};

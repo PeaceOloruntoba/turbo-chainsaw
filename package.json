@@ -13,7 +13,8 @@
     "payload": "dotenv -e .env -- payload",
     "generate:types": "dotenv -e .env -- payload generate:types",
     "generate:importmap": "dotenv -e .env -- payload generate:importmap",
-    "seed": "dotenv -e .env -- tsx src/seed/index.ts"
+    "seed": "dotenv -e .env -- tsx src/seed/index.ts",
+    "make-admin": "dotenv -e .env -- tsx src/seed/makeAdminCli.ts"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "3.88.0",
