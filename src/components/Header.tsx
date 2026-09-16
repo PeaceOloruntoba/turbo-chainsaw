@@ -27,8 +27,9 @@ export async function Header() {
   const logoUrl = (settings?.logo as any)?.url as string | undefined;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
-      <div className="container flex h-[76px] items-center justify-between gap-3 sm:gap-6">
+    <>
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
+        <div className="container flex h-[76px] items-center justify-between gap-3 sm:gap-6">
         <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
           {logoUrl ? (
             // Admin-uploaded logo: rendered as a single image since we can't
@@ -83,7 +84,9 @@ export async function Header() {
           </Link>
           <MobileNav />
         </div>
-      </div>
-    </header>
+        </div>
+      </header>
+      <div aria-hidden="true" className="h-[76px]" />
+    </>
   );
 }
