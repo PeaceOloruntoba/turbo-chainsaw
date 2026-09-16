@@ -58,6 +58,7 @@ export const AboutContent: GlobalConfig = {
     },
     {
       name: 'researchPartnerText',
+      label: 'Strategic Research and Intelligence Partner',
       type: 'textarea',
       required: true,
       defaultValue:

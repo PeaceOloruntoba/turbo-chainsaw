@@ -8,14 +8,21 @@ import { absoluteUrl, truncate } from '@/lib/seo'
 type Args = { params: Promise<{ slug: string }> }
 
 async function getArticle(slug: string) {
-  const payload = await getPayloadClient()
-  const result = await payload.find({
-    collection: 'intelligence',
-    where: { slug: { equals: slug } },
-    limit: 1,
-    depth: 1,
-  })
-  return result.docs[0] ?? null
+  // Guarded like every other data-fetch on the public site (see Header,
+  // Footer, the /intelligence list page, etc.) — a transient DB error here
+  // previously bubbled up as an unhandled 500 instead of a clean 404.
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'intelligence',
+      where: { slug: { equals: slug } },
+      limit: 1,
+      depth: 1,
+    })
+    return result.docs[0] ?? null
+  } catch {
+    return null
+  }
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
@@ -125,11 +132,11 @@ export default async function IntelligenceArticlePage({ params }: Args) {
             Subscribe
           </Link>
         </div>
-      ) : (
+      ) : article.content ? (
         <div className="prose prose-sm mt-10 max-w-none">
           <RichText data={article.content} />
         </div>
-      )}
+      ) : null}
 
       {article.pdfAttachment?.url && !isGated && (
         <a

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -37,11 +37,26 @@ const SLIDES = [
     src: 'https://images.unsplash.com/photo-1721907758701-d118fdd56b50?q=80&w=1600&auto=format&fit=crop',
     alt: 'A bridge over water in Lagos, Nigeria, in black and white.',
   },
+  {
+    src: 'https://images.unsplash.com/photo-1640475168872-4d8635675fc1?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Cityscape of high-rise buildings in downtown Lagos Island, Nigeria.',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1572727850654-f50a7ead20df?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Street-level view of buildings in Victoria Island, Lagos, Nigeria.',
+  },
 ]
+
+// How long each slide stays on screen before auto-advancing.
+const AUTOPLAY_INTERVAL_MS = 5000
 
 export function HomeHeroGallery() {
   const scrollerRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
+  // Auto-advance pauses on any manual interaction (arrows, dots, swipe/
+  // drag) so it never fights the visitor, and permanently for anyone who
+  // has asked their OS/browser for reduced motion.
+  const [autoplayEnabled, setAutoplayEnabled] = useState(true)
 
   function scrollToIndex(index: number) {
     const el = scrollerRef.current
@@ -57,12 +72,35 @@ export function HomeHeroGallery() {
     setActive(Math.round(el.scrollLeft / el.clientWidth))
   }
 
+  function handleManualNav(index: number) {
+    setAutoplayEnabled(false)
+    scrollToIndex(index)
+  }
+
+  useEffect(() => {
+    if (!autoplayEnabled) return
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return
+    }
+
+    const id = window.setInterval(() => {
+      const el = scrollerRef.current
+      if (!el) return
+      const next = (active + 1) % SLIDES.length
+      el.scrollTo({ left: next * el.clientWidth, behavior: 'smooth' })
+      setActive(next)
+    }, AUTOPLAY_INTERVAL_MS)
+
+    return () => window.clearInterval(id)
+  }, [active, autoplayEnabled])
+
   return (
     <>
       {/* Photo track — the only layer that actually scrolls. */}
       <div
         ref={scrollerRef}
         onScroll={handleScroll}
+        onPointerDown={() => setAutoplayEnabled(false)}
         className="absolute inset-0 flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {SLIDES.map((slide, index) => (
@@ -89,7 +127,7 @@ export function HomeHeroGallery() {
       <button
         type="button"
         aria-label="Previous photo"
-        onClick={() => scrollToIndex(active - 1)}
+        onClick={() => handleManualNav(active - 1)}
         disabled={active === 0}
         className="absolute left-3 top-1/2 z-20 hidden -translate-y-1/2 rounded-full bg-navy/70 p-2.5 text-paper backdrop-blur-sm transition-opacity hover:bg-navy disabled:pointer-events-none disabled:opacity-0 sm:block"
       >
@@ -98,7 +136,7 @@ export function HomeHeroGallery() {
       <button
         type="button"
         aria-label="Next photo"
-        onClick={() => scrollToIndex(active + 1)}
+        onClick={() => handleManualNav(active + 1)}
         disabled={active === SLIDES.length - 1}
         className="absolute right-3 top-1/2 z-20 hidden -translate-y-1/2 rounded-full bg-navy/70 p-2.5 text-paper backdrop-blur-sm transition-opacity hover:bg-navy disabled:pointer-events-none disabled:opacity-0 sm:block"
       >
@@ -118,7 +156,7 @@ export function HomeHeroGallery() {
             role="tab"
             aria-selected={index === active}
             aria-label={`Photo ${index + 1} of ${SLIDES.length}`}
-            onClick={() => scrollToIndex(index)}
+            onClick={() => handleManualNav(index)}
             className={`h-1.5 rounded-full transition-all ${
               index === active ? 'w-6 bg-green' : 'w-1.5 bg-paper/40 hover:bg-paper/60'
             }`}

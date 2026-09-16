@@ -1,18 +1,25 @@
 import nodemailer from 'nodemailer'
 
 /**
- * Thin wrapper around Nodemailer/Gmail SMTP for the site's transactional
- * emails (subscriber + research/contact confirmations, staff alerts).
+ * Thin wrapper around Nodemailer/SMTP for the site's transactional emails
+ * (subscriber + research/contact confirmations, staff alerts).
+ *
+ * Sends via the cPanel webmail mailbox for nigerialex.com (e.g.
+ * info@nigerialex.com) rather than a third-party provider like Gmail — see
+ * `.env.example` for where to find the exact host/port cPanel gives that
+ * mailbox (usually visible in webmail's "Configure Mail Client" screen at
+ * https://nigerialex.com/webmail).
  *
  * Configuration (all read from process.env, set in `.env`):
- *   SMTP_HOST      e.g. smtp.gmail.com
- *   SMTP_PORT      e.g. 465
- *   SMTP_USER      the sending Gmail address
- *   SMTP_PASS      a Gmail *app password* (not the normal account password —
- *                  Gmail rejects SMTP logins with a regular password. Generate
- *                  one at https://myaccount.google.com/apppasswords once
- *                  2-Step Verification is enabled on the sending account.)
- *   EMAIL_FROM     optional "From" header override, e.g. 'Nigeria Lex <no-reply@nigerialex.com>'
+ *   SMTP_HOST      cPanel's mail server for the domain, e.g. mail.nigerialex.com
+ *                  (sometimes a server hostname like server123.yourhost.com —
+ *                  check "Configure Mail Client" in webmail for the exact value)
+ *   SMTP_PORT      465 (SSL) or 587 (STARTTLS) — both work, see `secure` below
+ *   SMTP_USER      the full sending mailbox address, e.g. info@nigerialex.com
+ *   SMTP_PASS      that mailbox's webmail/email account password (the same
+ *                  one used to log in at https://nigerialex.com/webmail —
+ *                  not a cPanel account password)
+ *   EMAIL_FROM     optional "From" header override, e.g. 'Nigeria Lex <info@nigerialex.com>'
  *   EMAIL_NOTIFY_TO  staff inbox that receives new-subscriber / new-submission /
  *                    new-contact-message alerts. Defaults to info@nigerialex.com
  *                    if unset, but is fully configurable without a code change.

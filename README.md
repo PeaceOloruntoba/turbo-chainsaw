@@ -10,10 +10,10 @@ CMS v3 embedded natively.
 
 - **Framework:** Next.js 15 (App Router, TypeScript, React Server Components)
 - **CMS & API:** Payload CMS v3, embedded at `src/app/(payload)`
-- **Database:** Supabase Postgres via `@payloadcms/db-postgres` (direct connection — Supabase Auth/Edge Functions are not used)
+- **Database:** SQLite via `@payloadcms/db-sqlite` — a single file on the server's own disk (was Supabase Postgres; changed for cPanel deployment, see `DEPLOY_CPANEL.md`)
 - **Auth:** Payload's built-in HTTP-only cookie JWT auth (staff accounts only — see `src/collections/Users.ts`)
 - **Rich text:** `@payloadcms/richtext-lexical`
-- **Media/PDF storage:** `@payloadcms/storage-s3`
+- **Media/PDF storage:** local disk (`/public/media`), served directly by Next.js — no bucket/CDN dependency
 - **Styling:** Tailwind CSS, design tokens in `tailwind.config.ts`
 
 ## Project structure
@@ -58,9 +58,9 @@ without touching the repo).
 
 ## Local development
 
-**Requirements:** Node 20.9.0+ (required by Next.js 16 and by `sharp`), a
-Postgres database (Supabase or local), and (optionally, for uploads) an
-S3-compatible bucket.
+**Requirements:** Node 20.9.0+ (required by Next.js 16 and by `sharp`).
+No external database or bucket to provision — SQLite and local-disk media
+are both files inside this project.
 
 1. Install dependencies:
 
@@ -75,9 +75,10 @@ S3-compatible bucket.
    ```
 
    - `PAYLOAD_SECRET` — generate with `openssl rand -base64 32`
-   - `DATABASE_URI` — your Supabase Postgres **direct** connection string
-   - `S3_*` — your media bucket credentials (can be left blank while you're
-     only working on layout/content, but uploads won't work until set)
+   - `DATABASE_URI` — leave as the default `file:./data/nigeria-lex.db`
+     for local dev, or point it at a different path
+   - Media uploads (logos, lawyer photos, PDFs) just work — no credentials
+     needed; files land in `/public/media`
 
 3. Run the dev server:
 
@@ -168,51 +169,29 @@ copy are ready, they go in through `/admin` — no developer required.
 3. Deploy. Vercel builds `next build` automatically; no extra config needed
    beyond the env vars. `next.config.mjs` detects Vercel's build environment
    (`process.env.VERCEL`) and skips `output: 'standalone'` automatically —
-   that setting is only for the Docker/VPS target below and will break the
+   that setting is only for the cPanel target below and will break the
    Vercel build if applied there, so don't remove that conditional.
 
-Note: Payload's admin panel and file uploads work on Vercel, but for anything
-beyond light testing, prefer S3 (not local disk) for media — which is
-already how this project is configured.
+Note: Payload's admin panel works on Vercel, but file uploads won't
+persist there (Vercel's filesystem is ephemeral) now that media storage is
+local disk rather than S3 — Vercel isn't a supported target for this
+project's current setup. Use cPanel (`DEPLOY_CPANEL.md`) for production.
 
-### Option 2 — VPS via Docker + Nginx (production)
+### Option 2 — cPanel (production)
 
-1. On the VPS, clone the repo and create `.env` from `.env.example` with
-   production values (including a production `NEXT_PUBLIC_SERVER_URL`).
-2. Update `nginx/nginx.conf` with your real domain in place of
-   `nigerialex.com`.
-3. Obtain a first certificate (before Nginx can serve HTTPS), e.g.:
-
-   ```bash
-   docker compose run --rm certbot certonly \
-     --webroot -w /var/www/certbot \
-     -d nigerialex.com -d www.nigerialex.com
-   ```
-
-4. Build and start everything:
-
-   ```bash
-   docker compose up -d --build
-   ```
-
-   This runs three containers: `app` (Next.js + Payload, built via the
-   included multi-stage `Dockerfile`), `nginx` (reverse proxy + TLS
-   termination), and `certbot` (automatic certificate renewal).
-
-5. Point your domain's DNS A/AAAA records at the VPS if you haven't already.
+This is the production deployment target. The whole stack — app, SQLite
+database, and media uploads — runs on cPanel's own storage via cPanel's
+**Setup Node.js App** (Passenger), with no Docker, no separate reverse
+proxy, and no external services to provision. See `DEPLOY_CPANEL.md` for
+the full step-by-step: creating the Node.js app, building on the server
+itself (important — see why below), environment variables, and seeding
+the database.
 
 ## Troubleshooting
 
-**`getaddrinfo ENOTFOUND db.<ref>.supabase.co`** — Supabase's direct
-connection hostname is IPv6-only unless your project has the paid IPv4
-add-on. Many networks (including plenty of home/corporate Windows setups)
-can't route outbound IPv6, so Node fails to connect even though `nslookup`
-resolves the name fine. Fix: in the Supabase dashboard, click **Connect** →
-select the **Session pooler** tab (not Transaction pooler — Payload needs
-session-level features like prepared statements) → copy that connection
-string into `DATABASE_URI`. It looks like
-`postgresql://postgres.<project-ref>:[PASSWORD]@aws-0-<region>.pooler.supabase.com:5432/postgres`
-— note the host and username both differ from the direct string.
+For cPanel-specific deployment steps and troubleshooting (including why a
+locally-built-then-uploaded copy commonly 500s on admin/dynamic routes),
+see `DEPLOY_CPANEL.md`.
 
 **`missing secret key` when running `npm run seed`** — Next.js auto-loads
 `.env`, but a standalone script run via `tsx` does not. The seed script

@@ -7,4 +7,11 @@ out
 payload-types.ts
 .DS_Store
 *.log
-nginx/certbot
+
+# SQLite database file (server data — never commit/overwrite this on deploy)
+/data/
+*.db
+*.db-journal
+
+# Local media uploads (server data — never commit/overwrite this on deploy)
+/public/media/

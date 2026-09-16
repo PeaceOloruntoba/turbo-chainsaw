@@ -1,9 +1,8 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { buildConfig } from "payload";
-import { postgresAdapter } from "@payloadcms/db-postgres";
+import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
-import { s3Storage } from "@payloadcms/storage-s3";
 import sharp from "sharp";
 
 import { Users } from "./collections/Users";
@@ -59,33 +58,26 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
-  // Direct Postgres connection to Supabase. Supabase Auth and Edge Functions
-  // are deliberately not used — Payload owns auth and the schema directly.
-  db: postgresAdapter({
-    pool: {
-      connectionString: process.env.DATABASE_URI,
+  // SQLite, stored as a single file on the app's own server storage
+  // (see DATABASE_URI in .env — a local file path, e.g.
+  // file:./data/nigeria-lex.db). This replaced the Supabase Postgres
+  // connection so the whole stack — database and media — runs on cPanel's
+  // own storage with no external service to provision or pay for.
+  // Payload has no official MySQL adapter (its adapters are Postgres,
+  // SQLite and MongoDB), so SQLite is the closest fit to "use cPanel's own
+  // database" that Payload actually supports. See DEPLOY_CPANEL.md for
+  // the full reasoning and the Postgres fallback if your cPanel plan
+  // offers a real Postgres service instead.
+  db: sqliteAdapter({
+    client: {
+      url: process.env.DATABASE_URI || "file:./data/nigeria-lex.db",
     },
   }),
-  plugins: [
-    s3Storage({
-      collections: {
-        media: {
-          disablePayloadAccessControl: true,
-          prefix: "media",
-        },
-      },
-      bucket: process.env.S3_BUCKET || "",
-      config: {
-        region: process.env.S3_REGION,
-        endpoint: process.env.S3_ENDPOINT || undefined,
-        credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID || "",
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || "",
-        },
-        forcePathStyle: Boolean(process.env.S3_FORCE_PATH_STYLE),
-      },
-    }),
-  ],
+  // Media uploads now live on local disk under /public/media (see
+  // Media.ts `upload.staticDir`) instead of an S3/R2 bucket — this is
+  // cPanel's own storage, served directly by Next.js as static files.
+  // No storage plugin is needed for this; it's Payload's default
+  // behaviour once no storage adapter plugin is registered.
   cors: [process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000"].filter(
     Boolean,
   ),
