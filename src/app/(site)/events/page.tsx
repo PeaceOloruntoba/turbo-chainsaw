@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getPayloadClient } from '@/lib/payload'
+import { PageIntro } from '@/components/PageIntro'
 
 export const metadata: Metadata = {
   title: 'Events',
@@ -27,11 +28,14 @@ export default async function EventsPage() {
   const events = await getUpcomingEvents()
 
   return (
-    <div className="container max-w-3xl py-16 md:py-20">
-      <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">Events</p>
-      <h1 className="mt-2 font-serif text-3xl text-navy md:text-4xl">
-        Roundtables, briefings and research presentations.
-      </h1>
+    <>
+      <PageIntro
+        eyebrow="Events"
+        title="Roundtables, briefings and research presentations."
+        description="Meetings and presentations for the legal, investment and business communities."
+        tone="events"
+      />
+      <div className="container max-w-3xl py-16 md:py-20">
 
       {events.length === 0 ? (
         <div className="mt-10 rounded-sm border border-line bg-white p-8">
@@ -72,6 +76,7 @@ export default async function EventsPage() {
           ))}
         </ul>
       )}
-    </div>
+      </div>
+    </>
   )
 }

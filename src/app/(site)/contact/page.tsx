@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getPayloadClient } from "@/lib/payload";
 import { ContactForm } from "@/components/ContactForm";
+import { PageIntro } from "@/components/PageIntro";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -43,13 +44,14 @@ export default async function ContactPage() {
     "International presence — address to be confirmed.";
 
   return (
-    <div className="container max-w-2xl py-16 md:py-20">
-      <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
-        Contact
-      </p>
-      <h1 className="mt-2 font-serif text-3xl text-navy md:text-4xl">
-        Get in touch.
-      </h1>
+    <>
+      <PageIntro
+        eyebrow="Contact"
+        title="Get in touch."
+        description="Reach Nigeria Lex for research, editorial, partnerships, events and general enquiries."
+        tone="contact"
+      />
+      <div className="container max-w-2xl py-16 md:py-20">
 
       <section className="mt-12">
         <h2 className="font-serif text-lg text-navy">Departments</h2>
@@ -103,6 +105,7 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

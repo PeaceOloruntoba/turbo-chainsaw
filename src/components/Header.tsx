@@ -47,7 +47,7 @@ export async function Header() {
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo-mark.png"
+                src="/logo-lockup.png"
                 alt=""
                 aria-hidden="true"
                 className="h-9 w-auto shrink-0 sm:h-10"

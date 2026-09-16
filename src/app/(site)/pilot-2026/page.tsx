@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ResearchSubmissionForm } from '@/components/ResearchSubmissionForm'
 import { SubscribeForm } from '@/components/SubscribeForm'
+import { PageIntro } from '@/components/PageIntro'
 import { getPayloadClient } from '@/lib/payload'
 
 export const metadata: Metadata = {
@@ -54,13 +55,13 @@ export default async function Pilot2026Page() {
 
   return (
     <>
+      <PageIntro
+        eyebrow="Pilot 2026"
+        title="Nigeria Lex Pilot Study 2026"
+        description="Testing and refining an independent research methodology for Nigeria's corporate legal market."
+        tone="pilot"
+      />
       <div className="container max-w-3xl py-16 md:py-20">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
-          Pilot 2026
-        </p>
-        <h1 className="mt-2 font-serif text-3xl text-navy md:text-4xl">
-          Nigeria Lex Pilot Study 2026
-        </h1>
         <p className="mt-6 whitespace-pre-line text-[15px] leading-relaxed text-navy-ink">{intro}</p>
 
         {/* Distinct calls to action, immediately below the introduction, for

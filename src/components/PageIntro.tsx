@@ -5,6 +5,9 @@ const IMAGE_BY_TONE = {
   research: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1400&auto=format&fit=crop',
   intelligence: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1400&auto=format&fit=crop',
   firms: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1400&auto=format&fit=crop',
+  pilot: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1400&auto=format&fit=crop',
+  events: 'https://images.unsplash.com/photo-15053739-0d5e1a2d3f8e?q=80&w=1400&auto=format&fit=crop',
+  contact: 'https://images.unsplash.com/photo-1521791055366-0d553872125f?q=80&w=1400&auto=format&fit=crop',
 } as const
 
 type PageIntroProps = {
