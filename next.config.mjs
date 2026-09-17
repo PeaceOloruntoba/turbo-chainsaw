@@ -4,7 +4,9 @@ import { withPayload } from '@payloadcms/next/withPayload'
 const nextConfig = {
   reactStrictMode: true,
 
-  output: 'standalone',
+  // Vercel manages the Next.js runtime itself. Standalone output is kept for
+  // the cPanel Passenger deployment only.
+  ...(process.env.VERCEL ? {} : { output: 'standalone' }),
 
   typescript: {
     ignoreBuildErrors: true,

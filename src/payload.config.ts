@@ -2,7 +2,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { buildConfig } from "payload";
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
+import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { s3Storage } from "@payloadcms/storage-s3";
 import sharp from "sharp";
 
 import { Users } from "./collections/Users";
@@ -26,6 +28,12 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+const isVercel = Boolean(process.env.VERCEL);
+const databaseURL = process.env.DATABASE_URI || "file:./data/nigeria-lex.db";
+const usePostgres = isVercel || databaseURL.startsWith("postgres");
+const useS3 = Boolean(
+  process.env.S3_BUCKET && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY,
+);
 
 /**
  * Payload's `cors`/`csrf` allowlists are checked against the exact Origin
@@ -103,26 +111,37 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
-  // SQLite, stored as a single file on the app's own server storage
-  // (see DATABASE_URI in .env — a local file path, e.g.
-  // file:./data/nigeria-lex.db). This replaced the Supabase Postgres
-  // connection so the whole stack — database and media — runs on cPanel's
-  // own storage with no external service to provision or pay for.
-  // Payload has no official MySQL adapter (its adapters are Postgres,
-  // SQLite and MongoDB), so SQLite is the closest fit to "use cPanel's own
-  // database" that Payload actually supports. See DEPLOY_CPANEL.md for
-  // the full reasoning and the Postgres fallback if your cPanel plan
-  // offers a real Postgres service instead.
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URI || "file:./data/nigeria-lex.db",
-    },
-  }),
-  // Media uploads now live on local disk under /public/media (see
-  // Media.ts `upload.staticDir`) instead of an S3/R2 bucket — this is
-  // cPanel's own storage, served directly by Next.js as static files.
-  // No storage plugin is needed for this; it's Payload's default
-  // behaviour once no storage adapter plugin is registered.
+  db: usePostgres
+    ? postgresAdapter({
+        pool: {
+          connectionString: databaseURL,
+        },
+      })
+    : sqliteAdapter({
+        client: {
+          url: databaseURL,
+        },
+      }),
+  plugins: [
+    ...(useS3
+      ? [
+          s3Storage({
+            collections: { media: true },
+            bucket: process.env.S3_BUCKET!,
+            config: {
+              credentials: {
+                accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+              },
+              endpoint: process.env.S3_ENDPOINT || undefined,
+              forcePathStyle: process.env.S3_FORCE_PATH_STYLE === "true",
+              region: process.env.S3_REGION || "us-east-1",
+            },
+            clientUploads: true,
+          }),
+        ]
+      : []),
+  ],
   cors: allowedOrigins,
   csrf: allowedOrigins,
 });

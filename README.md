@@ -161,21 +161,25 @@ copy are ready, they go in through `/admin` — no developer required.
 
 ## Deployment
 
-### Option 1 — Vercel (Phase 1 testing)
+### Option 1 — Vercel
 
 1. Push this repository to GitHub/GitLab/Bitbucket and import it in Vercel.
-2. Add the environment variables from `.env.example` in the Vercel project
-   settings.
-3. Deploy. Vercel builds `next build` automatically; no extra config needed
-   beyond the env vars. `next.config.mjs` detects Vercel's build environment
-   (`process.env.VERCEL`) and skips `output: 'standalone'` automatically —
-   that setting is only for the cPanel target below and will break the
-   Vercel build if applied there, so don't remove that conditional.
+2. Create a Supabase Postgres database and set `DATABASE_URI` to its pooled
+  connection string. Vercel's filesystem is ephemeral, so SQLite is not
+  suitable for the Vercel deployment.
+3. Create a Supabase Storage bucket and add its S3 credentials:
+  `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`,
+  `S3_ENDPOINT`, and `S3_FORCE_PATH_STYLE=true`.
+4. Add `PAYLOAD_SECRET` and `NEXT_PUBLIC_SERVER_URL`, plus the SMTP variables
+  if the forms should send email.
+5. Deploy. Vercel builds `next build` automatically. No SSH or post-deploy
+  command is required.
+6. Initialize the database by opening `/api/seed?secret=YOUR_PAYLOAD_SECRET`
+  once. To promote the first registered user, open
+  `/api/seed?action=make-admin&secret=YOUR_PAYLOAD_SECRET&email=you@example.com`.
 
-Note: Payload's admin panel works on Vercel, but file uploads won't
-persist there (Vercel's filesystem is ephemeral) now that media storage is
-local disk rather than S3 — Vercel isn't a supported target for this
-project's current setup. Use cPanel (`DEPLOY_CPANEL.md`) for production.
+When the S3 variables are present, Payload uses Supabase Storage for media;
+otherwise local and cPanel deployments continue to use `public/media`.
 
 ### Option 2 — cPanel (production)
 
@@ -330,3 +334,4 @@ real gap worth knowing about:**
 Per the design brief, the domain, hosting account, Supabase project, S3
 bucket, and admin credentials should be registered under Kaye & Crowther
 Limited / Nigeria Lex accounts, not the developer's personal accounts.
+
