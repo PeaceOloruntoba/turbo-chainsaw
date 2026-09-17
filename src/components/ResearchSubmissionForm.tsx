@@ -90,14 +90,14 @@ export function ResearchSubmissionForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5">
+    <form onSubmit={handleSubmit} className="grid min-w-0 gap-5">
       <label className="grid gap-1.5 text-[13px] font-medium text-navy">
         Submission type
         <select
           name="submissionType"
           value={submissionType}
           onChange={(event) => setSubmissionType(event.target.value as SubmissionType)}
-          className="rounded-sm border border-line bg-white px-3.5 py-2.5 text-[15px] text-navy-ink outline-none focus:border-green"
+          className="w-full min-w-0 max-w-full rounded-sm border border-line bg-white px-3.5 py-2.5 text-[15px] text-navy-ink outline-none focus:border-green"
         >
           {SUBMISSION_TYPE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -107,11 +107,11 @@ export function ResearchSubmissionForm({
         </select>
       </label>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid min-w-0 gap-5 sm:grid-cols-2">
         <TextField label="Organisation" name="organisationName" required />
         <TextField label="Contact name" name="contactName" required />
       </div>
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid min-w-0 gap-5 sm:grid-cols-2">
         <TextField label="Contact email" name="contactEmail" type="email" required />
         <TextField label="Contact phone" name="contactPhone" />
       </div>
@@ -130,7 +130,7 @@ export function ResearchSubmissionForm({
         <textarea
           name="message"
           rows={4}
-          className="rounded-sm border border-line bg-white px-3.5 py-2.5 text-[15px] text-navy-ink outline-none focus:border-green"
+          className="w-full min-w-0 max-w-full rounded-sm border border-line bg-white px-3.5 py-2.5 text-[15px] text-navy-ink outline-none focus:border-green"
         />
       </label>
 
@@ -164,7 +164,7 @@ export function ResearchSubmissionForm({
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="w-fit rounded-sm bg-green px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep disabled:opacity-60"
+        className="w-full rounded-sm bg-green px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep disabled:opacity-60 sm:w-fit"
       >
         {status === 'submitting' ? 'Sending…' : 'Submit securely'}
       </button>

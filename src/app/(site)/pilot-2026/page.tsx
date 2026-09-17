@@ -139,8 +139,8 @@ export default async function Pilot2026Page() {
       </section>
 
       <section id="law-firms-participate" className="scroll-mt-24 border-t border-line bg-white">
-        <div className="container grid gap-12 py-16 md:grid-cols-2 md:py-20">
-          <div>
+        <div className="container grid gap-12 py-12 md:grid-cols-2 md:gap-16 md:py-20">
+          <div className="min-w-0">
             <h2 className="font-serif text-2xl text-navy">Law Firms &mdash; Participate in Research</h2>
             <p className="mt-3 text-[14px] leading-relaxed text-slate">
               Submit information for consideration as part of the Pilot Study 2026.
@@ -149,7 +149,7 @@ export default async function Pilot2026Page() {
               <ResearchSubmissionForm defaultType="law_firm" />
             </div>
           </div>
-          <div id="institutional-contribute" className="scroll-mt-24">
+          <div id="institutional-contribute" className="scroll-mt-24 min-w-0">
             <h2 className="font-serif text-2xl text-navy">Institutional Users &mdash; Contribute</h2>
             <p className="mt-3 text-[14px] leading-relaxed text-slate">
               Share market evidence or feedback to inform Nigeria Lex research.
