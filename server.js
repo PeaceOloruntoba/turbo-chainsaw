@@ -1,9 +1,17 @@
-var http = require('http');
-var server = http.createServer(function(req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    var message = 'It works!\n',
-        version = 'NodeJS ' + process.versions.node + '\n',
-        response = [message, version].join('\n');
-    res.end(response);
-});
-server.listen();
+const path = require('path');
+
+// Set environment to production
+process.env.NODE_ENV = 'production';
+process.env.PORT = process.env.PORT || 3000;
+
+// Path to Next.js standalone entry point
+const standaloneServer = path.join(__dirname, '.next', 'standalone', 'server.js');
+
+try {
+  // Pass execution directly to the Next.js standalone server
+  require(standaloneServer);
+} catch (err) {
+  console.error('Failed to start Next.js standalone server:', err);
+  process.exit(1);
+}
+
