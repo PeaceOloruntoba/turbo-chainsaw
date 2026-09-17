@@ -5,21 +5,18 @@ const nextConfig = {
   reactStrictMode: true,
   ...(process.env.VERCEL ? {} : { output: 'standalone' }),
 
-  // Disable in-memory TypeScript type checking to prevent memory spikes
   typescript: {
     ignoreBuildErrors: true,
   },
 
-  // Disable ESLint checking during build as well to save RAM
-  eslint: {
-    ignoreDuringBuilds: true,
+  // Restrict static page generation to 1 thread to avoid NPROC and RAM limits
+  experimental: {
+    cpus: 1,
+    workerThreads: false,
+    webpackMemoryOptimizations: true,
   },
 
   productionBrowserSourceMaps: false,
-
-  experimental: {
-    webpackMemoryOptimizations: true,
-  },
 
   webpack: (config) => {
     config.parallelism = 1;
