@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "NODE_OPTIONS='--max-old-space-size=512 --disable-warning=ExperimentalWarning' next build --webpack",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "node scripts/patch-payload-loadenv.mjs",
