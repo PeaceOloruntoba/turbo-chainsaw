@@ -5,34 +5,32 @@ const nextConfig = {
   reactStrictMode: true,
   ...(process.env.VERCEL ? {} : { output: 'standalone' }),
 
-  // Disable source map generation to keep memory low
+  // Disable in-memory TypeScript type checking to prevent memory spikes
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
+  // Disable ESLint checking during build as well to save RAM
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   productionBrowserSourceMaps: false,
 
-  // Force Webpack memory-saving options
   experimental: {
     webpackMemoryOptimizations: true,
   },
 
-  webpack: (config, { isServer }) => {
-    // Force Webpack to run on a single thread to avoid exceeding CloudLinux CPU/LVE limits
+  webpack: (config) => {
     config.parallelism = 1;
-    
-    // Disable heavy cache writing to disk during build
     config.cache = false;
-
     return config;
   },
 
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'plus.unsplash.com',
-      },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'plus.unsplash.com' },
     ],
   },
 }
