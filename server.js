@@ -1,4 +1,9 @@
-const path = require('path');
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+
+const require = createRequire(import.meta.url);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Set environment to production
 process.env.NODE_ENV = 'production';
