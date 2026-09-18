@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPayloadClient } from '@/lib/payload'
-import { promoteToAdmin } from '@/seed/makeAdmin'
 import { runSeed } from '@/seed/runSeed'
 
+export const dynamic = 'force-dynamic'
+
 /**
- * Runs deployment bootstrap tasks inside a live Next.js request. This keeps
- * Vercel deployments fully functional without SSH, a shell, or a post-build
- * command. The same endpoint can promote the first admin account.
+ * Runs deployment bootstrap tasks inside a live Next.js request. The seed
+ * action enables Payload's schema push before loading the config, so the
+ * first request can create tables in a new database and then insert content.
+ * The same endpoint can promote the first admin account.
  *
  * Protected by PAYLOAD_SECRET as a simple shared-secret check — this is
  * a developer/admin convenience endpoint, not a public API.
@@ -29,7 +30,16 @@ async function handle(req: NextRequest) {
   }
 
   try {
-    const payload = await getPayloadClient()
+    // This must happen before importing the Payload config. The adapter reads
+    // this flag while the config is constructed, not when a query is made.
+    if (action === 'seed') process.env.PAYLOAD_DB_PUSH = 'true'
+
+    const [{ getPayload }, { default: config }, { promoteToAdmin }] = await Promise.all([
+      import('payload'),
+      import('@payload-config'),
+      import('@/seed/makeAdmin'),
+    ])
+    const payload = await getPayload({ config })
     if (action === 'make-admin') {
       if (!email) {
         return NextResponse.json({ error: 'Pass ?email=<the account to promote>' }, { status: 400 })
