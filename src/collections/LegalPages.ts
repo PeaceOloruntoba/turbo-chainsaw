@@ -7,9 +7,8 @@ import { safeRevalidatePath } from '../utilities/revalidate'
  * this collection rather than a hardcoded page, so Nigeria Lex staff can
  * update legal copy from /admin without a developer.
  *
- * Seeded content (see src/seed) is clearly marked as a draft placeholder —
- * it must be reviewed and finalised by Nigeria Lex's legal counsel before
- * launch. Nothing here should be treated as reviewed legal advice.
+ * Seeded content (see src/seed) is client-approved and published. Staff can
+ * continue to update these pages from the admin panel.
  */
 export const LegalPages: CollectionConfig = {
   slug: 'legal-pages',
@@ -66,11 +65,11 @@ export const LegalPages: CollectionConfig = {
       defaultValue: 'draft_placeholder',
       options: [
         { label: 'Draft placeholder — not reviewed', value: 'draft_placeholder' },
-        { label: 'Reviewed by counsel — final', value: 'final' },
+        { label: 'Published', value: 'published' },
       ],
       admin: {
         position: 'sidebar',
-        description: 'Shows a draft notice banner on the public page until marked Final.',
+        description: 'Draft pages show a notice on the public page until approved and published.',
       },
     },
     { name: 'body', type: 'richText', required: true },

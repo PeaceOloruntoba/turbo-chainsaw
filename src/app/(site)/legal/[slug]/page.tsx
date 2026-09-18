@@ -39,8 +39,7 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
     title: page?.title || 'Legal',
     description: page?.title ? `${page.title} — Nigeria Lex.` : 'Nigeria Lex legal information.',
     alternates: { canonical: absoluteUrl(`/legal/${slug}`) },
-    // Unreviewed placeholder text shouldn't be indexed until legal counsel
-    // has signed off on it — see the in-page draft notice below.
+    // Unreviewed placeholder text should not be indexed until it is approved.
     robots: isUnreviewed ? { index: false, follow: true } : { index: true, follow: true },
   }
 }
@@ -60,7 +59,7 @@ export default async function LegalPage({ params }: Args) {
 
       {(!page || page.reviewStatus === 'draft_placeholder') && (
         <div className="mt-6 rounded-sm border border-line bg-white px-5 py-4 text-[13px] leading-relaxed text-slate">
-          <strong className="text-navy">Draft — pending legal review.</strong> The text below is
+          <strong className="text-navy">Draft — pending approval.</strong> The text below is
           placeholder content for development and design purposes. It has not been reviewed by
           Nigeria Lex&rsquo;s legal counsel and must not be relied upon until finalised.
         </div>

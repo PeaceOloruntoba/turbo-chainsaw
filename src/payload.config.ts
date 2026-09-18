@@ -31,6 +31,7 @@ const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 const isVercel = Boolean(process.env.VERCEL);
 const databaseURL = process.env.DATABASE_URI || "file:./data/nigeria-lex.db";
 const usePostgres = isVercel || databaseURL.startsWith("postgres");
+const pushDatabaseSchema = process.env.PAYLOAD_DB_PUSH === "true";
 const useS3 = Boolean(
   process.env.S3_BUCKET && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY,
 );
@@ -116,11 +117,13 @@ export default buildConfig({
         pool: {
           connectionString: databaseURL,
         },
+        push: pushDatabaseSchema,
       })
     : sqliteAdapter({
         client: {
           url: databaseURL,
         },
+        push: pushDatabaseSchema,
       }),
   plugins: [
     ...(useS3

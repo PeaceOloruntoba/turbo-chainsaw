@@ -148,9 +148,8 @@ Everything an editor needs is in the `/admin` panel:
   Content, Research Content, Pilot 2026 Content globals) — no code changes
   needed.
 - **Edit legal pages** (Privacy Policy, Terms of Use, etc.) → Legal Pages
-  collection. Each page has a "Draft placeholder" / "Final" status; set it to
-  Final once legal counsel has reviewed the text to remove the draft notice
-  from the public page.
+  collection. Client-approved seed content is published; draft pages show a
+  notice on the public page until approved and published.
 - **Change the logo** → Site Settings → Logo (see "Placeholder logo" above)
 - **View subscriber enquiries** → Subscribers collection (newsletter
   sign-ups) and Research Submissions collection (firm/institutional

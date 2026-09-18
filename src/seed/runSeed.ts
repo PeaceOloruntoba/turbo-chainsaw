@@ -7,9 +7,8 @@ import { paragraphsToLexical } from './lexical'
  * one. Globals are always overwritten with the content below — this is
  * the authoritative source, not just a fallback for empty fields — so
  * re-running this script after content changes here will push those
- * changes to the database. Legal Pages remain an explicit, clearly-marked
- * draft pending legal review; nothing here should be treated as reviewed
- * legal advice.
+ * changes to the database. The legal pages below have been approved by the
+ * client and are seeded as published content.
  *
  * Usage:  npm run seed
  * Safe to re-run: it updates existing documents by slug rather than
@@ -342,7 +341,7 @@ export async function runSeed(payload: Payload) {
     const data = {
       title: page.title,
       slug: page.slug as any,
-      reviewStatus: 'draft_placeholder' as const,
+      reviewStatus: 'published' as const,
       body: paragraphsToLexical(page.paragraphs),
     }
     if (existing.docs[0]) {
@@ -438,7 +437,7 @@ export async function runSeed(payload: Payload) {
   }
 
   payload.logger.info(
-    'Seed complete. Legal pages are marked "Draft placeholder" — review before launch. The demo firm/lawyer are hidden from the public site (Pilot 2026 status) — do not switch to Published.',
+    'Seed complete. Legal pages are published. The demo firm/lawyer are hidden from the public site (Pilot 2026 status) — do not switch to Published.',
   )
 
   return {
