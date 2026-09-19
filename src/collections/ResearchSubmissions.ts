@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { isAdmin, isContentTeam } from "../access";
 import {
   sendResearchSubmissionConfirmationEmail,
   sendStaffAlert,
@@ -35,12 +36,19 @@ export const ResearchSubmissions: CollectionConfig = {
     description: "Secure research participation and contribution submissions.",
   },
   access: {
-    read: ({ req: { user } }) => Boolean(user),
+    read: ({ req: { user } }) => isContentTeam(user),
     create: () => true, // public submissions from Research / Pilot 2026 forms
-    update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => user?.role === "admin",
+    update: ({ req: { user } }) => isContentTeam(user),
+    delete: ({ req: { user } }) => isAdmin(user),
   },
   hooks: {
+    beforeChange: [
+      ({ data, operation, req }) => {
+        // Public visitors cannot pre-set the review status.
+        if (operation === "create" && !isContentTeam(req.user)) data.status = "received";
+        return data;
+      },
+    ],
     afterChange: [
       async ({ doc, operation }) => {
         if (operation !== "create") return doc;

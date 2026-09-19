@@ -17,6 +17,11 @@ import { Subscribers } from "./collections/Subscribers";
 import { ResearchSubmissions } from "./collections/ResearchSubmissions";
 import { ContactMessages } from "./collections/ContactMessages";
 import { LegalPages } from "./collections/LegalPages";
+import { CommercialRegister } from "./collections/CommercialRegister";
+import { CommercialAuditLog } from "./collections/CommercialAuditLog";
+import { Members } from "./collections/Members";
+import { RestrictedDocuments } from "./collections/RestrictedDocuments";
+import { nigeriaLexEmailAdapter } from "./lib/payloadEmailAdapter";
 
 import { SiteSettings } from "./globals/SiteSettings";
 import { HomeContent } from "./globals/HomeContent";
@@ -100,6 +105,11 @@ export default buildConfig({
     ResearchSubmissions,
     ContactMessages,
     LegalPages,
+    // ── Private / access-controlled data (each in its own collection) ──
+    CommercialRegister,
+    CommercialAuditLog,
+    Members,
+    RestrictedDocuments,
   ],
   globals: [
     SiteSettings,
@@ -109,6 +119,9 @@ export default buildConfig({
     Pilot2026Content,
   ],
   secret: process.env.PAYLOAD_SECRET || "",
+  // Sends Payload's own emails (member verification, password resets for
+  // members and staff) through the same SMTP settings as the other emails.
+  email: nigeriaLexEmailAdapter,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
@@ -129,7 +142,12 @@ export default buildConfig({
     ...(useS3
       ? [
           s3Storage({
-            collections: { media: true },
+            collections: {
+              media: true,
+              // Login-protected reports. Keep the bucket PRIVATE: Payload
+              // streams these through its access-controlled file route.
+              "restricted-documents": { prefix: "restricted" },
+            } as any,
             bucket: process.env.S3_BUCKET!,
             config: {
               credentials: {

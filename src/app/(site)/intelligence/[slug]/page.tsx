@@ -4,20 +4,30 @@ import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getPayloadClient } from '@/lib/payload'
 import { absoluteUrl, truncate } from '@/lib/seo'
+import { canAccessLevel, levelOf } from '@/access'
+import { getViewer } from '@/lib/viewer'
+import { getPortalConfig } from '@/lib/portal'
 
 type Args = { params: Promise<{ slug: string }> }
 
-async function getArticle(slug: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function getArticle(slug: string, viewer: any = null) {
   // Guarded like every other data-fetch on the public site (see Header,
   // Footer, the /intelligence list page, etc.) — a transient DB error here
   // previously bubbled up as an unhandled 500 instead of a clean 404.
   try {
     const payload = await getPayloadClient()
+    // overrideAccess: false => the collection's own rules apply here:
+    //  • unpublished / future-dated items are hidden from non-staff
+    //  • the full `content` (and any restricted download) is only returned if
+    //    the viewer's access level allows it — enforced by the API, not the UI.
     const result = await payload.find({
       collection: 'intelligence',
       where: { slug: { equals: slug } },
       limit: 1,
       depth: 1,
+      overrideAccess: false,
+      user: viewer ?? undefined,
     })
     return result.docs[0] ?? null
   } catch {
@@ -55,13 +65,18 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
 
 export default async function IntelligenceArticlePage({ params }: Args) {
   const { slug } = await params
-  const article = await getArticle(slug)
+  // Reading the session makes this page render per request (not cached), which
+  // is what per-viewer content requires.
+  const viewer = await getViewer()
+  const article = await getArticle(slug, viewer)
   if (!article) notFound()
 
-  // NOTE: this checks the flag only. Full subscriber-gated access control
-  // (session lookup against Subscribers / a future paid-access collection)
-  // is part of Phase 4 — "Future Subscription Capability" in the brief.
-  const isGated = article.isSubscriberOnly
+  const level = levelOf(article)
+  const allowed = canAccessLevel(level, viewer)
+  const isGated = level !== 'public'
+  const portal = await getPortalConfig()
+  const isMemberViewer = viewer?.collection === 'members'
+  const nextParam = encodeURIComponent(`/intelligence/${article.slug}`)
 
   const articleUrl = absoluteUrl(`/intelligence/${article.slug}`)
   const jsonLd = {
@@ -119,18 +134,63 @@ export default async function IntelligenceArticlePage({ params }: Args) {
       )}
       <p className="mt-6 text-[17px] leading-relaxed text-navy-ink">{article.summary}</p>
 
-      {isGated ? (
+      {!allowed ? (
         <div className="mt-10 rounded-sm border border-line bg-white p-8">
-          <p className="font-serif text-lg text-navy">This item is for Nigeria Lex subscribers.</p>
-          <p className="mt-2 text-[14px] text-slate">
-            Subscribe to Nigeria Lex to receive full research, market intelligence and briefings.
+          <p className="font-serif text-lg text-navy">
+            {level === 'registered'
+              ? 'This item is available to registered users.'
+              : 'This item is for Nigeria Lex subscribers and institutional users.'}
           </p>
-          <Link
-            href="/subscribe"
-            className="mt-5 inline-block rounded-sm bg-green px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper hover:bg-green-deep"
-          >
-            Subscribe
-          </Link>
+          {portal.enabled ? (
+            <>
+              <p className="mt-2 text-[14px] text-slate">
+                {isMemberViewer
+                  ? 'Your account currently has registered access. Contact us about subscriber or institutional access.'
+                  : level === 'registered'
+                    ? 'Sign in, or create a free account, to read the full item.'
+                    : 'Sign in with a subscriber account to read the full item.'}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                {isMemberViewer ? (
+                  <Link
+                    href="/contact"
+                    className="inline-block rounded-sm bg-green px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper hover:bg-green-deep"
+                  >
+                    Contact us
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      href={`/account/login?next=${nextParam}`}
+                      className="inline-block rounded-sm bg-green px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper hover:bg-green-deep"
+                    >
+                      Sign in
+                    </Link>
+                    {portal.registrationOpen && (
+                      <Link
+                        href={`/account/register?next=${nextParam}`}
+                        className="inline-block rounded-sm border border-green px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-green hover:bg-mist"
+                      >
+                        Create account
+                      </Link>
+                    )}
+                  </>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="mt-2 text-[14px] text-slate">
+                Subscribe to Nigeria Lex to receive full research, market intelligence and briefings.
+              </p>
+              <Link
+                href="/subscribe"
+                className="mt-5 inline-block rounded-sm bg-green px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper hover:bg-green-deep"
+              >
+                Subscribe
+              </Link>
+            </>
+          )}
         </div>
       ) : article.content ? (
         <div className="prose prose-sm mt-10 max-w-none">
@@ -138,7 +198,7 @@ export default async function IntelligenceArticlePage({ params }: Args) {
         </div>
       ) : null}
 
-      {article.pdfAttachment?.url && !isGated && (
+      {allowed && article.pdfAttachment?.url && (
         <a
           href={article.pdfAttachment.url}
           className="mt-8 inline-block text-[13px] font-semibold text-green"
@@ -146,6 +206,19 @@ export default async function IntelligenceArticlePage({ params }: Args) {
           rel="noreferrer"
         >
           Download full PDF →
+        </a>
+      )}
+
+      {/* Login-protected report: served by /api/restricted-documents/file/…,
+          which re-checks the viewer's access level on every download. */}
+      {allowed && article.restrictedAttachment?.url && (
+        <a
+          href={article.restrictedAttachment.url}
+          className="mt-8 block text-[13px] font-semibold text-green"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Download full report (PDF) →
         </a>
       )}
     </article>

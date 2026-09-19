@@ -1,5 +1,6 @@
 import type { GlobalConfig } from "payload";
 import { safeRevalidatePath } from "../utilities/revalidate";
+import { adminOnlyField, isContentTeam } from "../access";
 
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
@@ -20,7 +21,7 @@ export const SiteSettings: GlobalConfig = {
   },
   access: {
     read: () => true,
-    update: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => isContentTeam(user),
   },
   fields: [
     {
@@ -89,6 +90,38 @@ export const SiteSettings: GlobalConfig = {
           name: "london",
           type: "textarea",
           defaultValue: "International presence — address to be confirmed.",
+        },
+      ],
+    },
+    {
+      name: "memberPortal",
+      label: "Member portal (login area)",
+      type: "group",
+      access: { update: adminOnlyField },
+      admin: {
+        description:
+          "Controls the public sign-in area for registered users and subscribers. Everything stays OFF until you switch it on. Only Super Administrators can change these.",
+      },
+      fields: [
+        {
+          name: "enabled",
+          label: "Enable member portal",
+          type: "checkbox",
+          defaultValue: false,
+          admin: {
+            description:
+              "Shows a 'Sign in' link in the site header and turns on the /account pages for existing members.",
+          },
+        },
+        {
+          name: "registrationOpen",
+          label: "Allow new registrations",
+          type: "checkbox",
+          defaultValue: false,
+          admin: {
+            description:
+              "Lets visitors create their own (free, registered-level) account. Leave off to keep accounts invitation / administrator-created only.",
+          },
         },
       ],
     },

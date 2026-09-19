@@ -75,6 +75,8 @@ async function getLatestIntelligence() {
       limit: 3,
       sort: "-publishedAt",
       depth: 0,
+      // Only published, non-future-dated items (collection read rules apply).
+      overrideAccess: false,
     });
     return result.docs;
   } catch {

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { safeRevalidatePath } from '../utilities/revalidate'
+import { isAdmin, isContentTeam } from '../access'
 
 export const Events: CollectionConfig = {
   slug: 'events',
@@ -25,9 +26,9 @@ export const Events: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req: { user } }) => Boolean(user),
-    update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => user?.role === 'admin',
+    create: ({ req: { user } }) => isContentTeam(user),
+    update: ({ req: { user } }) => isContentTeam(user),
+    delete: ({ req: { user } }) => isAdmin(user),
   },
   fields: [
     { name: 'title', type: 'text', required: true },

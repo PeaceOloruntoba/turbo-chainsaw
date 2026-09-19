@@ -36,12 +36,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         where: { researchStatus: { equals: 'published' } },
         limit: 500,
         depth: 0,
+        overrideAccess: false,
       }),
       payload.find({
         collection: 'intelligence',
-        where: { isSubscriberOnly: { equals: false } },
+        // overrideAccess: false => only published, non-future-dated items.
+        // Members-only items are included too: their title/summary are public
+        // (the body is gated), so the pages are legitimately indexable.
         limit: 500,
         depth: 0,
+        overrideAccess: false,
       }),
     ])
 

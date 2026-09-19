@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { safeRevalidatePath } from "../utilities/revalidate";
+import { isAdmin, isContentTeam, gatedByDocumentLevel } from "../access";
 
 /**
  * Individual firm pages are independent research profiles — not paid
@@ -34,13 +35,13 @@ export const Firms: CollectionConfig = {
   },
   access: {
     read: ({ req: { user } }) => {
-      if (user) return true;
-      // Public visitors only ever see published research.
+      if (isContentTeam(user)) return true;
+      // Public visitors and members only ever see published research.
       return { researchStatus: { equals: "published" } };
     },
-    create: ({ req: { user } }) => Boolean(user),
-    update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => user?.role === "admin",
+    create: ({ req: { user } }) => isContentTeam(user),
+    update: ({ req: { user } }) => isContentTeam(user),
+    delete: ({ req: { user } }) => isAdmin(user),
   },
   fields: [
     { name: "name", type: "text", required: true },
@@ -120,6 +121,7 @@ export const Firms: CollectionConfig = {
     {
       name: "representativeExperience",
       type: "array",
+      access: { read: gatedByDocumentLevel },
       labels: { singular: "Matter", plural: "Representative Experience" },
       fields: [
         { name: "description", type: "textarea", required: true },
@@ -134,13 +136,31 @@ export const Firms: CollectionConfig = {
     {
       name: "crossBorderExperience",
       type: "richText",
+      access: { read: gatedByDocumentLevel },
     },
     {
       name: "nigeriaLexAnalysis",
       type: "richText",
+      access: { read: gatedByDocumentLevel },
       admin: {
         description:
           "Editorial analysis — Nigeria Lex's independent assessment of the firm.",
+      },
+    },
+    {
+      name: "accessLevel",
+      label: "Access level",
+      type: "select",
+      defaultValue: "public",
+      options: [
+        { label: "Public", value: "public" },
+        { label: "Registered users", value: "registered" },
+        { label: "Subscribers / institutional users", value: "subscriber" },
+      ],
+      admin: {
+        position: "sidebar",
+        description:
+          "Who may see the detailed sections of this record. Name and basic details stay public. Only takes effect for non-public levels once the member portal is switched on.",
       },
     },
     {

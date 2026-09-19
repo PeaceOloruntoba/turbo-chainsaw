@@ -15,7 +15,7 @@ const NAV_ITEMS = [
   { label: 'Contact', href: '/contact' },
 ]
 
-export function MobileNav() {
+export function MobileNav({ portalEnabled = false }: { portalEnabled?: boolean }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
@@ -70,9 +70,17 @@ export function MobileNav() {
                 </li>
               ))}
             </ul>
+            {portalEnabled && (
+              <Link
+                href="/account"
+                className="mt-6 block w-full rounded-sm border border-white/30 px-6 py-3.5 text-center text-[13px] font-semibold uppercase tracking-[0.06em] text-paper"
+              >
+                Sign in / My account
+              </Link>
+            )}
             <Link
               href="/subscribe"
-              className="mt-8 block w-full rounded-sm bg-green px-6 py-3.5 text-center text-[13px] font-semibold uppercase tracking-[0.06em] text-paper"
+              className="mt-4 block w-full rounded-sm bg-green px-6 py-3.5 text-center text-[13px] font-semibold uppercase tracking-[0.06em] text-paper"
             >
               Subscribe
             </Link>

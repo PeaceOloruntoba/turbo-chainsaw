@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { safeRevalidatePath } from "../utilities/revalidate";
+import { isAdmin, isContentTeam, gatedByDocumentLevel } from "../access";
 
 async function revalidateRelatedFirm({ doc, req }: { doc: any; req: any }) {
   const firmRef = doc?.firm;
@@ -30,10 +31,16 @@ export const Lawyers: CollectionConfig = {
     afterDelete: [revalidateRelatedFirm],
   },
   access: {
-    read: () => true,
-    create: ({ req: { user } }) => Boolean(user),
-    update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => user?.role === "admin",
+    // A practitioner is only public once their firm's research is published
+    // (previously every lawyer record was readable via /api/lawyers, including
+    // those attached to unpublished Pilot 2026 firms).
+    read: ({ req: { user } }) => {
+      if (isContentTeam(user)) return true;
+      return { "firm.researchStatus": { equals: "published" } };
+    },
+    create: ({ req: { user } }) => isContentTeam(user),
+    update: ({ req: { user } }) => isContentTeam(user),
+    delete: ({ req: { user } }) => isAdmin(user),
   },
   fields: [
     { name: "name", type: "text", required: true },
@@ -50,7 +57,23 @@ export const Lawyers: CollectionConfig = {
       type: "text",
       admin: { description: "e.g. Partner, Senior Associate." },
     },
-    { name: "biography", type: "richText" },
+    { name: "biography", type: "richText", access: { read: gatedByDocumentLevel } },
+    {
+      name: "accessLevel",
+      label: "Access level",
+      type: "select",
+      defaultValue: "public",
+      options: [
+        { label: "Public", value: "public" },
+        { label: "Registered users", value: "registered" },
+        { label: "Subscribers / institutional users", value: "subscriber" },
+      ],
+      admin: {
+        position: "sidebar",
+        description:
+          "Who may see the detailed sections of this record. Name and basic details stay public. Only takes effect for non-public levels once the member portal is switched on.",
+      },
+    },
     {
       name: "firm",
       type: "relationship",

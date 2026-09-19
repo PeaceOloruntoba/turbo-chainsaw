@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { safeRevalidatePath } from '../utilities/revalidate'
+import { isContentTeam } from '../access'
 
 export const Pilot2026Content: GlobalConfig = {
   slug: 'pilot-2026-content',
@@ -14,7 +15,7 @@ export const Pilot2026Content: GlobalConfig = {
   },
   access: {
     read: () => true,
-    update: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => isContentTeam(user),
   },
   fields: [
     {

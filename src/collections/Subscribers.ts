@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import crypto from "crypto";
+import { isAdmin, isContentTeam } from "../access";
 import { sendStaffAlert, sendSubscriberConfirmationEmail } from "../lib/email";
 
 const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
@@ -26,17 +27,19 @@ export const Subscribers: CollectionConfig = {
       "Nigeria Lex Briefing subscribers, captured via the public Subscribe form.",
   },
   access: {
-    read: ({ req: { user } }) => Boolean(user),
+    read: ({ req: { user } }) => isContentTeam(user),
     create: () => true, // public submissions from the Subscribe page
-    update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => user?.role === "admin",
+    update: ({ req: { user } }) => isContentTeam(user),
+    delete: ({ req: { user } }) => isAdmin(user),
   },
   hooks: {
     beforeChange: [
-      ({ operation, data }) => {
-        // Generate the self-service unsubscribe token once, on create.
-        if (operation === "create" && !data.unsubscribeToken) {
+      ({ operation, data, req }) => {
+        if (operation === "create") {
+          // Always server-generated: a public caller must not be able to
+          // supply their own token, or start out pre-unsubscribed.
           data.unsubscribeToken = crypto.randomBytes(24).toString("hex");
+          if (!isContentTeam(req.user)) data.unsubscribed = false;
         }
         return data;
       },

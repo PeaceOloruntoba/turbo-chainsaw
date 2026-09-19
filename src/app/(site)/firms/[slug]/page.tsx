@@ -3,15 +3,23 @@ import type { Metadata } from 'next'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getPayloadClient } from '@/lib/payload'
 import { absoluteUrl, truncate } from '@/lib/seo'
+import { canAccessLevel, levelOf } from '@/access'
+import { getViewer } from '@/lib/viewer'
+import { getPortalConfig } from '@/lib/portal'
 
 type Args = { params: Promise<{ slug: string }> }
 
-async function getFirm(slug: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function getFirm(slug: string, viewer: any = null) {
   const payload = await getPayloadClient()
   const result = await payload.find({
     collection: 'firms',
     where: { slug: { equals: slug }, researchStatus: { equals: 'published' } },
     limit: 1,
+    // Field-level rules apply: for firms above Public access, the detailed
+    // sections are only returned to viewers with a high enough level.
+    overrideAccess: false,
+    user: viewer ?? undefined,
   })
   return result.docs[0] ?? null
 }
@@ -60,8 +68,13 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
 
 export default async function FirmProfilePage({ params }: Args) {
   const { slug } = await params
-  const firm = await getFirm(slug)
+  const viewer = await getViewer()
+  const firm = await getFirm(slug, viewer)
   if (!firm) notFound()
+
+  const level = levelOf(firm)
+  const detailLocked = level !== 'public' && !canAccessLevel(level, viewer)
+  const portal = detailLocked ? await getPortalConfig() : null
 
   const lawyers = await getLawyersForFirm(firm.id)
   const firmUrl = absoluteUrl(`/firms/${firm.slug}`)
@@ -99,6 +112,32 @@ export default async function FirmProfilePage({ params }: Args) {
         Firm Research Profile
       </p>
       <h1 className="mt-2 font-serif text-3xl text-navy md:text-4xl">{firm.name}</h1>
+
+      {detailLocked && (
+        <div className="mt-6 rounded-sm border border-line bg-white p-5">
+          <p className="font-serif text-base text-navy">
+            Detailed research on this firm is available to{' '}
+            {level === 'registered' ? 'registered users' : 'Nigeria Lex subscribers and institutional users'}.
+          </p>
+          <p className="mt-1 text-[13px] text-slate">
+            {portal?.enabled ? (
+              <>
+                <a href={`/account/login?next=${encodeURIComponent(`/firms/${firm.slug}`)}`} className="font-medium text-green">
+                  Sign in
+                </a>{' '}
+                to view it.
+              </>
+            ) : (
+              <>
+                <a href="/subscribe" className="font-medium text-green">
+                  Subscribe
+                </a>{' '}
+                to be notified when premium research access opens.
+              </>
+            )}
+          </p>
+        </div>
+      )}
 
       {firm.overview && (
         <section className="prose prose-sm mt-10 max-w-none">

@@ -25,6 +25,8 @@ export async function Header() {
   const settings = await getSiteSettings();
   const siteName = settings?.siteName || "Nigeria Lex";
   const logoUrl = (settings?.logo as any)?.url as string | undefined;
+  // Member portal is OFF until switched on in Site Settings → Member portal.
+  const portalEnabled = Boolean((settings as any)?.memberPortal?.enabled);
 
   return (
     <>
@@ -76,13 +78,21 @@ export async function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
+          {portalEnabled && (
+            <Link
+              href="/account"
+              className="hidden whitespace-nowrap text-[13px] font-medium uppercase tracking-[0.06em] text-navy-ink transition-colors hover:text-green lg:inline-block"
+            >
+              Sign in
+            </Link>
+          )}
           <Link
             href="/subscribe"
             className="hidden whitespace-nowrap rounded-sm bg-green px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.06em] text-paper transition-colors hover:bg-green-deep lg:inline-block"
           >
             Subscribe
           </Link>
-          <MobileNav />
+          <MobileNav portalEnabled={portalEnabled} />
         </div>
         </div>
       </header>

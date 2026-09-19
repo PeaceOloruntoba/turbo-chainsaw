@@ -33,6 +33,8 @@ async function getIntelligence(category?: string) {
       sort: '-publishedAt',
       limit: 50,
       depth: 0,
+      // Apply the collection's read rules: only published, non-future-dated items.
+      overrideAccess: false,
     })
     return result.docs
   } catch {
@@ -142,9 +144,15 @@ export default async function IntelligencePage({ searchParams }: Args) {
                 <Link href={`/intelligence/${item.slug}`} className="group">
                   <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-green">
                     {item.category}
-                    {item.isSubscriberOnly && (
+                    {(item.accessLevel === 'subscriber' ||
+                      (!item.accessLevel && item.isSubscriberOnly)) && (
                       <span className="ml-2 rounded-sm bg-navy px-2 py-0.5 text-[10px] tracking-normal text-paper">
                         Subscriber Only
+                      </span>
+                    )}
+                    {item.accessLevel === 'registered' && (
+                      <span className="ml-2 rounded-sm bg-green px-2 py-0.5 text-[10px] tracking-normal text-paper">
+                        Registered Users
                       </span>
                     )}
                   </p>
