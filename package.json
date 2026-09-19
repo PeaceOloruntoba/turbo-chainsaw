@@ -15,11 +15,14 @@
     "generate:types": "dotenv -e .env -- payload generate:types",
     "generate:importmap": "dotenv -e .env -- payload generate:importmap",
     "seed": "dotenv -e .env -- tsx src/seed/index.ts",
-    "make-admin": "dotenv -e .env -- tsx src/seed/makeAdminCli.ts"
+    "make-admin": "dotenv -e .env -- tsx src/seed/makeAdminCli.ts",
+    "migrate": "dotenv -e .env -- payload migrate",
+    "migrate:create": "dotenv -e .env -- payload migrate:create",
+    "migrate:status": "dotenv -e .env -- payload migrate:status",
+    "ci": "npm run migrate && npm run build"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.88.0",
-    "@payloadcms/db-sqlite": "3.88.0",
     "@payloadcms/next": "3.88.0",
     "@payloadcms/richtext-lexical": "3.88.0",
     "@payloadcms/storage-s3": "^3.88.0",

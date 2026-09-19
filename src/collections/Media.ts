@@ -1,14 +1,6 @@
 import type { CollectionConfig } from 'payload'
-import path from 'path'
-import { fileURLToPath } from 'url'
 import { isAdmin, isContentTeam } from '../access'
-
-// Resolved as an absolute path (rather than a relative one) so upload
-// location doesn't depend on the server's current working directory,
-// which varies between `next dev`, `next start` and cPanel's Passenger
-// process manager.
-const dirname = path.dirname(fileURLToPath(import.meta.url))
-const mediaDir = path.resolve(dirname, '../../public/media')
+import { mediaDir } from '../lib/storage'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -20,13 +12,14 @@ export const Media: CollectionConfig = {
     delete: ({ req: { user } }) => isAdmin(user),
   },
   upload: {
-    // Local disk storage — cPanel's own filesystem — instead of an S3/R2
-    // bucket. Files land in /public/media at the project root and Next.js
-    // serves them directly as static files at /media/<filename>. Make
-    // sure /public/media is writable by the Node process on the server
-    // (see DEPLOY_CPANEL.md) and is included in whatever you back up,
-    // since — unlike a bucket — it lives on the same disk as the app.
-    staticDir: '../../public/media',
+    // Where files go depends on the storage mode chosen in src/lib/storage.ts:
+    //  • development (MEDIA_STORAGE=s3): Supabase Storage bucket — the S3 plugin
+    //    in payload.config.ts takes over and this folder is not used.
+    //  • production (MEDIA_STORAGE=local): this absolute folder on the server,
+    //    <LOCAL_STORAGE_DIR>/media. Files are served by Payload's own file
+    //    route (/api/media/file/<name>), so they are available immediately
+    //    after upload — no rebuild or restart needed.
+    staticDir: mediaDir,
     mimeTypes: ['image/*', 'application/pdf'],
     imageSizes: [
       { name: 'thumbnail', width: 400, height: undefined, position: 'centre' },

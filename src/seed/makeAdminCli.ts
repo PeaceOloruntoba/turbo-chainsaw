@@ -7,8 +7,9 @@
 // affecting `npm run seed` (see README Troubleshooting).
 //
 // On Windows, use the live-server route instead — it sidesteps this
-// entirely by letting Next's own bundler load the config:
-//   http://localhost:3000/api/make-admin?secret=YOUR_PAYLOAD_SECRET&email=you@nigerialex.com
+// entirely by letting Next's own bundler load the config. Set SEED_SECRET
+// in .env (a value different from PAYLOAD_SECRET), then:
+//   curl -X POST -H "x-seed-secret: YOUR_SEED_SECRET" "http://localhost:3000/api/seed?action=make-admin&email=you@nigerialex.com"
 //
 // Elsewhere, this CLI works fine:
 //   npm run make-admin -- you@nigerialex.com

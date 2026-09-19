@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
-import path from 'path'
 import { adminOnly, allowedLevelsFor, contentTeamField, contentTeamOnly, isContentTeam } from '../access'
+import { restrictedDir } from '../lib/storage'
 
 /**
  * Downloadable reports / PDFs that must NOT be publicly downloadable.
@@ -11,12 +11,11 @@ import { adminOnly, allowedLevelsFor, contentTeamField, contentTeamOnly, isConte
  * which runs the `read` rule below on every download. A guessed or shared URL
  * therefore returns 403 unless the viewer's access level is high enough.
  *
- * Storage location: set PRIVATE_MEDIA_DIR to an absolute path OUTSIDE the
- * deployed app folder (so deploys do not wipe it) and include it in backups.
- * When S3 storage is enabled (see payload.config.ts) files go to the bucket
- * under the `restricted/` prefix instead.
+ * Storage location (see src/lib/storage.ts):
+ *  • development (MEDIA_STORAGE=s3): the Supabase bucket, under `restricted/`
+ *  • production (MEDIA_STORAGE=local): <LOCAL_STORAGE_DIR>/restricted on the
+ *    server — outside the app folder and never inside /public.
  */
-const privateDir = process.env.PRIVATE_MEDIA_DIR || path.resolve(process.cwd(), 'private-media')
 
 export const RestrictedDocuments: CollectionConfig = {
   slug: 'restricted-documents',
@@ -29,7 +28,7 @@ export const RestrictedDocuments: CollectionConfig = {
       'Downloadable reports with login-protected downloads. Attach them to an Intelligence item; the item’s access level is applied to the file.',
   },
   upload: {
-    staticDir: privateDir,
+    staticDir: restrictedDir,
     mimeTypes: ['application/pdf'],
   },
   access: {

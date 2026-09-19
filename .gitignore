@@ -8,10 +8,7 @@ payload-types.ts
 .DS_Store
 *.log
 
-# SQLite database file (server data — never commit/overwrite this on deploy)
-/data/
-*.db
-*.db-journal
-
-# Local media uploads (server data — never commit/overwrite this on deploy)
-/public/media/
+# Local file storage used in production (uploads + login-protected PDFs).
+# This is server data — never commit it or overwrite it on deploy. In
+# production point LOCAL_STORAGE_DIR at a folder OUTSIDE the app folder.
+/storage/

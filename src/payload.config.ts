@@ -1,7 +1,6 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { buildConfig } from "payload";
-import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { s3Storage } from "@payloadcms/storage-s3";
@@ -22,6 +21,7 @@ import { CommercialAuditLog } from "./collections/CommercialAuditLog";
 import { Members } from "./collections/Members";
 import { RestrictedDocuments } from "./collections/RestrictedDocuments";
 import { nigeriaLexEmailAdapter } from "./lib/payloadEmailAdapter";
+import { storageMode } from "./lib/storage";
 
 import { SiteSettings } from "./globals/SiteSettings";
 import { HomeContent } from "./globals/HomeContent";
@@ -34,12 +34,84 @@ const dirname = path.dirname(filename);
 
 const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 const isVercel = Boolean(process.env.VERCEL);
-const databaseURL = process.env.DATABASE_URI || "file:./data/nigeria-lex.db";
-const usePostgres = isVercel || databaseURL.startsWith("postgres");
-const pushDatabaseSchema = process.env.PAYLOAD_DB_PUSH === "true";
-const useS3 = Boolean(
-  process.env.S3_BUCKET && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY,
-);
+const isDevelopment = process.env.NODE_ENV === "development";
+
+/* ── Database: PostgreSQL only ─────────────────────────────────────
+ * Development: Supabase Postgres (via Vercel / local `npm run dev`).
+ * Production:  any PostgreSQL server (Supabase or your own).
+ *
+ * DATABASE_URI       postgresql://user:password@host:port/database
+ * DATABASE_SCHEMA    Postgres schema Payload's tables live in (default "payload").
+ *                    Keeping them OUT of Supabase's "public" schema stops the
+ *                    Supabase Data API (PostgREST) from exposing them. The
+ *                    schema must exist — see GUIDE, step "Create the schema".
+ * DATABASE_SSL       require (default for remote hosts) | off | verify
+ * DATABASE_SSL_CA    CA certificate text, only for DATABASE_SSL=verify
+ * DATABASE_POOL_MAX  max connections held by this process (default 3 on Vercel, else 10)
+ */
+const databaseURL = process.env.DATABASE_URI || "";
+const databaseSchema = process.env.DATABASE_SCHEMA?.trim() || "payload";
+
+// `next build` and `payload generate:*` don't need a live database, so only
+// complain about a missing/incorrect DATABASE_URI when the app or a
+// database command really runs.
+const skipDatabaseCheck =
+  process.env.NEXT_PHASE === "phase-production-build" ||
+  process.argv.some((arg) => /^generate:/.test(arg));
+
+if (!/^postgres(ql)?:\/\//.test(databaseURL)) {
+  const message =
+    'DATABASE_URI must be a PostgreSQL connection string starting with "postgresql://". SQLite is no longer supported. See the step-by-step guide.';
+  if (!skipDatabaseCheck) throw new Error(message);
+  console.warn(`[db] ${message}`);
+}
+
+function buildPoolConfig(uri: string) {
+  let connectionString = uri;
+  let host = "";
+  try {
+    const url = new URL(uri);
+    host = url.hostname;
+    // TLS is configured below. A `sslmode=` in the URL would silently override it.
+    url.searchParams.delete("sslmode");
+    url.searchParams.delete("ssl");
+    connectionString = url.toString();
+  } catch {
+    /* leave as-is; the driver will report a clear error */
+  }
+
+  const isLocalHost = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(host);
+  const sslMode = (process.env.DATABASE_SSL || (isLocalHost ? "off" : "require")).toLowerCase();
+  const ca = process.env.DATABASE_SSL_CA?.replace(/\\n/g, "\n");
+
+  const ssl =
+    sslMode === "off"
+      ? false
+      : sslMode === "verify" && ca
+        ? { ca, rejectUnauthorized: true }
+        : // Encrypted, but the server certificate chain is not verified. This is
+          // what Supabase's pooler needs unless you supply its CA certificate.
+          { rejectUnauthorized: false };
+
+  return {
+    connectionString,
+    ssl,
+    max: Number(process.env.DATABASE_POOL_MAX) || (isVercel ? 3 : 10),
+  };
+}
+
+// Schema changes: `push` applies them straight to the database (fast, used
+// while developing); migrations (`npm run migrate`) are for production.
+// Default: push ON for local `npm run dev`, OFF everywhere else.
+// Override with PAYLOAD_DB_PUSH=true / false.
+const pushDatabaseSchema =
+  process.env.PAYLOAD_DB_PUSH === "true"
+    ? true
+    : process.env.PAYLOAD_DB_PUSH === "false"
+      ? false
+      : isDevelopment;
+
+const useS3 = storageMode === "s3";
 
 /**
  * Payload's `cors`/`csrf` allowlists are checked against the exact Origin
@@ -125,19 +197,12 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
-  db: usePostgres
-    ? postgresAdapter({
-        pool: {
-          connectionString: databaseURL,
-        },
-        push: pushDatabaseSchema,
-      })
-    : sqliteAdapter({
-        client: {
-          url: databaseURL,
-        },
-        push: pushDatabaseSchema,
-      }),
+  db: postgresAdapter({
+    pool: buildPoolConfig(databaseURL),
+    schemaName: databaseSchema,
+    migrationDir: path.resolve(dirname, "migrations"),
+    push: pushDatabaseSchema,
+  }),
   plugins: [
     ...(useS3
       ? [
@@ -146,8 +211,9 @@ export default buildConfig({
               media: true,
               // Login-protected reports. Keep the bucket PRIVATE: Payload
               // streams these through its access-controlled file route.
+              // (Only used when MEDIA_STORAGE=s3 — see src/lib/storage.ts.)
               "restricted-documents": { prefix: "restricted" },
-            } as any,
+            },
             bucket: process.env.S3_BUCKET!,
             config: {
               credentials: {
@@ -158,7 +224,10 @@ export default buildConfig({
               forcePathStyle: process.env.S3_FORCE_PATH_STYLE === "true",
               region: process.env.S3_REGION || "us-east-1",
             },
-            clientUploads: true,
+            // Browser uploads straight to the bucket (needed on Vercel, whose
+            // request size limit is ~4.5 MB). Set S3_CLIENT_UPLOADS=false to
+            // upload through the server instead (small files only).
+            clientUploads: process.env.S3_CLIENT_UPLOADS !== "false",
           }),
         ]
       : []),
