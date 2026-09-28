@@ -1,8 +1,8 @@
-import crypto from 'crypto'
-import { NextRequest, NextResponse } from 'next/server'
-import { runSeed } from '@/seed/runSeed'
+import crypto from "crypto";
+import { NextRequest, NextResponse } from "next/server";
+import { runSeed } from "@/seed/runSeed";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 /**
  * Deployment bootstrap / recovery route. Not a public API.
@@ -31,74 +31,105 @@ export const dynamic = 'force-dynamic'
  * After make-admin, log out and back in at /admin.
  */
 function secretsMatch(provided: string | null, expected: string | undefined) {
-  if (!provided || !expected) return false
-  const a = crypto.createHash('sha256').update(provided).digest()
-  const b = crypto.createHash('sha256').update(expected).digest()
-  return crypto.timingSafeEqual(a, b)
+  if (!provided || !expected) return false;
+  const a = crypto.createHash("sha256").update(provided).digest();
+  const b = crypto.createHash("sha256").update(expected).digest();
+  return crypto.timingSafeEqual(a, b);
 }
 
 async function handle(req: NextRequest) {
-  const expected = process.env.SEED_SECRET
+  const expected = process.env.SEED_SECRET;
   if (!expected) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const provided = req.headers.get('x-seed-secret') ?? req.nextUrl.searchParams.get('secret')
+  const provided =
+    req.headers.get("x-seed-secret") ?? req.nextUrl.searchParams.get("secret");
   if (!secretsMatch(provided, expected)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const email = req.nextUrl.searchParams.get('email')
-  const action = req.nextUrl.searchParams.get('action') || 'seed'
+  const email = req.nextUrl.searchParams.get("email");
+  const action = req.nextUrl.searchParams.get("action") || "seed";
 
-  if (!['seed', 'push-schema', 'make-admin'].includes(action)) {
-    return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
+  if (!["seed", "push-schema", "make-admin"].includes(action)) {
+    return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   }
 
   try {
     // This must happen before importing the Payload config. The adapter reads
     // this flag while the config is constructed, not when a query is made.
-    if (action === 'seed' || action === 'push-schema') process.env.PAYLOAD_DB_PUSH = 'true'
+    if (action === "seed" || action === "push-schema")
+      process.env.PAYLOAD_DB_PUSH = "true";
 
-    const [{ getPayload }, { default: config }, { promoteToAdmin }] = await Promise.all([
-      import('payload'),
-      import('@payload-config'),
-      import('@/seed/makeAdmin'),
-    ])
-    const payload = await getPayload({ config })
+    const [{ getPayload }, { default: config }, { promoteToAdmin }] =
+      await Promise.all([
+        import("payload"),
+        import("@payload-config"),
+        import("@/seed/makeAdmin"),
+      ]);
+    const payload = await getPayload({ config });
 
-    if (action === 'push-schema') {
+    // Record every use of this maintenance route in the site-wide activity log
+    // (skipped for push-schema: the log table may not exist yet).
+    const record = async (summary: string) => {
+      const { logActivity } = await import("@/lib/activity");
+      await logActivity(payload, {
+        action: "system",
+        resourceType: "system",
+        resource: "seed-route",
+        summary,
+        actor: {
+          actorType: "system",
+          actorName: "Maintenance route (/api/seed)",
+        },
+        ip:
+          (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() ||
+          undefined,
+        userAgent: req.headers.get("user-agent") || undefined,
+      });
+    };
+
+    if (action === "push-schema") {
       return NextResponse.json({
         ok: true,
         action,
-        message: 'Schema push requested. Restart the app, then check /admin.',
-      })
+        message: "Schema push requested. Restart the app, then check /admin.",
+      });
     }
 
-    if (action === 'make-admin') {
+    if (action === "make-admin") {
       if (!email) {
-        return NextResponse.json({ error: 'Pass ?email=<the account to promote>' }, { status: 400 })
+        return NextResponse.json(
+          { error: "Pass ?email=<the account to promote>" },
+          { status: 400 },
+        );
       }
 
-      const result = await promoteToAdmin(payload, email)
+      const result = await promoteToAdmin(payload, email);
+      await record(`make-admin run for ${email}: ${result.status}`);
 
-      if (result.status === 'not-found') {
+      if (result.status === "not-found") {
         return NextResponse.json(
           { ok: false, error: `No user found with email "${result.email}".` },
           { status: 404 },
-        )
+        );
       }
 
-      return NextResponse.json({ ok: true, action, ...result })
+      return NextResponse.json({ ok: true, action, ...result });
     }
 
-    const summary = await runSeed(payload)
-    return NextResponse.json({ ok: true, action, ...summary })
+    await record("Starter content seed run");
+    const summary = await runSeed(payload);
+    return NextResponse.json({ ok: true, action, ...summary });
   } catch (err: any) {
-    console.error('[seed route] failed:', err)
-    return NextResponse.json({ ok: false, error: err?.message || String(err) }, { status: 500 })
+    console.error("[seed route] failed:", err);
+    return NextResponse.json(
+      { ok: false, error: err?.message || String(err) },
+      { status: 500 },
+    );
   }
 }
 
-export const GET = handle
-export const POST = handle
+export const GET = handle;
+export const POST = handle;

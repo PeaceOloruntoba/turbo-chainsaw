@@ -24,6 +24,7 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { CommercialRegisterSummary as CommercialRegisterSummary_5c1e0a7d9b2f4e6a8c3d1b7f9e2a4c60 } from '@/components/admin/CommercialRegisterSummary'
 import { MembersExportLink as MembersExportLink_9d3b7e1a4c5f48b2a6e0c8d1f3a5b7c9 } from '@/components/admin/MembersExportLink'
+import { ActivityLogExportLink as ActivityLogExportLink_3f8a1c5e7b9d4a62b0e1c7d5f9a3b8e2 } from '@/components/admin/ActivityLogExportLink'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -54,5 +55,6 @@ export const importMap = {
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@/components/admin/CommercialRegisterSummary#CommercialRegisterSummary": CommercialRegisterSummary_5c1e0a7d9b2f4e6a8c3d1b7f9e2a4c60,
   "@/components/admin/MembersExportLink#MembersExportLink": MembersExportLink_9d3b7e1a4c5f48b2a6e0c8d1f3a5b7c9,
+  "@/components/admin/ActivityLogExportLink#ActivityLogExportLink": ActivityLogExportLink_3f8a1c5e7b9d4a62b0e1c7d5f9a3b8e2,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

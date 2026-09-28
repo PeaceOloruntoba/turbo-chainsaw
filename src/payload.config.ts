@@ -20,6 +20,8 @@ import { CommercialRegister } from "./collections/CommercialRegister";
 import { CommercialAuditLog } from "./collections/CommercialAuditLog";
 import { Members } from "./collections/Members";
 import { RestrictedDocuments } from "./collections/RestrictedDocuments";
+import { ActivityLog } from "./collections/ActivityLog";
+import { withActivityLog, withActivityLogGlobal } from "./lib/activity";
 import { nigeriaLexEmailAdapter } from "./lib/payloadEmailAdapter";
 import { storageMode } from "./lib/storage";
 
@@ -81,7 +83,9 @@ function buildPoolConfig(uri: string) {
   }
 
   const isLocalHost = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(host);
-  const sslMode = (process.env.DATABASE_SSL || (isLocalHost ? "off" : "require")).toLowerCase();
+  const sslMode = (
+    process.env.DATABASE_SSL || (isLocalHost ? "off" : "require")
+  ).toLowerCase();
   const ca = process.env.DATABASE_SSL_CA?.replace(/\\n/g, "\n");
 
   const ssl =
@@ -182,14 +186,18 @@ export default buildConfig({
     CommercialAuditLog,
     Members,
     RestrictedDocuments,
-  ],
+    ActivityLog,
+  ].map(withActivityLog),
+  // ↑ withActivityLog attaches the site-wide activity log to EVERY collection
+  //   (changes, deletions, sign-ins, failed sign-ins …). New collections added
+  //   to this list are covered automatically.
   globals: [
     SiteSettings,
     HomeContent,
     AboutContent,
     ResearchContent,
     Pilot2026Content,
-  ],
+  ].map(withActivityLogGlobal),
   secret: process.env.PAYLOAD_SECRET || "",
   // Sends Payload's own emails (member verification, password resets for
   // members and staff) through the same SMTP settings as the other emails.

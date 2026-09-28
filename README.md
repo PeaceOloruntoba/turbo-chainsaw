@@ -1,336 +1,413 @@
 # Nigeria Lex™
 
-Independent research. Market intelligence. Informed choice. — Phase 1.
+**Independent research. Market intelligence. Informed choice.**
 
-An independent, research-led legal market intelligence platform for Nigeria's
-corporate legal market, built as a single Next.js 15 codebase with Payload
-CMS v3 embedded natively.
+Nigeria Lex is a research and market-intelligence website about **Nigeria's corporate legal market**. It helps investors, businesses, financial institutions and professional advisers understand which law firms and lawyers have real, demonstrable capability, and what is happening in the market around them.
 
-## Stack
+Nigeria Lex is owned and published by **Kaye & Crowther Limited**. **SBM Intelligence** is its research partner.
 
-- **Framework:** Next.js 15 (App Router, TypeScript, React Server Components)
-- **CMS & API:** Payload CMS v3, embedded at `src/app/(payload)`
-- **Database:** SQLite via `@payloadcms/db-sqlite` — a single file on the server's own disk (was Supabase Postgres; changed for cPanel deployment, see `DEPLOY_CPANEL.md`)
-- **Auth:** Payload's built-in HTTP-only cookie JWT auth (staff accounts only — see `src/collections/Users.ts`)
-- **Rich text:** `@payloadcms/richtext-lexical`
-- **Media/PDF storage:** local disk (`/public/media`), served directly by Next.js — no bucket/CDN dependency
-- **Styling:** Tailwind CSS, design tokens in `tailwind.config.ts`
+This document explains, in plain English, what the website is, what it does, and how each group of people uses it. No technical knowledge is needed.
 
-## Project structure
+> **Are you a developer or hosting provider?** The technical documentation is in [`docs/DEVELOPER-README.md`](docs/DEVELOPER-README.md) and [`docs/STEP-BY-STEP-GUIDE.md`](docs/STEP-BY-STEP-GUIDE.md).
 
-```
-src/
-  app/
-    (payload)/          Payload admin panel + REST/GraphQL API routes
-    (site)/              Public-facing pages (Home, About, Research, ...)
-  collections/           Payload collection schemas
-  components/            Shared site components (Header, Footer, forms, ...)
-  lib/                   Shared helpers (Payload Local API client)
-  payload.config.ts       Main Payload configuration
-```
+---
 
-Public routes: `/`, `/about`, `/research`, `/firms`, `/firms/[slug]`,
-`/intelligence`, `/intelligence/[slug]`, `/pilot-2026`, `/events`,
-`/subscribe`, `/contact`, plus stub legal pages under `/legal/*`.
+## Contents
 
-Admin panel: `/admin`.
+1. [The website in one minute](#1-the-website-in-one-minute)
+2. [For visitors: the public website](#2-for-visitors-the-public-website)
+3. [Member accounts (when switched on)](#3-member-accounts-when-switched-on)
+4. [For the Nigeria Lex team: the admin area](#4-for-the-nigeria-lex-team-the-admin-area)
+5. [The private Commercial Register](#5-the-private-commercial-register)
+6. [The Activity Log: a record of everything that happens](#6-the-activity-log-a-record-of-everything-that-happens)
+7. [Who can see what](#7-who-can-see-what)
+8. [Privacy and security in plain English](#8-privacy-and-security-in-plain-english)
+9. [Frequently asked questions](#9-frequently-asked-questions)
+10. [Glossary](#10-glossary)
+11. [Getting help](#11-getting-help)
 
-## Logo & brand assets
+---
 
-The real, client-approved Nigeria Lex logo is in place, cropped from the
-supplied source file into the variants the site needs:
+## 1. The website in one minute
 
-- `public/logo-lockup.png` — icon + wordmark, used in the header
-- `public/logo-mark.png` / `public/logo-mark-512.png` — icon only
-- `public/logo-full.png` — icon + wordmark + tagline, used as the default
-  Open Graph / social share image
-- `src/app/icon.png` (32×32) and `src/app/apple-icon.png` (180×180) — favicon
-  and mobile home-screen icon, via Next.js's automatic file convention
+The project has **three parts**:
 
-All were auto-cropped with a simple brightness-threshold transparency cutout
-(near-white → transparent), which is good enough for web use but not
-pixel-perfect at the edges. If Nigeria Lex's designer can supply the
-original vector/source file with true transparency, swap these files for
-higher-quality versions — no code changes needed, just replace the files at
-the same paths (or upload a replacement in `/admin` under **Site
-Configuration → Site Settings → Logo**, which overrides `logo-lockup.png`
-without touching the repo).
+| Part | Who it is for | Where you find it |
+|---|---|---|
+| **The public website** | Anyone | The website address, e.g. `nigerialex.com` |
+| **The admin area** | The Nigeria Lex team (and SBM colleagues where authorised) | The website address followed by `/admin` |
+| **Private tools** inside the admin area | Authorised people only | The Commercial Register, member accounts, and the Activity Log |
 
-## Local development
+**Key ideas**
 
-**Requirements:** Node 20.9.0+ (required by Next.js 16 and by `sharp`).
-No external database or bucket to provision — SQLite and local-disk media
-are both files inside this project.
+- **Everything on the public website can be edited by the team** without a developer: pages, articles, firm profiles, events and legal notices. Changes appear on the live site within moments.
+- **Some content can be limited to certain readers.** Each article or firm profile can be *Public*, *Registered users only*, or *Subscribers only*.
+- **Private information stays private.** The commercial records, member accounts and research submissions are kept apart, and each person sees only what their role allows.
+- **Everything important is recorded.** The system keeps a history of who changed what, and when.
 
-1. Install dependencies:
+---
 
-   ```bash
-   npm install
-   ```
+## 2. For visitors: the public website
 
-2. Copy the environment template and fill in real values:
+Anyone can browse the public pages. No account is needed unless you want to read material that has been marked for registered users or subscribers.
 
-   ```bash
-   cp .env.example .env
-   ```
+| Page | What you will find |
+|---|---|
+| **Home** | What Nigeria Lex does, the latest intelligence, and news about the Pilot Study |
+| **About** | Who we are, our purpose, leadership, ownership and research partner |
+| **Research** | Our methodology: how we research, what we assess, our process, our independence and how corrections are handled. Firms and organisations can also **submit information** here |
+| **Firms & Lawyers** | Evidence-led profiles of law firms and practitioners. Each firm profile has an overview, core capabilities, representative experience, key lawyers, sector strengths, cross-border experience and a Nigeria Lex analysis. Firm profiles appear once their research is **published** |
+| **Intelligence** | Articles, reports, briefings, sector briefings, transaction intelligence, regulatory intelligence and investor briefings |
+| **Pilot 2026** | Our inaugural pilot study: what is being researched, why it matters, who can take part, and the timetable |
+| **Events** | Upcoming roundtables and events, with dates, venue, speakers and a link to register |
+| **Subscribe** | Sign up to receive Nigeria Lex updates by email. Every email has an **unsubscribe** link |
+| **Contact** | Send us a message. You receive an automatic acknowledgement |
+| **Legal notices** | Privacy Policy, Cookie Policy, Terms of Use, Disclaimer, Editorial Independence and Corrections Policy |
 
-   - `PAYLOAD_SECRET` — generate with `openssl rand -base64 32`
-   - `DATABASE_URI` — leave as the default `file:./data/nigeria-lex.db`
-     for local dev, or point it at a different path
-   - Media uploads (logos, lawyer photos, PDFs) just work — no credentials
-     needed; files land in `/public/media`
+### Things you can do as a visitor
 
-3. Run the dev server:
+- **Read** any public article, report or profile.
+- **Subscribe** to updates, or **unsubscribe** at any time.
+- **Contact us** with a question.
+- **Submit research information** (as a law firm, practitioner or institution) through the Research or Pilot 2026 pages. You can tick a box to say we may contact you *confidentially*.
+- **Create an account** or **sign in**, if the team has switched that on (see the next section).
 
-   ```bash
-   npm run dev
-   ```
+### What "limited" content looks like
 
-4. Visit `http://localhost:3000/admin` and follow the prompt to create the
-   first administrator account. This is the only account with `role: admin`
-   until you promote others from the admin panel.
+Every article always shows its **title and a short summary** to everyone. If the full text is limited to registered users or subscribers, you will see a friendly notice explaining how to get access. The full text is genuinely withheld until you have the right access. It is not just hidden on screen.
 
-5. Seed placeholder content (recommended — see below):
+---
 
-   ```bash
-   npm run seed
-   ```
+## 3. Member accounts (when switched on)
 
-6. Visit `http://localhost:3000` to see the public site. Pages that read
-   from collections (Home's "Latest Intelligence", Firms & Lawyers,
-   Intelligence, Events) render sensible empty states until you publish
-   content — nothing needs to be seeded before the site works, but running
-   the seed script gives every page and legal document real starting
-   content to edit rather than blank forms.
+The site is built so that **sign-in and subscriber access can be introduced without rebuilding it**. Until the team switches it on, nothing about it appears on the site.
 
-### What `npm run seed` does
+Once switched on, there are four levels of reader:
 
-- Creates all six Legal Pages (Privacy Policy, Cookie Policy, Terms of Use,
-  Disclaimer, Editorial Independence, Corrections Policy) with generic
-  placeholder wording, each flagged **"Draft placeholder — not reviewed"**.
-  A matching notice banner shows on the public page until you change a
-  page's status to "Final" in `/admin`. This text is a starting point only
-  and must be reviewed by Nigeria Lex's legal counsel before launch.
-- Persists the default copy for every content Global (Site Settings, Home,
-  About, Research, Pilot 2026) as real, editable documents in `/admin`,
-  rather than leaving editors looking at blank forms the first time they
-  open one.
-- Publishes two starter Intelligence items (a "Welcome to Nigeria Lex"
-  briefing and a Pilot Study 2026 announcement) so the Intelligence page
-  isn't empty, and one starter Event for the proposed Lagos launch
-  briefing.
-- Seeds **one demo Firm and Lawyer, kept in "Pilot 2026" status** —
-  deliberately **not** "Published", so the public `read` access rule on
-  Firms excludes it and it never appears on the live site. This exists
-  only so you can see the Firms/Lawyers admin UI populated with a
-  realistic example while real research is in progress. Its name is
-  prefixed "(Sample — Do Not Publish)" for exactly this reason — **do not
-  switch its status to Published**, and delete it once you've entered real
-  firm research.
-- Safe to re-run — it updates existing documents by slug instead of
-  duplicating them.
+| Level | Who | What they can read |
+|---|---|---|
+| **Public** | Anyone | Free articles, introductory research and public information |
+| **Registered user** | Anyone who creates a free account | Public material **plus** selected extra material and Nigeria Lex updates |
+| **Subscriber / institutional user** | Paying or approved organisations and individuals | Premium intelligence and research, including reports you can download |
+| **Administrator / research team** | The Nigeria Lex team | Everything, so that they can manage it |
 
-## Content editing (non-technical admin)
+### How a member uses their account
 
-Everything an editor needs is in the `/admin` panel:
+1. **Create an account** (only if the team has opened registration). You give your name, organisation, email and a strong password, and you accept the Terms of Use and Privacy Policy.
+2. **Verify your email.** We send you a link. Click it once, and your account is ready.
+3. **Sign in.** Use your email and password.
+4. **My account.** See your access level and subscription status, update your details, or change your password.
+5. **Forgotten your password?** Use the link on the sign-in page. We email you a reset link that works for one hour.
+6. **Sign out** when you have finished.
 
-- **Publish an article / report / briefing** → Intelligence collection
-- **Add an event** → Events collection
-- **Add/update a firm** → Firms collection (set `Research Status` to
-  "Published" to make a profile public; leave as "Pilot 2026" to keep it
-  research-in-progress and hidden from the public site)
-- **Add/update a lawyer** → Lawyers collection
-- **Upload a PDF** → attach directly on the relevant Intelligence item, or
-  upload independently via the Media collection
-- **Change the pilot timetable, hero copy, About text, Research methodology,
-  or footer/contact details** → all editable under **Site Configuration**
-  and **Page Content** in `/admin` (Site Settings, Home Content, About
-  Content, Research Content, Pilot 2026 Content globals) — no code changes
-  needed.
-- **Edit legal pages** (Privacy Policy, Terms of Use, etc.) → Legal Pages
-  collection. Client-approved seed content is published; draft pages show a
-  notice on the public page until approved and published.
-- **Change the logo** → Site Settings → Logo (see "Placeholder logo" above)
-- **View subscriber enquiries** → Subscribers collection (newsletter
-  sign-ups) and Research Submissions collection (firm/institutional
-  submissions)
+**Good to know**
 
-Everything above is now genuinely CMS-driven: once the real logo and final
-copy are ready, they go in through `/admin` — no developer required.
+- Passwords need **at least 12 characters** with a mix of letters, numbers and symbols. Please use a password you use nowhere else, and **never** your email password.
+- After **5 wrong passwords** an account is locked for 15 minutes to protect it.
+- **Institutional accounts** are reviewed and approved by the Nigeria Lex team.
+- Subscriber access can have an **end date** (for example, an annual subscription). After that date the account returns to Registered access.
+- **Payments are not switched on.** The site is prepared for online subscription payments in future. For now the team grants subscriber access manually.
 
-## Deployment
+---
 
-### Option 1 — Vercel
+## 4. For the Nigeria Lex team: the admin area
 
-1. Push this repository to GitHub/GitLab/Bitbucket and import it in Vercel.
-2. Create a Supabase Postgres database and set `DATABASE_URI` to its pooled
-  connection string. Vercel's filesystem is ephemeral, so SQLite is not
-  suitable for the Vercel deployment.
-3. Create a Supabase Storage bucket and add its S3 credentials:
-  `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`,
-  `S3_ENDPOINT`, and `S3_FORCE_PATH_STYLE=true`.
-4. Add `PAYLOAD_SECRET` and `NEXT_PUBLIC_SERVER_URL`, plus the SMTP variables
-  if the forms should send email.
-5. Deploy. Vercel builds `next build` automatically. No SSH or post-deploy
-  command is required.
-6. Initialize the database by opening `/api/seed?secret=YOUR_PAYLOAD_SECRET`
-  once. To promote the first registered user, open
-  `/api/seed?action=make-admin&secret=YOUR_PAYLOAD_SECRET&email=you@example.com`.
+### Signing in
 
-When the S3 variables are present, Payload uses Supabase Storage for media;
-otherwise local and cPanel deployments continue to use `public/media`.
+1. Go to the website address followed by **`/admin`** (for example `nigerialex.com/admin`).
+2. Enter your email and password. Every team member has their **own** login. Never share a login.
+3. Your session ends automatically after **8 hours**, and you sign in again.
+4. **Forgotten password?** Use the "Forgot password" link on the sign-in page, or ask a Super Administrator.
 
-### Option 2 — cPanel (production)
+The menu on the left is grouped by topic:
 
-This is the production deployment target. The whole stack — app, SQLite
-database, and media uploads — runs on cPanel's own storage via cPanel's
-**Setup Node.js App** (Passenger), with no Docker, no separate reverse
-proxy, and no external services to provision. See `DEPLOY_CPANEL.md` for
-the full step-by-step: creating the Node.js app, building on the server
-itself (important — see why below), environment variables, and seeding
-the database.
+| Menu group | What is in it |
+|---|---|
+| **Content** | Intelligence (articles and reports), Events, Media (images and public PDFs), Restricted documents |
+| **Research** | Firms, Lawyers |
+| **Audience** | Subscribers, Research Submissions, Contact Messages |
+| **Page Content** | Home, About, Research and Pilot 2026 page text |
+| **Site Configuration** | Site Settings (logo, contact details, member portal switch), Legal Pages |
+| **Members & Access** | Team logins (Users) and public Members |
+| **Commercial Register** | The private commercial records and their Audit Trail |
+| **Security & Audit** | The Activity Log |
 
-## Troubleshooting
+You only see the groups your role allows.
 
-For cPanel-specific deployment steps and troubleshooting (including why a
-locally-built-then-uploaded copy commonly 500s on admin/dynamic routes),
-see `DEPLOY_CPANEL.md`.
+### Team roles
 
-**`missing secret key` when running `npm run seed`** — Next.js auto-loads
-`.env`, but a standalone script run via `tsx` does not. The seed script
-loads `.env` itself via `dotenv` (see `src/seed/index.ts`), so make sure
-you've run `npm install` after pulling this update and that a `.env` file
-(not just `.env.example`) exists in the project root with real values.
+| Role | Intended for | Can do |
+|---|---|---|
+| **Super Administrator** | Directors of K&C / Nigeria Lex | Everything: content, team logins, members, Commercial Register, Activity Log |
+| **Editor** | Content team | Write and publish content; see enquiries, subscribers and submissions |
+| **Researcher** | Research team | Same as Editor |
+| **Commercial Register: editor** | K&C commercial staff and authorised SBM colleagues | Use the Commercial Register only |
+| **Commercial Register: view only** | Observers | Read the Commercial Register only |
 
-## Live content updates (on-demand revalidation)
+### Everyday tasks
 
-Public pages are statically generated for speed, but every collection and
-global that feeds a public page has a Payload `afterChange`/`afterDelete`
-hook (see `src/utilities/revalidate.ts`) that calls Next.js's
-`revalidatePath` the moment you save in `/admin` — so edits show up on the
-live site within seconds, not just at the next deploy. This covers Site
-Settings (logo, name, footer, contact details — revalidates the whole
-site), Home/About/Research/Pilot 2026 content, Legal Pages, Firms,
-Intelligence, and Events.
+**Publish an article or report**
+1. **Content → Intelligence → Create New**.
+2. Fill in the **Title**, **Category**, **Summary** (shown to everyone) and **Content** (the full text).
+3. Set **Access level** in the side panel: *Public*, *Registered users*, or *Subscribers / institutional users*.
+4. Set the **Published at** date. A **future date schedules** the article for that time. **Leaving it empty keeps it hidden**, which is useful for drafts.
+5. To attach a downloadable report:
+   - For a **public** item, use *PDF attachment*.
+   - For a **members-only** item, first upload the file under **Content → Restricted documents**, then choose it in *Login-protected download*. Only people with the right access can then download it.
+6. Click **Save**. The page goes live within moments.
 
-`revalidatePath` only works inside a live Next.js server request, so the
-hooks are wrapped in `safeRevalidatePath`, which silently no-ops when
-called from a standalone context — e.g. `npm run seed` or any future
-Payload CLI command — rather than throwing and aborting the write.
+**Edit the words on a page** (Home, About, Research, Pilot 2026)
+- **Page Content →** choose the page, change the text, and **Save**.
 
-## Keeping dependencies current
+**Add a firm and its lawyers**
+1. **Research → Firms → Create New.** Complete the overview, capabilities, experience and analysis.
+2. Set **Research status**: *Pilot 2026 (in progress)* keeps the firm hidden. *Published* makes it public.
+3. Optionally set **Access level** to restrict the detailed sections.
+4. **Research → Lawyers → Create New**, then choose the firm. A lawyer only appears publicly once their firm is published.
 
-This project runs **Next.js 16.3.x, React 19.2.x, and Payload 3.88.x** — the
-current stable line of each as of this writing. Two deliberate choices here:
+**Add an event**
+- **Content → Events → Create New.** Add the title, date, venue, description, speakers and the registration link.
 
-- **`payload` and every `@payloadcms/*` package are pinned to the exact same
-  version** (currently `3.88.0`), with no `^`. This is intentional and
-  matches Payload's own recommendation — mixing patch versions across
-  `@payloadcms/*` packages is a common source of subtle bugs. When
-  upgrading Payload, bump all of them together to the same new version.
-- **Everything else uses a caret range** (`^`), so `npm audit fix` /
-  `npm update` can actually pull in patch and minor security fixes on their
-  own between now and your next manual dependency review — unlike the
-  original exact pins, which is why `npm audit fix` wasn't able to do much
-  before this update.
+**Upload images or documents**
+- **Content → Media** for public images and PDFs.
+- **Content → Restricted documents** for downloads that need sign-in.
 
-Because `next` jumped a major version (15 → 16) and `payload` jumped ~58
-minor/patch releases, treat this as a real upgrade, not just a patch bump:
-run `npm install`, then `npm run build` locally before deploying, and skim
-the [Payload releases](https://github.com/payloadcms/payload/releases)
-and [Next.js blog](https://nextjs.org/blog) for anything relevant between
-your previous version and this one. Next.js 16 also switches Turbopack on
-by default for `next dev`/`next build`; this project doesn't use any
-webpack-specific config, so no changes were needed here, but worth knowing
-if you add custom build config later.
+**Change the logo, contact details or legal notices**
+- **Site Configuration → Site Settings** for the logo and contact details. **Legal Pages** for the six legal notices.
 
-For ongoing hygiene: run `npm outdated` periodically, and prefer bumping
-`@payloadcms/*` packages together rather than one at a time.
+**See who has been in touch**
+- **Audience → Contact Messages** for messages from the Contact page.
+- **Audience → Subscribers** for the email list. Unsubscribed people are marked.
+- **Audience → Research Submissions** for information sent in by firms and institutions. Change the **Status** as you work through them.
+- New messages, sign-ups and submissions also trigger an **email alert** to the team inbox.
 
-**Blank `/admin` page, no visible browser error** — check your Vercel
-**Runtime Logs** (not build logs). If you see
-`getFromImportMap: PayloadComponent not found in importMap`, it means
-`src/app/(payload)/admin/importMap.js` is out of date. Run
-`npm run generate:importmap` locally, commit the regenerated file, and
-redeploy. Do this again any time you add a plugin or custom component that
-touches the admin UI (uploads, rich-text editor features, etc. all register
-their own admin components here). Note: on some Windows + Node 22+
-combinations, `payload generate:importmap` can fail with
-`ERR_REQUIRE_ASYNC_MODULE` — this is an open upstream Payload bug
-([payloadcms/payload#16378](https://github.com/payloadcms/payload/issues/16378)).
-If you hit that, running the same command under Node 20 LTS (`nvm use
-20`) has resolved it in practice.
+**Switch the member portal on** (Super Administrators only)
+1. **Site Configuration → Site Settings → Member portal.**
+2. Tick **Enable member portal** to show "Sign in" and turn on member pages.
+3. Tick **Allow new registrations** only if you want visitors to create their own free accounts.
+4. **Save.** Untick to switch off again at any time.
 
-## Project status against the brief
+**Manage members** (Super Administrators only)
+- **Members & Access → Members.**
+- **Create a member:** add them, and they receive a verification email. Ask them to use *Forgotten your password?* to choose their own password.
+- **Approve an institution:** set *Institutional approval* to Approved.
+- **Give or remove subscriber access:** change *Access level*, and set *Access expires* for annual terms.
+- **Suspend someone:** set *Status* to *Suspended*. They lose access at once.
+- **Export the member list:** use the **Export members** button above the list.
 
-**Done:**
+**Manage the team** (Super Administrators only)
+- **Members & Access → Users.**
+- **Add a colleague:** choose their **Role** and **Organisation** (K&C or SBM).
+- **Suspend someone who has left:** untick **Active**. Their history stays. **Do not delete people**; suspending is safer.
+- The system will not let you suspend, demote or delete the **last** Super Administrator, so you cannot lock yourselves out.
 
-- **Phase 1 (Design) and Phase 2 (Initial Website)** — Home, About, Research,
-  Firms & Lawyers (placeholder), Intelligence, Pilot 2026, Events, Contact,
-  Subscribe, and all six footer legal pages are built and live.
-- **Real brand assets** — the client-supplied logo is cropped, wired into
-  the header, footer, and favicon (see "Logo & brand assets" above), in the
-  brief's exact navy `#0A192F` / green `#005A36` / off-white `#F8FAFC`
-  palette.
-- **Real site copy** — every page's text now matches the client-approved
-  web content brief (`NIGERIA_LEX_Webcontent.docx`), not placeholder text,
-  including the updated tagline, the five "What We Do" pillars, the fuller
-  Research criteria/methodology, and real leadership/ownership/partner
-  copy. Applied via `npm run seed`, which is safe to re-run.
-- **Fully CMS-editable** — every collection and global (Site Settings,
-  Home/About/Research/Pilot 2026 content, Legal Pages, Firms, Lawyers,
-  Intelligence, Events) is editable in `/admin` with no code changes
-  needed, and edits go live within seconds via on-demand revalidation (see
-  "Live content updates" above) — not just at the next deploy.
-- **Firm profiles** now render all seven sections the brief specifies
-  (§9): Overview, Core Capabilities, Representative Experience, Key
-  Practitioners (linked Lawyers), Sector Strengths, Cross-Border
-  Experience, Nigeria Lex Analysis.
-- **Mobile responsive**, including a real hamburger menu on small screens
-  (`MobileNav.tsx`), not just a wrapped list.
-- **SEO**: per-page metadata, Open Graph + Twitter card images, a
-  JSON-LD Organization schema, an auto-generated `/sitemap.xml` (including
-  every published Firm and Intelligence article) and `/robots.txt`
-  disallowing `/admin` and `/api`.
-- **Visual design pass**: reworked type scale, spacing rhythm, and the
-  homepage hero/pillar treatment to move away from generic
-  hairline-rule/eyebrow-label patterns, applied to the Header, Home, About,
-  and Research pages.
+---
 
-**Deferred, per the brief's own quotation structure (§19) or flagged as a
-real gap worth knowing about:**
+## 5. The private Commercial Register
 
-- **Phase 3 — Research Database**: the schema for a searchable, filterable
-  Firms & Lawyers database is fully built, but the public filter controls
-  (Firm/Lawyer/Practice Area/Sector/Location) stay inert until there's
-  enough published research to filter meaningfully — matching the brief's
-  "Research in progress" instruction (§8, §20). Individual lawyer profile
-  pages (`/lawyers/[slug]`) also aren't built yet, so Key Practitioners on
-  a firm page currently render as plain text, not links.
-- **Phase 4 — Future Subscription Capability**: the `isSubscriberOnly` flag
-  and gating UI exist, but there's no real subscriber login — every
-  visitor sees the same "subscribe to read this" message regardless of
-  subscription status.
-- **Real legal copy**: Legal Pages are seeded with generic, clearly-marked
-  "Draft placeholder" text — not reviewed by counsel, must be finalised
-  before launch.
-- **Visual design pass isn't sitewide yet** — Header, Home, About, and
-  Research got the refined type/spacing treatment described above; Pilot
-  2026, Events, Contact, Firms, Intelligence, and Subscribe still use the
-  earlier, plainer styling and would benefit from the same pass.
-- **No real email sending** — Subscribers are captured to the database
-  only; there's no welcome email, newsletter delivery, or staff
-  password-reset email yet (see the email-adapter warning in your server
-  logs). Needs `@payloadcms/email-resend` or similar wired in when ready.
-- **SiteSettings favicon field** isn't actually wired to the live favicon
-  yet (it comes from `src/app/icon.png` instead) — see the field's admin
-  description for detail.
-- **Per-page canonical URLs** are set on Home, About, and Research; the
-  remaining pages don't have one yet (low-priority SEO polish, not a bug).
+**What it is.** A private, password-protected record of Nigeria Lex's commercial activity, shared by **Kaye & Crowther / Nigeria Lex** and **SBM Intelligence**. It tracks opportunities, who originated them, proposals, invoices and payments. It is an **internal tool**. It is never visible to the public, and it is completely separate from the website content and member accounts.
 
-## Ownership & accounts
+**Where.** **Commercial Register → Commercial Register**, inside the admin area.
 
-Per the design brief, the domain, hosting account, Supabase project, S3
-bucket, and admin credentials should be registered under Kaye & Crowther
-Limited / Nigeria Lex accounts, not the developer's personal accounts.
+**Who can use it.** Only people who have been given a Commercial Register role (or are Super Administrators). Each person has an **individual login**, so it is always clear who entered or changed something. Both parties see the **full register**.
 
+### What each entry holds
+
+| Group | What is recorded |
+|---|---|
+| **Opportunity** | Date created, organisation or prospective customer, contact person and details, opportunity type, originating party (**K&C / Nigeria Lex**, **SBM** or **Joint**), the Nigeria Lex contact responsible, description, status |
+| **Proposal and value** | Whether a proposal or quotation was issued (and when), currency, estimated value, agreed commercial value |
+| **Invoicing and receipts** | Invoice number and date, amount invoiced, amount received, date payment received |
+| **Origination and distribution** | Origination entitlement (where applicable) and distribution or payment status |
+| **Follow-up** | Next action, next-action date, notes |
+
+**Opportunity types:** Subscriptions, Sponsorship, Institutional partnership, Reports / research products, Events / roundtables, Advertising, Licensing, Commissioned research, Other agreed commercial activity.
+
+**Status progression:** Lead → Contacted → Meeting arranged → Proposal in preparation → Proposal issued → Negotiation → Agreed → Invoiced → Part-paid → Paid, or **Closed / unsuccessful**.
+
+Each entry is given a **reference number** automatically (for example `NLCR-00012`).
+
+### Using it
+
+1. **Add an entry:** *Create New*, fill in the tabs (Opportunity, Proposal & value, Invoicing & receipts, Origination & distribution, Follow-up), and **Save**.
+2. **Update as things progress:** open the entry, change the status and add invoice or payment details.
+3. **Find things:** use the search box, the **Filters** (organisation, originating party, opportunity type, status, date) and click column headings to sort.
+4. **Download to Excel:** click **Export register (CSV / Excel)**. It downloads exactly what you are currently looking at, including any search or filters.
+5. **Dashboard:** above the list you will see totals for open pipeline, agreed value, amounts invoiced, amounts received and outstanding, plus how many opportunities were originated by K&C / Nigeria Lex, SBM, or jointly. **Amounts in different currencies are kept separate and never added together.**
+
+### Mistakes and withdrawn items: cancel, don't delete
+
+Ordinary users **cannot delete** register entries. If something was entered by mistake or withdrawn:
+1. Open the entry.
+2. Set **Record state** to **Cancelled** or **Archived**, and give a reason.
+3. The entry stays in the history. Cancelled and archived entries are left out of the dashboard totals.
+
+Only a Super Administrator can restore a cancelled or archived entry.
+
+### The Audit Trail
+
+**Commercial Register → Audit Trail** shows, for every entry:
+- **who** created it and who later amended it (and whether they are K&C or SBM);
+- **when** each change was made;
+- **what changed**, with the **previous value** and the new value (for example, *Status: Proposal issued → Agreed*);
+- when the register was **exported**.
+
+Nobody can edit or remove the audit trail through the website.
+
+---
+
+## 6. The Activity Log: a record of everything that happens
+
+The Commercial Register has its own audit trail. The **Activity Log** goes further: it records **activity across the whole website**, so that the directors can always answer "who did what, and when?"
+
+**Where.** **Security & Audit → Activity Log.** **Only Super Administrators can see it.** Through the website and admin area, nobody can add to it by hand, edit it or delete from it.
+
+### What it records
+
+| Kind of activity | Examples |
+|---|---|
+| **Changes to content** | An article created, edited or deleted; a firm profile updated; an event added; a page's text changed; site settings changed, such as switching the member portal on |
+| **People and access** | A team login created, its role changed, or a person suspended; a member's access level changed, or an institution approved |
+| **Sign-ins** | Successful sign-ins and sign-outs (staff and members); **failed** sign-in attempts; accounts locked after too many wrong passwords; password-reset requests |
+| **Members** | New registrations and email verifications |
+| **Public forms** | A new subscriber, contact message or research submission arriving |
+| **Downloads of data** | Every time the register, its audit trail, the member list or the activity log itself is exported |
+| **Maintenance** | Use of the special set-up and recovery route used by the technical team |
+| **Commercial Register** | That an entry was created, changed or archived (the detailed values are in the register's own Audit Trail) |
+
+Each line shows: **what happened, to which record, who did it** (name, email and role, and whether K&C or SBM), **when**, and the **IP address** (the internet address reported by the hosting provider) and **browser**. Where it is safe to do so, it also shows the **previous and new value** of the field that changed.
+
+### What it deliberately does *not* record
+
+To protect people's privacy and security, the log never copies:
+- **passwords**, or anything that could be used to work one out (it only notes that "a password was changed");
+- **security tokens** or sign-in sessions;
+- **personal details** of members, subscribers or people who wrote to us. It records that a record changed, but not the private contents;
+- the **values** in the Commercial Register (those are in the register's own Audit Trail, visible to K&C and SBM users);
+- long text such as full articles. It notes that the text changed.
+
+It also does not record every time somebody merely **views** a page.
+
+### How to use it
+
+- Open **Security & Audit → Activity Log.** The newest activity is at the top.
+- Use the **search box** (for example a person's name or email, or the name of an article).
+- Use **Filters** to narrow by action (for example *Failed sign-in*), by area, by person type, or by date.
+- Click **Export activity log** to download what you are looking at as a spreadsheet, for example for an annual review.
+
+**Examples of questions it can answer**
+- *Who changed the Pilot 2026 timetable last Tuesday?* Filter by area and date.
+- *Has anyone been trying to guess passwords?* Filter by **Failed sign-in** or **Account locked**.
+- *When did this member get subscriber access, and who granted it?*
+- *Who exported the Commercial Register this month?*
+
+**Keeping the log.** The log only grows. The technical team should agree a retention period with Kaye & Crowther (for example 24 months online, then archived), in line with your privacy policy.
+
+---
+
+## 7. Who can see what
+
+| Information | Public visitor | Registered member | Subscriber | Editor / Researcher | Commercial Register user | Super Administrator |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| Public pages, articles, published firm profiles | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
+| Items marked "Registered users" | ✘ | ✔ | ✔ | ✔ | ✘ | ✔ |
+| Items marked "Subscribers" | ✘ | ✘ | ✔ | ✔ | ✘ | ✔ |
+| Unpublished drafts and hidden firms | ✘ | ✘ | ✘ | ✔ | ✘ | ✔ |
+| Contact messages, subscribers, research submissions | ✘ | ✘ | ✘ | ✔ | ✘ | ✔ |
+| **Commercial Register and its Audit Trail** | ✘ | ✘ | ✘ | ✘ | ✔ | ✔ |
+| Member accounts (everyone's) | ✘ | ✘ (own only) | ✘ (own only) | ✘ | ✘ | ✔ |
+| Team logins | ✘ | ✘ | ✘ | ✘ (limited) | ✘ (own only) | ✔ |
+| **Activity Log** | ✘ | ✘ | ✘ | ✘ | ✘ | ✔ |
+
+Having access to one area **never** automatically gives access to another.
+
+---
+
+## 8. Privacy and security in plain English
+
+**Your information**
+- We collect only what is needed: for example your name, email and organisation when you register, subscribe or write to us.
+- Subscribers can **unsubscribe** at any time using the link in every email.
+- Our **Privacy Policy** (linked in the website footer) explains what we hold and why.
+
+**How the site is protected**
+- **Individual logins** for the team, with roles, so people only see what they need.
+- **Strong passwords** are required, and repeated wrong guesses **lock the account** for a short time.
+- **Passwords are never stored in readable form.** Even the administrators cannot see them.
+- **Encrypted connections.** The site should always be used through `https`.
+- **Suspending** a person cuts off their access immediately.
+- **Confidential downloads** are stored privately, and are checked against your access level **every time** they are downloaded.
+- **Everything important is recorded** in the Activity Log and, for commercial records, in the Audit Trail.
+- **Separate systems, separate passwords.** Website and register passwords must be different from Nigeria Lex email passwords.
+
+**Looking after the data (for the owners)**
+- Data is stored in a managed database and a file store. **Backups must be arranged with the hosting provider.** Ask your technical team to confirm what is backed up, how often, and that a restore has been tested.
+- **Kaye & Crowther should own** the domain, hosting accounts and code, with developers given access that can be withdrawn.
+- The commercial register and other records can be **exported in full** to spreadsheets at any time, so nothing is locked in.
+
+**Something looks wrong?** Tell a Super Administrator straight away, and change your password if you think someone else knows it.
+
+---
+
+## 9. Frequently asked questions
+
+**Can anyone see the Commercial Register?**
+No. Only people with a Commercial Register role and the Super Administrators, after signing in with their own login. It is not on the public website.
+
+**Can SBM colleagues see everything in the register?**
+Yes. Both K&C / Nigeria Lex and authorised SBM users see the **full** register. SBM users cannot see the website's other admin areas.
+
+**Can an entry be deleted by mistake?**
+No. Ordinary users cannot delete. Entries are cancelled or archived, and the history is kept.
+
+**How do we know who changed something?**
+Every change to the register is in its Audit Trail. Every other change on the site is in the Activity Log.
+
+**I published an article but it is not showing.**
+Check the **Published at** date is not in the future and is not empty. Then check the **Access level**: readers who lack it will see only the summary.
+
+**Why can't I see the Activity Log or the Members list?**
+Those are for Super Administrators only.
+
+**A member says they can't sign in.**
+Ask them to check they clicked the **verification link** in their email, and try *Forgotten your password?*. After five wrong attempts an account waits 15 minutes. A Super Administrator can check the account under **Members & Access → Members**. It may be suspended.
+
+**Can we start charging for subscriptions?**
+The site is ready for it: access levels, subscriber accounts, start and end dates. Online payment is a future step. Until then, the team grants subscriber access manually.
+
+**Is our data backed up?**
+Backups are arranged with the hosting provider. Please confirm the arrangement with your technical team.
+
+**Can we move to a different developer or host?**
+Yes. The site uses standard, widely supported technology, and the registers can be exported to spreadsheets at any time.
+
+---
+
+## 10. Glossary
+
+| Term | Meaning |
+|---|---|
+| **Admin area** | The private part of the website where the team manages content, at `/admin` |
+| **Access level** | Who may read an item: Public, Registered users, or Subscribers |
+| **Audit Trail** | The Commercial Register's history of who created or changed each entry, when, and the previous values |
+| **Activity Log** | The site-wide history of important actions, visible only to Super Administrators |
+| **Commercial Register** | The private record of commercial opportunities, invoices and payments |
+| **Member** | Someone with a public-site account (Registered or Subscriber) |
+| **Originating party** | Who brought in an opportunity: K&C / Nigeria Lex, SBM, or Joint |
+| **Pilot 2026** | Nigeria Lex's first research study, testing and refining the methodology |
+| **Record state** | Whether a register entry is Active, Cancelled or Archived |
+| **Restricted document** | A downloadable file that needs the right access to open |
+| **Role** | The set of things a team member is allowed to do |
+| **Suspend** | Block a login immediately without deleting it or its history |
+| **Super Administrator** | A K&C / Nigeria Lex director with full control |
+| **Verification email** | The email with a link to confirm an address is genuine |
+
+---
+
+## 11. Getting help
+
+- **Questions about the content or the service:** info@nigerialex.com
+- **Something not working in the admin area:** tell a Super Administrator, who can contact the technical team.
+- **Technical team:** see [`docs/DEVELOPER-README.md`](docs/DEVELOPER-README.md) and [`docs/STEP-BY-STEP-GUIDE.md`](docs/STEP-BY-STEP-GUIDE.md).
+
+*Nigeria Lex is owned and published by Kaye & Crowther Limited. Research partner: SBM Intelligence.*
