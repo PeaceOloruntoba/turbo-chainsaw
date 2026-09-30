@@ -1,3 +1,4 @@
+import { ResearchInviteLink as ResearchInviteLink_1f043e41e16544af89e10fdf0b606e12 } from '@/components/admin/ResearchInviteLink'
 import { ResearchExportLink as ResearchExportLink_7c92e06f4e2845e6a4b42c89623f1170 } from '@/components/admin/ResearchExportLink'
 import { ResearchReviewControls as ResearchReviewControls_2a61ca8d5b174885bf380a9f7192d44e } from '@/components/admin/ResearchReviewControls'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -31,6 +32,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/components/admin/ResearchInviteLink#ResearchInviteLink": ResearchInviteLink_1f043e41e16544af89e10fdf0b606e12,
   "@/components/admin/ResearchExportLink#ResearchExportLink": ResearchExportLink_7c92e06f4e2845e6a4b42c89623f1170,
   "@/components/admin/ResearchReviewControls#ResearchReviewControls": ResearchReviewControls_2a61ca8d5b174885bf380a9f7192d44e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,

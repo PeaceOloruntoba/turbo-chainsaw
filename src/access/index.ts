@@ -60,10 +60,13 @@ export const canViewRegister = (user: AnyUser): boolean =>
 export const canEditRegister = (user: AnyUser): boolean =>
   isStaff(user) && (REGISTER_EDIT_ROLES as readonly string[]).includes(user?.role)
 
-/** Restricted SBM reviewer: research records only, read-only. */
-export const canReviewResearch = (user: AnyUser): boolean =>
-  isStaff(user) && (RESEARCH_REVIEW_ROLES as readonly string[]).includes(user?.role)
-
+/** Restricted SBM reviewer: research records only, read-only, with optional expiry. */
+export const canReviewResearch = (user: AnyUser): boolean => {
+  if (!isStaff(user) || !(RESEARCH_REVIEW_ROLES as readonly string[]).includes(user?.role)) return false
+  if (user.role === 'admin') return true
+  const expires = user.researchAccessExpiresAt
+  return !expires || new Date(expires).getTime() > Date.now()
+}
 /** A member account (public portal) that has not been suspended. */
 export const isMember = (user: AnyUser): boolean =>
   user?.collection === 'members' && user.status !== 'suspended'

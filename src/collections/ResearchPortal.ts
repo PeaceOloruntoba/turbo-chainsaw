@@ -10,18 +10,21 @@ const baseURL = () => process.env.NEXT_PUBLIC_SERVER_URL || 'https://nigerialex.
 
 export const ResearchParticipants: CollectionConfig = {
   slug: 'research-participants',
-  admin: { group: 'Research Portal', useAsTitle: 'firmName', defaultColumns: ['firmName', 'contactEmail', 'invitationStatus', 'lastActivityAt'] },
+  admin: { group: 'Research Portal', useAsTitle: 'firmName', defaultColumns: ['firmName', 'contactEmail', 'invitationStatus', 'lastActivityAt'], components:{beforeDocumentControls:['@/components/admin/ResearchInviteLink#ResearchInviteLink']} },
   access: {
     admin: ({ req }) => isAdmin(req.user), read: ({ req }) => isAdmin(req.user),
     create: ({ req }) => isAdmin(req.user), update: ({ req }) => isAdmin(req.user), delete: ({ req }) => isAdmin(req.user),
   },
   hooks: {
     afterChange: [async ({ doc, operation, req }) => {
-      if (doc.active === false || (operation !== 'create' && !doc.sendInvite)) return doc
+      if (req.context?.skipResearchInvite) return doc
+      if (doc.active === false) { if(doc.invitationStatus!=='revoked') await req.payload.update({collection:'research-participants',id:doc.id,data:{invitationStatus:'revoked',invitationHash:null},overrideAccess:true,context:{skipActivityLog:true}}); return doc }
+      if (operation !== 'create' && !doc.sendInvite) return doc
       const invite = token()
       await req.payload.update({ collection: 'research-participants', id: doc.id, data: { invitationHash: hex(invite), invitationExpiresAt: new Date(Date.now()+60*86400000).toISOString(), invitationStatus: 'invited', sendInvite: false }, overrideAccess: true, context: { skipActivityLog: true } })
       const url = `${baseURL()}/research-portal?invite=${encodeURIComponent(invite)}`
-      await sendEmail({ to: doc.contactEmail, subject: `Invitation to the Nigeria Lex Pilot Study 2026`, text: `Dear ${doc.contactName || doc.firmName},\n\nNigeria Lex invites ${doc.firmName} to complete the confidential Pilot Study 2026 research questionnaire. Use this personal invitation link to begin: ${url}\n\nThe submission window closes on 17 October 2026. You can save your progress and return later. Please do not enter legally privileged or highly sensitive confidential information.\n\nNigeria Lex\ninfo@nigerialex.com` })
+      await sendEmail({ to: doc.contactEmail, subject: `Invitation to the Nigeria Lex Pilot Study 2026`, text: `Dear ${doc.contactName || doc.firmName},\n\nNigeria Lex invites ${doc.firmName} to complete the confidential Pilot Study 2026 research questionnaire. Use this personal invitation link to begin: ${url}\n\nThe current submission deadline is shown on the Review & Submit page. You can save your progress and return later. Please do not enter legally privileged or highly sensitive confidential information.\n\nNigeria Lex\ninfo@nigerialex.com` })
+      await logActivity(req.payload,{action:'system',resourceType:'collection',resource:'research-participants',resourceId:String(doc.id),resourceLabel:doc.firmName,summary:'Invitation sent to '+doc.contactEmail,req})
       const existing = await req.payload.find({collection:'research-portal-submissions',where:{participant:{equals:doc.id}},limit:1,depth:0,overrideAccess:true})
       const form = await req.payload.findGlobal({slug:'research-portal-settings',depth:0,overrideAccess:true}) as any
       const snapshot = {version:form.questionnaireVersion,sections:form.sections,privacyNotice:form.privacyNotice,consentText:form.consentText}
@@ -75,7 +78,7 @@ export const ResearchDocuments: CollectionConfig = {
  slug:'research-documents', labels:{singular:'Research document',plural:'Research documents'}, admin:{group:'Research Portal',useAsTitle:'title',defaultColumns:['title','filename','createdAt']},
  upload:{staticDir:process.env.RESEARCH_UPLOAD_DIR||'storage/research',mimeTypes:['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','image/jpeg','image/png']},
  access:{admin:({req})=>isAdmin(req.user)||canReviewResearch(req.user),read:({req})=>isAdmin(req.user)||canReviewResearch(req.user),create:({req})=>isAdmin(req.user),update:({req})=>isAdmin(req.user),delete:({req})=>isAdmin(req.user)},
- fields:[{name:'title',type:'text',required:true},{name:'participant',type:'relationship',relationTo:'research-participants',required:true,admin:{readOnly:true}},{name:'submission',type:'relationship',relationTo:'research-portal-submissions',required:true,admin:{readOnly:true}}],
+ hooks:{afterRead:[async ({doc,req})=>{if(canReviewResearch(req.user))await logActivity(req.payload,{action:'system',resourceType:'collection',resource:'research-documents',resourceId:String(doc.id),resourceLabel:String(doc.title||doc.filename),summary:'Viewed or downloaded research document',req});return doc}]}, fields:[{name:'title',type:'text',required:true},{name:'participant',type:'relationship',relationTo:'research-participants',required:true,admin:{readOnly:true}},{name:'submission',type:'relationship',relationTo:'research-portal-submissions',required:true,admin:{readOnly:true}}],
 }
 
 export const ResearchAccessTokens: CollectionConfig = {
@@ -105,8 +108,8 @@ export const ResearchPortalSettings: GlobalConfig = {
   {name:'privacyNotice',type:'textarea',defaultValue:'Your responses are collected by Kaye & Crowther Limited through Nigeria Lex for the Nigeria Lex Pilot Study 2026. Responses are confidential and will be available only to authorised Nigeria Lex / K&C personnel and authorised SBM Intelligence researchers supporting the Pilot. Your information will not be made public or sold. It may be used to assess legal capabilities and experience, verify research, and prepare aggregated or attributed research outputs only where you have indicated that attribution is permitted. Drafts and submissions are retained permanently in the Nigeria Lex research environment. Do not include legally privileged or highly sensitive confidential information.'},
   {name:'consentText',type:'textarea',defaultValue:'I confirm that I am authorised to provide this information on behalf of the firm, that it is accurate to the best of my knowledge, and that Nigeria Lex / Kaye & Crowther and authorised SBM Intelligence researchers may use it for the Pilot Study 2026 as described above.'},
   {name:'questionnaireVersion',type:'number',defaultValue:1,admin:{readOnly:true}},
-  {name:'sections',type:'array',required:true,defaultValue:sections.map(s=>({title:s.title,repeatable:Boolean(s.repeatable),fields:s.fields.map(([id,label,type,options,required])=>({id,label,type,options,required,active:true}))})),fields:[
-   {name:'title',type:'text',required:true},{name:'repeatable',type:'checkbox',defaultValue:false},
+  {name:'sections',type:'array',required:true,defaultValue:sections.map(s=>({id:s.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,''),title:s.title,repeatable:Boolean(s.repeatable),fields:s.fields.map(([id,label,type,options,required])=>({id,label,type,options,required,active:true}))})),fields:[
+   {name:'id',type:'text',required:true,admin:{description:'Stable section key. Keep this unchanged after invitations are sent.'}},{name:'title',type:'text',required:true},{name:'repeatable',type:'checkbox',defaultValue:false},
    {name:'fields',type:'array',fields:[{name:'id',type:'text',required:true},{name:'label',type:'text',required:true},{name:'helpText',type:'text'},{name:'type',type:'select',required:true,options:['text','textarea','email','number','date','url','select','multiselect','checkbox'].map(value=>({label:value,value}))},{name:'options',type:'textarea',admin:{description:'For select/multiselect, enter choices separated by |'}},{name:'required',type:'checkbox',defaultValue:false},{name:'active',type:'checkbox',defaultValue:true}]},
   ]},
  ]

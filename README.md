@@ -110,6 +110,10 @@ Once switched on, there are four levels of reader:
 
 ---
 
+## Nigeria Lex Research Portal
+
+For simple instructions on inviting firms, questionnaires, SBM access, exports, reminders, uploads and backups, see [todo.md](todo.md).
+
 ## 4. For the Nigeria Lex team: the admin area
 
 ### Signing in
