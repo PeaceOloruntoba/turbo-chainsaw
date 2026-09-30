@@ -208,7 +208,7 @@ By a K&C Super Administrator only (section 8): add a "Research reviewer" login w
 ## 13. Decisions and inputs I need from you
 
 1. **Approve Option C** (build inside the website) and the **invitation link plus emailed sign-in link** access model, or tell me which alternative you prefer. - Approved Option C
-2. **The questionnaire itself:** every question in each section, which are required, and the fields you want for each **representative matter** and **practitioner**. Please also say if there is a cap on matters. - You decide.
+2. **The questionnaire itself:** every question in each section, which are required, and the fields you want for each **representative matter** and **practitioner**. Please also say if there is a cap on matters. - You decide & can we make it possible to add the fields from the admin side of things, just make it flexible and let the client add or remove whatever they wish, make it required or not and do and undo.
 3. **SBM permissions:** submitted only, or drafts too? Can they export? Any end date? Do any SBM researchers also need Commercial Register access? - they can draft too, and exports too, no commercial register access.
 4. **Uploads:** off at launch as proposed? If they are needed later, the answers to the table in section 9. - if file uploads is required, we already using supabase storage bucket
 5. **Master administrators:** the names or roles of the K&C Super Administrators, and confirmation that the K&C-owned accounts will be used. - the role 'admin', email: info@nigerialex.com
@@ -227,3 +227,4 @@ By a K&C Super Administrator only (section 8): add a "Research reviewer" login w
 - **Provider details** (Supabase regions, backup features on each plan, Google Forms' current save-progress behaviour) are from general knowledge and should be checked before you rely on them.
 - **This is not legal advice.** Data-protection, cross-border transfer and confidentiality questions should be confirmed by K&C's own counsel.
 - As with earlier updates, I cannot run the site in my environment, so the build will come with a checklist for you to test on the development site before any firm is invited.
+

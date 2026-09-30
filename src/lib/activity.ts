@@ -70,7 +70,7 @@ type Policy =
   | { mode: "names" };
 
 /** Collections that must not log themselves (would loop / duplicate). */
-const EXCLUDED = new Set(["activity-log", "commercial-audit-log"]);
+const EXCLUDED = new Set(["activity-log", "commercial-audit-log", "research-access-tokens"]);
 
 const POLICIES: Record<string, Policy> = {
   users: {
@@ -93,7 +93,10 @@ const POLICIES: Record<string, Policy> = {
   },
   subscribers: { mode: "allowlist", fields: ["unsubscribed"] },
   "contact-messages": { mode: "allowlist", fields: ["status"] },
-  "research-submissions": { mode: "allowlist", fields: ["status"] },
+  "research-submissions": { mode: "allowlist", fields: ["status"] },  "research-participants": { mode: "allowlist", fields: ["active", "invitationStatus"] },
+  "research-portal-submissions": { mode: "allowlist", fields: ["status", "progress", "submittedAt"] },
+  "research-documents": { mode: "names" },
+  "research-portal-settings": { mode: "names" },
   "commercial-register": { mode: "names" },
 };
 
@@ -102,7 +105,9 @@ const LABEL_FIELD: Record<string, string> = {
   users: "email",
   members: "email",
   subscribers: "email",
-  "commercial-register": "reference",
+  "commercial-register": "reference",  "research-participants": "firmName",
+  "research-portal-submissions": "reference",
+  "research-documents": "title",
 };
 
 /** Bookkeeping / secret / noisy fields that are never diffed or stored. */

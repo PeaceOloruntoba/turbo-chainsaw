@@ -175,6 +175,7 @@ export const Users: CollectionConfig = {
         { label: 'Researcher', value: 'researcher' },
         { label: 'Commercial Register — editor', value: 'commercial_editor' },
         { label: 'Commercial Register — view only', value: 'commercial_viewer' },
+        { label: 'Research reviewer (SBM)', value: 'research_reviewer' },
       ],
       access: { update: adminOnlyField },
       admin: {

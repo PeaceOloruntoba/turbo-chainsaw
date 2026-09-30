@@ -1,0 +1,7 @@
+import { NextRequest,NextResponse } from 'next/server'
+import { getPayloadClient } from '@/lib/payload'
+import { canReviewResearch } from '@/access'
+import { logActivity } from '@/lib/activity'
+export const dynamic='force-dynamic'
+const csv=(v:any)=>`"${String(typeof v==='object'&&v!==null?JSON.stringify(v):v??'').replace(/"/g,'""')}"`
+export async function GET(req:NextRequest){const payload=await getPayloadClient();const user=(await payload.auth({headers:req.headers} as any)).user;if(!canReviewResearch(user))return NextResponse.json({error:'Not authorised'},{status:403});const result=await payload.find({collection:'research-portal-submissions',limit:1000,depth:0,sort:'createdAt',overrideAccess:true});const cols=['reference','firmName','status','progress','createdAt','updatedAt','submittedAt','answers','questionnaireSnapshot','documents'];const rows=[cols,...result.docs.map((d:any)=>cols.map(c=>d[c]??''))];const text='\uFEFF'+rows.map(r=>r.map(csv).join(',')).join('\r\n');await logActivity(payload,{action:'export',resourceType:'collection',resource:'research-portal-submissions',summary:`Exported ${result.docs.length} research submissions`,user:user as any,req:req as any});return new NextResponse(text,{headers:{'content-type':'text/csv; charset=utf-8','content-disposition':`attachment; filename="nigeria-lex-research-${new Date().toISOString().slice(0,10)}.csv"`}})}

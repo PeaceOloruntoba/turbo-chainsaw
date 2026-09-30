@@ -39,6 +39,7 @@ export const CONTENT_ROLES = ['admin', 'editor', 'researcher'] as const
 export const REGISTER_VIEW_ROLES = ['admin', 'commercial_editor', 'commercial_viewer'] as const
 /** Roles that may create / amend Commercial Register entries. */
 export const REGISTER_EDIT_ROLES = ['admin', 'commercial_editor'] as const
+export const RESEARCH_REVIEW_ROLES = ['admin', 'research_reviewer'] as const
 
 /* ── Who is this? ─────────────────────────────────────────────────── */
 
@@ -58,6 +59,10 @@ export const canViewRegister = (user: AnyUser): boolean =>
 
 export const canEditRegister = (user: AnyUser): boolean =>
   isStaff(user) && (REGISTER_EDIT_ROLES as readonly string[]).includes(user?.role)
+
+/** Restricted SBM reviewer: research records only, read-only. */
+export const canReviewResearch = (user: AnyUser): boolean =>
+  isStaff(user) && (RESEARCH_REVIEW_ROLES as readonly string[]).includes(user?.role)
 
 /** A member account (public portal) that has not been suspended. */
 export const isMember = (user: AnyUser): boolean =>

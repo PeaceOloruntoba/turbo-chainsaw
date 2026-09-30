@@ -85,7 +85,7 @@ export default async function Pilot2026Page() {
           >
             Register for Pilot Updates
           </Link>
-        </div>
+          <Link href="/research-portal" className="border border-green px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-green transition-colors hover:bg-green hover:text-white">Already invited? Sign in to the research portal</Link>        </div>
 
         <section className="mt-14 border-t border-line pt-10">
           <h2 className="font-serif text-lg text-navy">What Is Being Researched</h2>

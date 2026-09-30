@@ -14,6 +14,7 @@ import { Intelligence } from "./collections/Intelligence";
 import { Events } from "./collections/Events";
 import { Subscribers } from "./collections/Subscribers";
 import { ResearchSubmissions } from "./collections/ResearchSubmissions";
+import { ResearchParticipants, ResearchPortalSubmissions, ResearchAccessTokens, ResearchPortalSettings, ResearchDocuments } from "./collections/ResearchPortal";
 import { ContactMessages } from "./collections/ContactMessages";
 import { LegalPages } from "./collections/LegalPages";
 import { CommercialRegister } from "./collections/CommercialRegister";
@@ -179,6 +180,10 @@ export default buildConfig({
     Events,
     Subscribers,
     ResearchSubmissions,
+    ResearchParticipants,
+    ResearchPortalSubmissions,
+    ResearchAccessTokens,
+    ResearchDocuments,
     ContactMessages,
     LegalPages,
     // ── Private / access-controlled data (each in its own collection) ──
@@ -197,6 +202,7 @@ export default buildConfig({
     AboutContent,
     ResearchContent,
     Pilot2026Content,
+    ResearchPortalSettings,
   ].map(withActivityLogGlobal),
   secret: process.env.PAYLOAD_SECRET || "",
   // Sends Payload's own emails (member verification, password resets for
@@ -221,6 +227,7 @@ export default buildConfig({
               // streams these through its access-controlled file route.
               // (Only used when MEDIA_STORAGE=s3 — see src/lib/storage.ts.)
               "restricted-documents": { prefix: "restricted" },
+              "research-documents": { prefix: "research" },
             },
             bucket: process.env.S3_BUCKET!,
             config: {
