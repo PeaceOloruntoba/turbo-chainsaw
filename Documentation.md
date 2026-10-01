@@ -1,0 +1,588 @@
+# Nigeria Lex — Full Product Documentation
+
+This manual describes the live public website, member accounts and subscriptions, Nigeria Lex administration area, private research portal, Commercial Register, access controls, data handling and deployment. It also includes the existing todo.md guide in full. Feature availability can depend on administrator settings and environment configuration described below.
+
+# Nigeria Lex™
+
+**Independent research. Market intelligence. Informed choice.**
+
+Nigeria Lex is a research and market-intelligence website about **Nigeria's corporate legal market**. It helps investors, businesses, financial institutions and professional advisers understand which law firms and lawyers have real, demonstrable capability, and what is happening in the market around them.
+
+Nigeria Lex is owned and published by **Kaye & Crowther Limited**. **SBM Intelligence** is its research partner.
+
+This document explains, in plain English, what the website is, what it does, and how each group of people uses it. No technical knowledge is needed.
+
+> **Are you a developer or hosting provider?** The technical documentation is in [`docs/DEVELOPER-README.md`](docs/DEVELOPER-README.md) and [`docs/STEP-BY-STEP-GUIDE.md`](docs/STEP-BY-STEP-GUIDE.md).
+
+---
+
+## Contents
+
+1. [The website in one minute](#1-the-website-in-one-minute)
+2. [For visitors: the public website](#2-for-visitors-the-public-website)
+3. [Member accounts (when switched on)](#3-member-accounts-when-switched-on)
+4. [For the Nigeria Lex team: the admin area](#4-for-the-nigeria-lex-team-the-admin-area)
+5. [The private Commercial Register](#5-the-private-commercial-register)
+6. [The Activity Log: a record of everything that happens](#6-the-activity-log-a-record-of-everything-that-happens)
+7. [Who can see what](#7-who-can-see-what)
+8. [Privacy and security in plain English](#8-privacy-and-security-in-plain-english)
+9. [Frequently asked questions](#9-frequently-asked-questions)
+10. [Glossary](#10-glossary)
+11. [Getting help](#11-getting-help)
+
+---
+
+## 1. The website in one minute
+
+The project has **three parts**:
+
+| Part | Who it is for | Where you find it |
+|---|---|---|
+| **The public website** | Anyone | The website address, e.g. `nigerialex.com` |
+| **The admin area** | The Nigeria Lex team (and SBM colleagues where authorised) | The website address followed by `/admin` |
+| **Private tools** inside the admin area | Authorised people only | The Commercial Register, member accounts, and the Activity Log |
+
+**Key ideas**
+
+- **Everything on the public website can be edited by the team** without a developer: pages, articles, firm profiles, events and legal notices. Changes appear on the live site within moments.
+- **Some content can be limited to certain readers.** Each article or firm profile can be *Public*, *Registered users only*, or *Subscribers only*.
+- **Private information stays private.** The commercial records, member accounts and research submissions are kept apart, and each person sees only what their role allows.
+- **Everything important is recorded.** The system keeps a history of who changed what, and when.
+
+---
+
+## 2. For visitors: the public website
+
+Anyone can browse the public pages. No account is needed unless you want to read material that has been marked for registered users or subscribers.
+
+| Page | What you will find |
+|---|---|
+| **Home** | What Nigeria Lex does, the latest intelligence, and news about the Pilot Study |
+| **About** | Who we are, our purpose, leadership, ownership and research partner |
+| **Research** | Our methodology: how we research, what we assess, our process, our independence and how corrections are handled. Firms and organisations can also **submit information** here |
+| **Firms & Lawyers** | Evidence-led profiles of law firms and practitioners. Each firm profile has an overview, core capabilities, representative experience, key lawyers, sector strengths, cross-border experience and a Nigeria Lex analysis. Firm profiles appear once their research is **published** |
+| **Intelligence** | Articles, reports, briefings, sector briefings, transaction intelligence, regulatory intelligence and investor briefings |
+| **Pilot 2026** | Our inaugural pilot study: what is being researched, why it matters, who can take part, and the timetable |
+| **Events** | Upcoming roundtables and events, with dates, venue, speakers and a link to register |
+| **Subscribe** | Sign up to receive Nigeria Lex updates by email. Every email has an **unsubscribe** link |
+| **Contact** | Send us a message. You receive an automatic acknowledgement |
+| **Legal notices** | Privacy Policy, Cookie Policy, Terms of Use, Disclaimer, Editorial Independence and Corrections Policy |
+
+### Things you can do as a visitor
+
+- **Read** any public article, report or profile.
+- **Subscribe** to updates, or **unsubscribe** at any time.
+- **Contact us** with a question.
+- **Submit research information** (as a law firm, practitioner or institution) through the Research or Pilot 2026 pages. You can tick a box to say we may contact you *confidentially*.
+- **Create an account** or **sign in**, if the team has switched that on (see the next section).
+
+### What "limited" content looks like
+
+Every article always shows its **title and a short summary** to everyone. If the full text is limited to registered users or subscribers, you will see a friendly notice explaining how to get access. The full text is genuinely withheld until you have the right access. It is not just hidden on screen.
+
+---
+
+## 3. Member accounts (when switched on)
+
+The site is built so that **sign-in and subscriber access can be introduced without rebuilding it**. Until the team switches it on, nothing about it appears on the site.
+
+Once switched on, there are four levels of reader:
+
+| Level | Who | What they can read |
+|---|---|---|
+| **Public** | Anyone | Free articles, introductory research and public information |
+| **Registered user** | Anyone who creates a free account | Public material **plus** selected extra material and Nigeria Lex updates |
+| **Subscriber / institutional user** | Paying or approved organisations and individuals | Premium intelligence and research, including reports you can download |
+| **Administrator / research team** | The Nigeria Lex team | Everything, so that they can manage it |
+
+### How a member uses their account
+
+1. **Create an account** (only if the team has opened registration). You give your name, organisation, email and a strong password, and you accept the Terms of Use and Privacy Policy.
+2. **Verify your email.** We send you a link. Click it once, and your account is ready.
+3. **Sign in.** Use your email and password.
+4. **My account.** See your access level and subscription status, update your details, or change your password.
+5. **Forgotten your password?** Use the link on the sign-in page. We email you a reset link that works for one hour.
+6. **Sign out** when you have finished.
+
+**Good to know**
+
+- Passwords need **at least 12 characters** with a mix of letters, numbers and symbols. Please use a password you use nowhere else, and **never** your email password.
+- After **5 wrong passwords** an account is locked for 15 minutes to protect it.
+- **Institutional accounts** are reviewed and approved by the Nigeria Lex team.
+- Subscriber access can have an **end date** (for example, an annual subscription). After that date the account returns to Registered access.
+- **Payments are not switched on.** The site is prepared for online subscription payments in future. For now the team grants subscriber access manually.
+
+---
+
+## Nigeria Lex Research Portal
+
+For simple instructions on inviting firms, questionnaires, SBM access, exports, reminders, uploads and backups, see [todo.md](todo.md).
+
+## 4. For the Nigeria Lex team: the admin area
+
+### Signing in
+
+1. Go to the website address followed by **`/admin`** (for example `nigerialex.com/admin`).
+2. Enter your email and password. Every team member has their **own** login. Never share a login.
+3. Your session ends automatically after **8 hours**, and you sign in again.
+4. **Forgotten password?** Use the "Forgot password" link on the sign-in page, or ask a Super Administrator.
+
+The menu on the left is grouped by topic:
+
+| Menu group | What is in it |
+|---|---|
+| **Content** | Intelligence (articles and reports), Events, Media (images and public PDFs), Restricted documents |
+| **Research** | Firms, Lawyers |
+| **Audience** | Subscribers, Research Submissions, Contact Messages |
+| **Page Content** | Home, About, Research and Pilot 2026 page text |
+| **Site Configuration** | Site Settings (logo, contact details, member portal switch), Legal Pages |
+| **Members & Access** | Team logins (Users) and public Members |
+| **Commercial Register** | The private commercial records and their Audit Trail |
+| **Security & Audit** | The Activity Log |
+
+You only see the groups your role allows.
+
+### Team roles
+
+| Role | Intended for | Can do |
+|---|---|---|
+| **Super Administrator** | Directors of K&C / Nigeria Lex | Everything: content, team logins, members, Commercial Register, Activity Log |
+| **Editor** | Content team | Write and publish content; see enquiries, subscribers and submissions |
+| **Researcher** | Research team | Same as Editor |
+| **Commercial Register: editor** | K&C commercial staff and authorised SBM colleagues | Use the Commercial Register only |
+| **Commercial Register: view only** | Observers | Read the Commercial Register only |
+
+### Everyday tasks
+
+**Publish an article or report**
+1. **Content → Intelligence → Create New**.
+2. Fill in the **Title**, **Category**, **Summary** (shown to everyone) and **Content** (the full text).
+3. Set **Access level** in the side panel: *Public*, *Registered users*, or *Subscribers / institutional users*.
+4. Set the **Published at** date. A **future date schedules** the article for that time. **Leaving it empty keeps it hidden**, which is useful for drafts.
+5. To attach a downloadable report:
+   - For a **public** item, use *PDF attachment*.
+   - For a **members-only** item, first upload the file under **Content → Restricted documents**, then choose it in *Login-protected download*. Only people with the right access can then download it.
+6. Click **Save**. The page goes live within moments.
+
+**Edit the words on a page** (Home, About, Research, Pilot 2026)
+- **Page Content →** choose the page, change the text, and **Save**.
+
+**Add a firm and its lawyers**
+1. **Research → Firms → Create New.** Complete the overview, capabilities, experience and analysis.
+2. Set **Research status**: *Pilot 2026 (in progress)* keeps the firm hidden. *Published* makes it public.
+3. Optionally set **Access level** to restrict the detailed sections.
+4. **Research → Lawyers → Create New**, then choose the firm. A lawyer only appears publicly once their firm is published.
+
+**Add an event**
+- **Content → Events → Create New.** Add the title, date, venue, description, speakers and the registration link.
+
+**Upload images or documents**
+- **Content → Media** for public images and PDFs.
+- **Content → Restricted documents** for downloads that need sign-in.
+
+**Change the logo, contact details or legal notices**
+- **Site Configuration → Site Settings** for the logo and contact details. **Legal Pages** for the six legal notices.
+
+**See who has been in touch**
+- **Audience → Contact Messages** for messages from the Contact page.
+- **Audience → Subscribers** for the email list. Unsubscribed people are marked.
+- **Audience → Research Submissions** for information sent in by firms and institutions. Change the **Status** as you work through them.
+- New messages, sign-ups and submissions also trigger an **email alert** to the team inbox.
+
+**Switch the member portal on** (Super Administrators only)
+1. **Site Configuration → Site Settings → Member portal.**
+2. Tick **Enable member portal** to show "Sign in" and turn on member pages.
+3. Tick **Allow new registrations** only if you want visitors to create their own free accounts.
+4. **Save.** Untick to switch off again at any time.
+
+**Manage members** (Super Administrators only)
+- **Members & Access → Members.**
+- **Create a member:** add them, and they receive a verification email. Ask them to use *Forgotten your password?* to choose their own password.
+- **Approve an institution:** set *Institutional approval* to Approved.
+- **Give or remove subscriber access:** change *Access level*, and set *Access expires* for annual terms.
+- **Suspend someone:** set *Status* to *Suspended*. They lose access at once.
+- **Export the member list:** use the **Export members** button above the list.
+
+**Manage the team** (Super Administrators only)
+- **Members & Access → Users.**
+- **Add a colleague:** choose their **Role** and **Organisation** (K&C or SBM).
+- **Suspend someone who has left:** untick **Active**. Their history stays. **Do not delete people**; suspending is safer.
+- The system will not let you suspend, demote or delete the **last** Super Administrator, so you cannot lock yourselves out.
+
+---
+
+## 5. The private Commercial Register
+
+**What it is.** A private, password-protected record of Nigeria Lex's commercial activity, shared by **Kaye & Crowther / Nigeria Lex** and **SBM Intelligence**. It tracks opportunities, who originated them, proposals, invoices and payments. It is an **internal tool**. It is never visible to the public, and it is completely separate from the website content and member accounts.
+
+**Where.** **Commercial Register → Commercial Register**, inside the admin area.
+
+**Who can use it.** Only people who have been given a Commercial Register role (or are Super Administrators). Each person has an **individual login**, so it is always clear who entered or changed something. Both parties see the **full register**.
+
+### What each entry holds
+
+| Group | What is recorded |
+|---|---|
+| **Opportunity** | Date created, organisation or prospective customer, contact person and details, opportunity type, originating party (**K&C / Nigeria Lex**, **SBM** or **Joint**), the Nigeria Lex contact responsible, description, status |
+| **Proposal and value** | Whether a proposal or quotation was issued (and when), currency, estimated value, agreed commercial value |
+| **Invoicing and receipts** | Invoice number and date, amount invoiced, amount received, date payment received |
+| **Origination and distribution** | Origination entitlement (where applicable) and distribution or payment status |
+| **Follow-up** | Next action, next-action date, notes |
+
+**Opportunity types:** Subscriptions, Sponsorship, Institutional partnership, Reports / research products, Events / roundtables, Advertising, Licensing, Commissioned research, Other agreed commercial activity.
+
+**Status progression:** Lead → Contacted → Meeting arranged → Proposal in preparation → Proposal issued → Negotiation → Agreed → Invoiced → Part-paid → Paid, or **Closed / unsuccessful**.
+
+Each entry is given a **reference number** automatically (for example `NLCR-00012`).
+
+### Using it
+
+1. **Add an entry:** *Create New*, fill in the tabs (Opportunity, Proposal & value, Invoicing & receipts, Origination & distribution, Follow-up), and **Save**.
+2. **Update as things progress:** open the entry, change the status and add invoice or payment details.
+3. **Find things:** use the search box, the **Filters** (organisation, originating party, opportunity type, status, date) and click column headings to sort.
+4. **Download to Excel:** click **Export register (CSV / Excel)**. It downloads exactly what you are currently looking at, including any search or filters.
+5. **Dashboard:** above the list you will see totals for open pipeline, agreed value, amounts invoiced, amounts received and outstanding, plus how many opportunities were originated by K&C / Nigeria Lex, SBM, or jointly. **Amounts in different currencies are kept separate and never added together.**
+
+### Mistakes and withdrawn items: cancel, don't delete
+
+Ordinary users **cannot delete** register entries. If something was entered by mistake or withdrawn:
+1. Open the entry.
+2. Set **Record state** to **Cancelled** or **Archived**, and give a reason.
+3. The entry stays in the history. Cancelled and archived entries are left out of the dashboard totals.
+
+Only a Super Administrator can restore a cancelled or archived entry.
+
+### The Audit Trail
+
+**Commercial Register → Audit Trail** shows, for every entry:
+- **who** created it and who later amended it (and whether they are K&C or SBM);
+- **when** each change was made;
+- **what changed**, with the **previous value** and the new value (for example, *Status: Proposal issued → Agreed*);
+- when the register was **exported**.
+
+Nobody can edit or remove the audit trail through the website.
+
+---
+
+## 6. The Activity Log: a record of everything that happens
+
+The Commercial Register has its own audit trail. The **Activity Log** goes further: it records **activity across the whole website**, so that the directors can always answer "who did what, and when?"
+
+**Where.** **Security & Audit → Activity Log.** **Only Super Administrators can see it.** Through the website and admin area, nobody can add to it by hand, edit it or delete from it.
+
+### What it records
+
+| Kind of activity | Examples |
+|---|---|
+| **Changes to content** | An article created, edited or deleted; a firm profile updated; an event added; a page's text changed; site settings changed, such as switching the member portal on |
+| **People and access** | A team login created, its role changed, or a person suspended; a member's access level changed, or an institution approved |
+| **Sign-ins** | Successful sign-ins and sign-outs (staff and members); **failed** sign-in attempts; accounts locked after too many wrong passwords; password-reset requests |
+| **Members** | New registrations and email verifications |
+| **Public forms** | A new subscriber, contact message or research submission arriving |
+| **Downloads of data** | Every time the register, its audit trail, the member list or the activity log itself is exported |
+| **Maintenance** | Use of the special set-up and recovery route used by the technical team |
+| **Commercial Register** | That an entry was created, changed or archived (the detailed values are in the register's own Audit Trail) |
+
+Each line shows: **what happened, to which record, who did it** (name, email and role, and whether K&C or SBM), **when**, and the **IP address** (the internet address reported by the hosting provider) and **browser**. Where it is safe to do so, it also shows the **previous and new value** of the field that changed.
+
+### What it deliberately does *not* record
+
+To protect people's privacy and security, the log never copies:
+- **passwords**, or anything that could be used to work one out (it only notes that "a password was changed");
+- **security tokens** or sign-in sessions;
+- **personal details** of members, subscribers or people who wrote to us. It records that a record changed, but not the private contents;
+- the **values** in the Commercial Register (those are in the register's own Audit Trail, visible to K&C and SBM users);
+- long text such as full articles. It notes that the text changed.
+
+It also does not record every time somebody merely **views** a page.
+
+### How to use it
+
+- Open **Security & Audit → Activity Log.** The newest activity is at the top.
+- Use the **search box** (for example a person's name or email, or the name of an article).
+- Use **Filters** to narrow by action (for example *Failed sign-in*), by area, by person type, or by date.
+- Click **Export activity log** to download what you are looking at as a spreadsheet, for example for an annual review.
+
+**Examples of questions it can answer**
+- *Who changed the Pilot 2026 timetable last Tuesday?* Filter by area and date.
+- *Has anyone been trying to guess passwords?* Filter by **Failed sign-in** or **Account locked**.
+- *When did this member get subscriber access, and who granted it?*
+- *Who exported the Commercial Register this month?*
+
+**Keeping the log.** The log only grows. The technical team should agree a retention period with Kaye & Crowther (for example 24 months online, then archived), in line with your privacy policy.
+
+---
+
+## 7. Who can see what
+
+| Information | Public visitor | Registered member | Subscriber | Editor / Researcher | Commercial Register user | Super Administrator |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| Public pages, articles, published firm profiles | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
+| Items marked "Registered users" | ✘ | ✔ | ✔ | ✔ | ✘ | ✔ |
+| Items marked "Subscribers" | ✘ | ✘ | ✔ | ✔ | ✘ | ✔ |
+| Unpublished drafts and hidden firms | ✘ | ✘ | ✘ | ✔ | ✘ | ✔ |
+| Contact messages, subscribers, research submissions | ✘ | ✘ | ✘ | ✔ | ✘ | ✔ |
+| **Commercial Register and its Audit Trail** | ✘ | ✘ | ✘ | ✘ | ✔ | ✔ |
+| Member accounts (everyone's) | ✘ | ✘ (own only) | ✘ (own only) | ✘ | ✘ | ✔ |
+| Team logins | ✘ | ✘ | ✘ | ✘ (limited) | ✘ (own only) | ✔ |
+| **Activity Log** | ✘ | ✘ | ✘ | ✘ | ✘ | ✔ |
+
+Having access to one area **never** automatically gives access to another.
+
+---
+
+## 8. Privacy and security in plain English
+
+**Your information**
+- We collect only what is needed: for example your name, email and organisation when you register, subscribe or write to us.
+- Subscribers can **unsubscribe** at any time using the link in every email.
+- Our **Privacy Policy** (linked in the website footer) explains what we hold and why.
+
+**How the site is protected**
+- **Individual logins** for the team, with roles, so people only see what they need.
+- **Strong passwords** are required, and repeated wrong guesses **lock the account** for a short time.
+- **Passwords are never stored in readable form.** Even the administrators cannot see them.
+- **Encrypted connections.** The site should always be used through `https`.
+- **Suspending** a person cuts off their access immediately.
+- **Confidential downloads** are stored privately, and are checked against your access level **every time** they are downloaded.
+- **Everything important is recorded** in the Activity Log and, for commercial records, in the Audit Trail.
+- **Separate systems, separate passwords.** Website and register passwords must be different from Nigeria Lex email passwords.
+
+**Looking after the data (for the owners)**
+- Data is stored in a managed database and a file store. **Backups must be arranged with the hosting provider.** Ask your technical team to confirm what is backed up, how often, and that a restore has been tested.
+- **Kaye & Crowther should own** the domain, hosting accounts and code, with developers given access that can be withdrawn.
+- The commercial register and other records can be **exported in full** to spreadsheets at any time, so nothing is locked in.
+
+**Something looks wrong?** Tell a Super Administrator straight away, and change your password if you think someone else knows it.
+
+---
+
+## 9. Frequently asked questions
+
+**Can anyone see the Commercial Register?**
+No. Only people with a Commercial Register role and the Super Administrators, after signing in with their own login. It is not on the public website.
+
+**Can SBM colleagues see everything in the register?**
+Yes. Both K&C / Nigeria Lex and authorised SBM users see the **full** register. SBM users cannot see the website's other admin areas.
+
+**Can an entry be deleted by mistake?**
+No. Ordinary users cannot delete. Entries are cancelled or archived, and the history is kept.
+
+**How do we know who changed something?**
+Every change to the register is in its Audit Trail. Every other change on the site is in the Activity Log.
+
+**I published an article but it is not showing.**
+Check the **Published at** date is not in the future and is not empty. Then check the **Access level**: readers who lack it will see only the summary.
+
+**Why can't I see the Activity Log or the Members list?**
+Those are for Super Administrators only.
+
+**A member says they can't sign in.**
+Ask them to check they clicked the **verification link** in their email, and try *Forgotten your password?*. After five wrong attempts an account waits 15 minutes. A Super Administrator can check the account under **Members & Access → Members**. It may be suspended.
+
+**Can we start charging for subscriptions?**
+The site is ready for it: access levels, subscriber accounts, start and end dates. Online payment is a future step. Until then, the team grants subscriber access manually.
+
+**Is our data backed up?**
+Backups are arranged with the hosting provider. Please confirm the arrangement with your technical team.
+
+**Can we move to a different developer or host?**
+Yes. The site uses standard, widely supported technology, and the registers can be exported to spreadsheets at any time.
+
+---
+
+## 10. Glossary
+
+| Term | Meaning |
+|---|---|
+| **Admin area** | The private part of the website where the team manages content, at `/admin` |
+| **Access level** | Who may read an item: Public, Registered users, or Subscribers |
+| **Audit Trail** | The Commercial Register's history of who created or changed each entry, when, and the previous values |
+| **Activity Log** | The site-wide history of important actions, visible only to Super Administrators |
+| **Commercial Register** | The private record of commercial opportunities, invoices and payments |
+| **Member** | Someone with a public-site account (Registered or Subscriber) |
+| **Originating party** | Who brought in an opportunity: K&C / Nigeria Lex, SBM, or Joint |
+| **Pilot 2026** | Nigeria Lex's first research study, testing and refining the methodology |
+| **Record state** | Whether a register entry is Active, Cancelled or Archived |
+| **Restricted document** | A downloadable file that needs the right access to open |
+| **Role** | The set of things a team member is allowed to do |
+| **Suspend** | Block a login immediately without deleting it or its history |
+| **Super Administrator** | A K&C / Nigeria Lex director with full control |
+| **Verification email** | The email with a link to confirm an address is genuine |
+
+---
+
+## 11. Getting help
+
+- **Questions about the content or the service:** info@nigerialex.com
+- **Something not working in the admin area:** tell a Super Administrator, who can contact the technical team.
+- **Technical team:** see [`docs/DEVELOPER-README.md`](docs/DEVELOPER-README.md) and [`docs/STEP-BY-STEP-GUIDE.md`](docs/STEP-BY-STEP-GUIDE.md).
+
+*Nigeria Lex is owned and published by Kaye & Crowther Limited. Research partner: SBM Intelligence.*
+
+
+# Deployment and technical operations
+
+## Runtime and build
+
+The application is a Next.js 16 and Payload CMS 3 application using PostgreSQL. Vercel must use Node.js 24; package.json sets engines.node to 24.x. The build command is npm run build, which generates the Payload import map and then builds Next.js.
+
+## Environment configuration
+
+Use the variables documented in .env.example. Configure a different DATABASE_URL for development and production. Set a strong, unique PAYLOAD_SECRET per environment. Configure the public site URL, email provider credentials and sender, S3-compatible media storage settings, and research backup settings separately for each environment. Never commit .env or credentials.
+
+Research reminders and encrypted backup endpoints are triggered by an external scheduled job, not by a process inside the website. Configure hosting cron to call /api/research-portal/reminders and /api/research-portal/backup with the RESEARCH_CRON_SECRET authorization expected by the routes. Backups use the separately configured private backup bucket. The restore command is npm run restore:research; test restore procedures operationally before relying on them.
+
+## Deployment and ownership
+
+The organization should own the domain, hosting project, database, email provider, storage buckets, source repository, and master administrator credentials. Grant developers named, revocable access. Keep production and development credentials and data separate. Before changing hosting or developers, export records, preserve private uploads and backups, transfer environment configuration securely, run migrations, and verify restoration.
+
+## Useful commands
+
+- npm run dev — start local development.
+- npm run build — build the production application.
+- npm run migrate — apply database migrations.
+- npm run seed — seed configured initial website content.
+- npm run make-admin — create/promote the initial administrator using the configured CLI flow.
+- npm run restore:research — restore a research backup using its configured environment.
+
+## Full implementation scope / previous todo guide
+
+The following is the complete content of todo.md as maintained in this repository. It remains part of this full-scope manual so the portal workflow and operational details are not lost.
+
+
+---
+
+# Nigeria Lex Research Portal — Simple Guide
+
+This guide explains what the Pilot 2026 research portal does and how the Nigeria Lex team, SBM reviewers, and invited law firms use it.
+
+## What the portal does
+
+- Collects detailed **law-firm** research submissions in eight short sections instead of one long form.
+- Lets firms save progress automatically and return on another device using a single-use email sign-in link.
+- Keeps drafts separate from final submissions. A firm must use **Submit final questionnaire** before its answers count as submitted.
+- Lets Nigeria Lex invite firms, see status and progress, change the submission dates, manage the questions, review submissions, export data and revoke access.
+- Lets authorised SBM research reviewers read drafts and completed submissions and download CSV exports. They do not receive access to the website settings, invitations, members, Commercial Register or administrator controls.
+- Stores the portal records in Kaye & Crowther’s configured PostgreSQL/Supabase environment. Development and production use separate connection settings.
+
+Drafts and submissions are retained permanently. Information is private and is not made public or sold. The portal warns firms not to enter legally privileged or highly sensitive confidential information.
+
+## Opening the portal
+
+The public sign-in page is:
+
+`https://nigerialex.com/research-portal`
+
+An invited firm can also open the personal invitation link sent to its contact email. The invitation link is for first access. On later visits, the firm enters its invited email address on the portal page and requests a fresh sign-in link. That link expires after 30 minutes and works once.
+
+The current window opens **30 September 2026** and closes **17 October 2026 at 11:59 pm Nigeria time (WAT)**. A firm can save its draft after the deadline, but cannot submit it unless an administrator extends the window.
+
+## Nigeria Lex team: inviting a firm
+
+1. Sign in at `/admin` with a Nigeria Lex administrator account.
+2. In **Research Portal → Participants**, choose **Create New**.
+3. Enter the firm name, the contact’s name and the contact’s email address, then save.
+4. The system creates an **Invited (not started)** submission and emails the invitation.
+5. To resend an invitation, open the firm, tick **Send invite**, and save.
+6. To stop access, untick **Active** and save. This revokes the invitation and ends the firm’s portal access. To invite the firm again, turn it back on and send a new invitation.
+
+Use the contact email from the firm’s existing expression of interest. The expression-of-interest form remains separate from the detailed questionnaire.
+
+## What firms do
+
+1. Open the invitation link or go to `/research-portal` and request a sign-in email.
+2. Complete each section. **Representative Matters** and **Practitioners** have an **Add** button for as many entries as the firm needs.
+3. Answers save automatically after a short pause. **Save now** is also available. The page shows the last save time.
+4. Use **Review & Submit** to check the answers and read the privacy notice. Tick the declaration and select **Submit final questionnaire**.
+5. The page confirms receipt and emails a reference number. Submitted answers are locked. If a correction is needed, Nigeria Lex can return the form for changes.
+
+A draft is not a submission. Required answers are checked only when the firm submits. The portal warns before a browser is closed if changes have not finished saving.
+
+## Reviewing submissions
+
+Open **Research Portal → Research Portal Submissions** in `/admin`.
+
+- **Invited (not started):** the firm has been invited but has not entered answers.
+- **Draft / In progress:** the firm has saved a draft.
+- **Submitted:** the firm pressed the final submit button; the questionnaire is locked.
+- **Under Review:** Nigeria Lex has started assessing the submission.
+- **Returned for changes:** Nigeria Lex has reopened it and given the firm a reason.
+
+Open a submission to read its answers. Use **Mark under review** when assessment starts. Use **Return for changes** to enter a reason and email the firm. The previous submitted answers are kept in the submission history. Once the firm resubmits, its new answers become the current submission. **Reopen as draft** is available for a returned form.
+
+SBM users with the **Research reviewer (SBM)** role can read every submission, including drafts, but cannot edit or change statuses. They can export data. To add one, an administrator opens **Members & Access → Users**, creates a user, sets the role to **Research reviewer (SBM)** and organisation to **SBM Intelligence**, then saves. To remove access, untick **Active**. An optional reviewer access end date can also be set on the user account.
+
+## Editing questions and dates
+
+Only administrators can change these settings:
+
+- Open **Research Portal → Research Portal Settings**.
+- In **Sections**, add, rename, reorder or remove a section. In a section, add or remove a field, choose its type, set its choices, and tick or untick **Required** and **Active**.
+- To retire a question but keep it available to restore, untick **Active**. If a field is deleted, its saved answers remain in the submission’s answer data and exports. Re-adding a field with the same ID shows its old answers again.
+- Each invited submission keeps a copy of the questionnaire it received. Later questionnaire edits do not silently change that firm’s form. New invitations use the latest version.
+- Change **Window Opens At** or **Window Closes At** to edit the timetable. Enter the time in Nigeria time (WAT). Submission is automatically blocked outside the window.
+- **Reminders Enabled** controls the email reminders. The system sends a weekly reminder, then one at three days and one day before closing, to firms that have not submitted.
+- **Uploads Enabled** is off by default. Turn it on to show the upload area; turn it off to stop new uploads and downloads.
+- **Privacy Notice** and **Consent Text** control what firms see before submission.
+
+The questionnaire starts with Firm Profile, Practice Areas, Representative Matters, Practitioners, Client / Investor Experience, Cross-Border Experience, Evidence & Verification, and Review & Submit. Evidence & Verification includes a firm-publication permission question.
+
+## Supporting documents
+
+Uploads are off until a Nigeria Lex administrator enables them. When enabled, firms can attach up to five files per submission, each up to 10 MB: PDF, Word, Excel, JPG or PNG. The files use the configured `research/` folder in Supabase Storage and are downloaded through an access-checked route. The storage bucket must be set to **private** in Supabase. The confidentiality warning is shown next to the upload area.
+
+File type and size are checked. **The current app does not run an antivirus scan.** Keep uploads disabled until the team has decided how it wants to scan files before accepting them.
+
+## Exporting data
+
+In the submissions list, choose one of the CSV buttons:
+
+- **Submissions** — firm, status, progress, ordinary question fields and a complete answers JSON column (including retired fields).
+- **Representative matters** — one row per matter.
+- **Practitioners** — one row per practitioner.
+
+CSV files open in Excel. Exports are recorded in the Activity Log. Supporting files can be downloaded from a submission by an authorised administrator or SBM reviewer, or from the firm’s own signed-in portal.
+
+## Reminders and independent backups
+
+The app provides two protected daily jobs. The host must be configured to call them; they do not run by themselves inside the website.
+
+1. Create a long random `RESEARCH_CRON_SECRET` and set it in the server environment.
+2. Configure a daily host cron job for these URLs, with an `Authorization: Bearer <RESEARCH_CRON_SECRET>` header:
+   - `/api/research-portal/reminders`
+   - `/api/research-portal/backup`
+3. Set the job for about **9:00 am Nigeria time**. For a UTC-only scheduler, use **08:00 UTC**.
+4. For encrypted backups, set `RESEARCH_BACKUP_BUCKET`, `RESEARCH_BACKUP_ACCESS_KEY_ID`, `RESEARCH_BACKUP_SECRET_ACCESS_KEY`, `RESEARCH_BACKUP_KEY` (base64 encoding of a random 32-byte key), and, if needed, `RESEARCH_BACKUP_ENDPOINT` and `RESEARCH_BACKUP_REGION`. These credentials should point to a separate K&C-controlled private bucket/project, not the website’s public files bucket.
+5. The backup contains firms, submissions, questionnaire settings and uploaded files. It is compressed and encrypted with AES-256-GCM before it leaves the app. Keep the encryption key separately from the bucket credentials.
+6. Download a `.nlbackup` file from the backup bucket before restoring. Configure `.env` for the empty destination database and storage, set the same `RESEARCH_BACKUP_KEY`, then run `npm run restore:research -- <path-to-backup.nlbackup>`. Restore refuses to run if the destination already contains participants.
+
+Keep a second copy of the encryption key and periodically practise restoring into a separate, empty development database. The backup bucket should have its own retention/lifecycle policy.
+
+## First deployment checklist
+
+- Set development and production `DATABASE_URI` values to the **separate K&C Supabase projects**. Keep the database schema outside Supabase’s exposed `public` schema.
+- Set `PAYLOAD_SECRET`, the SMTP values (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`) and `EMAIL_FROM="Nigeria Lex <info@nigerialex.com>"` in both environments.
+- Configure `S3_BUCKET`, `S3_ENDPOINT`, `S3_REGION`, `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` for the private upload bucket. An administrator must still enable uploads in portal settings.
+- Apply the new Payload schema on the target database before opening the portal. Use the project’s Payload migration workflow or the secured schema-push procedure in the developer guide.
+- Sign in to `/admin` as `info@nigerialex.com`, make sure a second K&C administrator is available, confirm the opening/closing times, then invite a test firm.
+- Create SBM logins individually. Give only the Research reviewer role unless a person has a separate, approved role for other work.
+- Configure the reminder and backup cron jobs and test email delivery before sending real invitations.
+
+## Troubleshooting
+
+- **No sign-in email?** Check the SMTP settings and spam folder. The same message appears whether an email is invited or not. An administrator can resend an invitation from the Participants record.
+- **Firm cannot sign in?** Check the contact email, **Active** setting and invitation status. Sign-in links expire after 30 minutes; request another.
+- **Firm cannot submit?** Check the closing time in Research Portal Settings. Draft saving remains available after the window closes.
+- **Upload fails?** Confirm the admin switch is on, the bucket is private and configured, and the file is an allowed type under 10 MB.
+- **Need to correct a final submission?** Open it in the admin and choose **Return for changes**, entering a reason. The firm receives an email and the original answers remain in history.
+
+## Data access at a glance
+
+| User | Portal access |
+|---|---|
+| Invited firm contact | Its own submission and its own supporting files |
+| Nigeria Lex / K&C administrator | Invitations, all submissions, settings, reviews, exports and access control |
+| SBM Research reviewer | Read-only access to all drafts and submissions, supporting files and CSV exports |
+| Other site roles | No Research Portal access unless separately granted |
+
