@@ -442,6 +442,7 @@ The organization should own the domain, hosting project, database, email provide
 - npm run dev — start local development.
 - npm run build — build the production application.
 - npm run migrate — apply database migrations.
+- npm run db:push — explicitly synchronize the configured database schema for initial setup or repair. Back up first and review any Payload data-loss warning.
 - npm run seed — seed configured initial website content.
 - npm run make-admin — create/promote the initial administrator using the configured CLI flow.
 - npm run restore:research — restore a research backup using its configured environment.
@@ -564,7 +565,7 @@ Keep a second copy of the encryption key and periodically practise restoring int
 - Set development and production `DATABASE_URI` values to the **separate K&C Supabase projects**. Keep the database schema outside Supabase’s exposed `public` schema.
 - Set `PAYLOAD_SECRET`, the SMTP values (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`) and `EMAIL_FROM="Nigeria Lex <info@nigerialex.com>"` in both environments.
 - Configure `S3_BUCKET`, `S3_ENDPOINT`, `S3_REGION`, `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` for the private upload bucket. An administrator must still enable uploads in portal settings.
-- Apply the new Payload schema on the target database before opening the portal. Use the project’s Payload migration workflow or the secured schema-push procedure in the developer guide.
+- Apply the new Payload schema on the target database before opening the portal. Use `npm run migrate` when migrations are present. For a one-time repair or initial schema setup, back up the database and run `npm run db:push` with the target database environment variables configured. Review and confirm any data-loss warning from Payload before proceeding; do not leave schema push enabled on the application server.
 - Sign in to `/admin` as `info@nigerialex.com`, make sure a second K&C administrator is available, confirm the opening/closing times, then invite a test firm.
 - Create SBM logins individually. Give only the Research reviewer role unless a person has a separate, approved role for other work.
 - Configure the reminder and backup cron jobs and test email delivery before sending real invitations.
@@ -585,4 +586,3 @@ Keep a second copy of the encryption key and periodically practise restoring int
 | Nigeria Lex / K&C administrator | Invitations, all submissions, settings, reviews, exports and access control |
 | SBM Research reviewer | Read-only access to all drafts and submissions, supporting files and CSV exports |
 | Other site roles | No Research Portal access unless separately granted |
-

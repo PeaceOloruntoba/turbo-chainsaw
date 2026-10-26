@@ -14,6 +14,7 @@
     "payload": "dotenv -e .env -- payload",
     "generate:types": "dotenv -e .env -- payload generate:types",
     "generate:importmap": "dotenv -e .env -- payload generate:importmap",
+    "db:push": "tsx scripts/pushPayloadSchema.ts",
     "seed": "dotenv -e .env -- tsx src/seed/index.ts",
     "make-admin": "dotenv -e .env -- tsx src/seed/makeAdminCli.ts",
     "migrate": "dotenv -e .env -- payload migrate",
